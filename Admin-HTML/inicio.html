@@ -9,19 +9,19 @@
 		<link
 			rel="apple-touch-icon"
 			sizes="180x180"
-			href=".../vendors/images/apple-touch-icon.png"
+			href="../vendors/images/apple-touch-icon.png"
 		/>
 		<link
 			rel="icon"
 			type="image/png"
 			sizes="32x32"
-			href=".../vendors/images/favicon-32x32.png"
+			href="../vendors/images/favicon-32x32.png"
 		/>
 		<link
 			rel="icon"
 			type="image/png"
 			sizes="16x16"
-			href=".../vendors/images/favicon-16x16.png"
+			href="../vendors/images/favicon-16x16.png"
 		/>
 
 		<!-- Mobile Specific Metas -->
@@ -45,12 +45,12 @@
 		<link
 			rel="stylesheet"
 			type="text/css"
-			href=".../src/plugins/datatables/css/dataTables.bootstrap4.min.css"
+			href="../src/plugins/datatables/css/dataTables.bootstrap4.min.css"
 		/>
 		<link
 			rel="stylesheet"
 			type="text/css"
-			href=".../src/plugins/datatables/css/responsive.bootstrap4.min.css"
+			href="../src/plugins/datatables/css/responsive.bootstrap4.min.css"
 		/>
 		<link rel="stylesheet" type="text/css" href="../vendors/styles/style.css" />
 
@@ -100,7 +100,7 @@
 				<div class="card-box pd-20 height-100-p mb-30">
 					<div class="row align-items-center">
 						<div class="col-md-4">
-							<img src=".../vendors/images/banner-img.png" alt="" />
+							<img src="../vendors/images/banner-img.png" alt="" />
 						</div>
 						<div class="col-md-8">
 							<h4 class="font-20 weight-500 mb-10 text-capitalize">
@@ -426,23 +426,24 @@
 		<!-- js -->
 		<script>
 			// Cargar el contenido del header utilizando fetch
-			fetch('.....views\Admin-HTML\template.html')
+			fetch('../Admin-HTML/template.html')
 				.then(response => response.text())
 				.then(data => {
 					// Insertar el contenido del header en el contenedor
 					document.getElementById('template').innerHTML = data;
 				});
 		</script>
-		<script src=".../vendors/scripts/core.js"></script>
-		<script src=".../vendors/scripts/script.min.js"></script>
-		<script src=".../vendors/scripts/process.js"></script>
-		<script src=".../vendors/scripts/layout-settings.js"></script>
+		<script src="../vendors/scripts/core.js"></script>
+		<script src="../vendors/scripts/script.min.js"></script>
+		<script src="../vendors/scripts/process.js"></script>
+		<script src="../vendors/scripts/layout-settings.js"></script>
 		
-		<script src=".../src/plugins/datatables/js/jquery.dataTables.min.js"></script>
-		<script src=".../src/plugins/datatables/js/dataTables.bootstrap4.min.js"></script>
-		<script src=".../src/plugins/datatables/js/dataTables.responsive.min.js"></script>
-		<script src=".../src/plugins/datatables/js/responsive.bootstrap4.min.js"></script>
-		<script src=".../vendors/scripts/dashboard.js"></script>
+		<script src="../src/plugins/datatables/js/jquery.dataTables.min.js"></script>
+		<script src="../src/plugins/datatables/js/dataTables.bootstrap4.min.js"></script>
+		<script src="../src/plugins/apexcharts/apexcharts.min.js"></script>
+		<script src="../src/plugins/datatables/js/dataTables.responsive.min.js"></script>
+		<script src="../src/plugins/datatables/js/responsive.bootstrap4.min.js"></script>
+		<script src="../vendors/scripts/dashboard.js"></script>
 		<!-- Google Tag Manager (noscript) -->
 		<noscript
 			><iframe
