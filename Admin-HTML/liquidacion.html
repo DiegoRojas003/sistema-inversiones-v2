@@ -73,49 +73,338 @@
 				<div class="min-height-200px">
 					<div class="page-header">
 						<div class="row">
-							<div class="col-md-6 col-sm-12">
-								<div class="title">
-									<h4>blank</h4>
-								</div>
-								<nav aria-label="breadcrumb" role="navigation">
-									<ol class="breadcrumb">
-										<li class="breadcrumb-item">
-											<a href="index.html">Home</a>
-										</li>
-										<li class="breadcrumb-item active" aria-current="page">
-											blank
-										</li>
-									</ol>
-								</nav>
-							</div>
-							<div class="col-md-6 col-sm-12 text-right">
-								<div class="dropdown">
-									<a
-										class="btn btn-primary dropdown-toggle"
-										href="#"
-										role="button"
-										data-toggle="dropdown"
+							<div class="col-md-6">
+								<div class="form-group">
+									<label>Proyecto</label>
+									<select
+										class="custom-select2 form-control"
+										multiple="multiple"
+										style="width: 100%"
 									>
-										January 2018
-									</a>
-									<div class="dropdown-menu dropdown-menu-right">
-										<a class="dropdown-item" href="#">Export List</a>
-										<a class="dropdown-item" href="#">Policies</a>
-										<a class="dropdown-item" href="#">View Assets</a>
-									</div>
+										<!--Ingresa aqui las opciones de Proyectos que tenga el usuario -->
+									</select>
 								</div>
+							</div>
+							<div class="contenido-boton">
+								<input class="btn btn-primary"  value="Liquidar"data-toggle="modal"
+								data-target="#confirmation-modal"
+								type="button" />
+								
+		
+								
+							</div>
+
+
+							
+						</div>	
+					</div>
+
+				<div class="bg-white pd-20 card-box mb-30">
+					<div id="chart6"></div>
+					<div><h5>Total: $56.000.000</h5></div>
+				</div>
+				
+				<div class="row clearfix">
+					<div class="col-lg-6 col-md-12 col-sm-12 mb-30">
+						<div class="pd-20 card-box" style="height: 360px;">
+							<h5 class="h4 text-blue mb-20">Valor tipo de aporte</h5>
+							
+								<div class="pd-20 card-box height-100-p" style="height: 255px">
+									
+									<div id="chart8Valor" style="max-width: 500px;"></div>
+								</div>
+							
+						</div>
+					</div>
+					<div class="col-lg-6 col-md-12 col-sm-12 mb-30">
+						<div class="pd-20 card-box" style="height: 360px;">
+							<h5 class="h4 text-blue mb-20">Cantidad tipo de aporte</h5>
+							
+								<div class="pd-20 card-box height-100-p" style="height: 255px">
+									
+									<div id="chart8Cantidad" style="max-width: 500px;"></div>
+								</div>
+							
+						</div>
+					</div>
+					<div class="col-lg-6 col-md-12 col-sm-12 mb-30">
+						<div class="pd-20 card-box" style="height: 360px;">
+							<h5 class="h4 text-blue mb-20">Aportes de la industria</h5>
+							
+								<div class="pd-20 card-box height-100-p" style="height: 255px">
+									
+									<div id="chart8Industria" style="max-width: 500px;"></div>
+								</div>
+							
+						</div>
+					</div>
+					<div class="col-lg-6 col-md-12 col-sm-12 mb-30">
+						<div class="pd-20 card-box" style="height: 360px;">
+							<h5 class="h4 text-blue mb-20">Cantidad</h5>
+							
+								<div class="pd-20 card-box height-100-p" style="height: 255px">
+									
+									<div id="chart9" style="max-width: 500px;"></div>
+								</div>
+							
+						</div>
+					</div>
+					<div class="col-md-4 col-sm-12 mb-30">
+						<div class="card text-white bg-primary card-box">
+							<div class="card-body">
+								<h5 class="card-title text-white">Participación Minima</h5>
+								<p class="card-text">
+									5,5%
+								</p>
 							</div>
 						</div>
 					</div>
-					<div class="pd-20 bg-white border-radius-4 box-shadow mb-30"></div>
+					<div class="col-md-4 col-sm-12 mb-30">
+						<div class="card text-white bg-success card-box">
+							
+							<div class="card-body">
+								<h5 class="card-title text-white">Participación Maxima</h5>
+								<p class="card-text">
+									10,5%
+								</p>
+							</div>
+						</div>
+					</div>
+					<div class="col-md-4 col-sm-12 mb-30">
+						<div class="card text-white bg-primary card-box">
+							<div class="card-body">
+								<h5 class="card-title text-white">Promedio Participación</h5>
+								<p class="card-text">
+									10,0%
+								</p>
+							</div>
+						</div>
+					</div>
+					<div class="col-md-6 col-sm-12 mb-30">
+						<div class="card text-white bg-primary card-box">
+							<div class="card-body">
+								<h5 class="card-title text-white">Valor de los aportes de capital</h5>
+								<p class="card-text">
+									$5.466.766.901
+								</p>
+							</div>
+						</div>
+					</div>
+					<div class="col-md-6 col-sm-12 mb-30">
+						<div class="card text-white bg-primary card-box">
+							<div class="card-body">
+								<h5 class="card-title text-white">Valor de los aportes de industria</h5>
+								<p class="card-text">
+									$770.434.969
+								</p>
+							</div>
+						</div>
+					</div>
 				</div>
-				<div class="footer-wrap pd-20 mb-20 card-box">
-					DeskApp - Bootstrap 4 Admin Template By
-					<a href="https://github.com/dropways" target="_blank"
-						>Ankit Hingarajiya</a
-					>
+				
+				<div class="card-box pb-10">
+					<div class="h5 pd-20 mb-0">Resumen</div>
+					<table class="data-table table nowrap">
+						<thead>
+							<tr>
+								<th>Socios</th>
+								<th class="table-plus">Valor de los aportes de capital</th>
+								<th>Valor de los aportes de industria</th>
+								<th>Valor de los aportes</th>
+								<th>Porcentaje participación accionaria</th>
+								<th class="datatable-nosort">Actions</th>
+							</tr>
+						</thead>
+						<tbody>
+							<tr>
+								<td>Socio 1</td>
+								<td>$ 263.016.989</td>
+								<td>$ 77.043.497</td>
+								<td>$ 340.060.486</td>
+								<td>$ 5,45</td>
+								
+								
+								<td>
+									<div class="table-actions">
+										<a href="#" data-color="#265ed7"
+											><i class="icon-copy dw dw-edit2"></i
+										></a>
+										<a href="#" data-color="#e95959"
+											><i class="icon-copy dw dw-delete-3"></i
+										></a>
+									</div>
+								</td>
+							</tr>
+							<tr>
+								<td>Socio 1</td>
+								<td>$ 263.016.989</td>
+								<td>$ 77.043.497</td>
+								<td>$ 340.060.486</td>
+								<td>$ 5,45</td>
+								<td>
+									<div class="table-actions">
+										<a href="#" data-color="#265ed7"
+											><i class="icon-copy dw dw-edit2"></i
+										></a>
+										<a href="#" data-color="#e95959"
+											><i class="icon-copy dw dw-delete-3"></i
+										></a>
+									</div>
+								</td>
+							</tr>
+							<tr>
+								<td>Socio 1</td>
+								<td>$ 263.016.989</td>
+								<td>$ 77.043.497</td>
+								<td>$ 340.060.486</td>
+								<td>$ 5,45</td>
+								<td>
+									<div class="table-actions">
+										<a href="#" data-color="#265ed7"
+											><i class="icon-copy dw dw-edit2"></i
+										></a>
+										<a href="#" data-color="#e95959"
+											><i class="icon-copy dw dw-delete-3"></i
+										></a>
+									</div>
+								</td>
+							</tr>
+							<tr>
+								<td>Socio 1</td>
+								<td>$ 263.016.989</td>
+								<td>$ 77.043.497</td>
+								<td>$ 340.060.486</td>
+								<td>$ 5,45</td>
+								<td>
+									<div class="table-actions">
+										<a href="#" data-color="#265ed7"
+											><i class="icon-copy dw dw-edit2"></i
+										></a>
+										<a href="#" data-color="#e95959"
+											><i class="icon-copy dw dw-delete-3"></i
+										></a>
+									</div>
+								</td>
+							</tr>
+							<tr>
+								<td>Socio 1</td>
+								<td>$ 263.016.989</td>
+								<td>$ 77.043.497</td>
+								<td>$ 340.060.486</td>
+								<td>$ 5,45</td>
+								<td>
+									<div class="table-actions">
+										<a href="#" data-color="#265ed7"
+											><i class="icon-copy dw dw-edit2"></i
+										></a>
+										<a href="#" data-color="#e95959"
+											><i class="icon-copy dw dw-delete-3"></i
+										></a>
+									</div>
+								</td>
+							</tr>
+							<tr>
+								<td>Socio 1</td>
+								<td>$ 263.016.989</td>
+								<td>$ 77.043.497</td>
+								<td>$ 340.060.486</td>
+								<td>$ 5,45</td>
+								<td>
+									<div class="table-actions">
+										<a href="#" data-color="#265ed7"
+											><i class="icon-copy dw dw-edit2"></i
+										></a>
+										<a href="#" data-color="#e95959"
+											><i class="icon-copy dw dw-delete-3"></i
+										></a>
+									</div>
+								</td>
+							</tr>
+							<tr>
+								<td>Socio 1</td>
+								<td>$ 263.016.989</td>
+								<td>$ 77.043.497</td>
+								<td>$ 340.060.486</td>
+								<td>$ 5,45</td>
+								<td>
+									<div class="table-actions">
+										<a href="#" data-color="#265ed7"
+											><i class="icon-copy dw dw-edit2"></i
+										></a>
+										<a href="#" data-color="#e95959"
+											><i class="icon-copy dw dw-delete-3"></i
+										></a>
+									</div>
+								</td>
+							</tr>
+						</tbody>
+						<tfoot>
+							<tr>
+								<th>TOTALES</th>
+								<th class="table-plus">$ 45.265.267</th>
+								<th>$ 45.265.267</th>
+								<th>$ 45.265.267</th>
+								<th>100%</th>
+								<th></th>
+							</tr>
+						</tfoot>
+					</table>
 				</div>
-			</div>
+
+				</div>
+			</div>	
+			
+			<div
+									class="modal fade"
+									id="confirmation-modal"
+									tabindex="-1"
+									role="dialog"
+									aria-hidden="true"
+								>
+									<div
+										class="modal-dialog modal-dialog-centered"
+										role="document"
+									>
+										<div class="modal-content">
+											<div class="modal-body text-center font-18">
+												<h4 class="padding-top-30 mb-30 weight-500">
+													¿Estas seguro de liquidar?
+													Recuerda que no hay vuelta atrás y no se podrá realizar más inversiones.
+												</h4>
+												<div
+													class="padding-bottom-30 row"
+													style="max-width: 170px; margin: 0 auto"
+												>
+													<div class="col-6">
+														<button
+															type="button"
+															class="btn btn-secondary border-radius-100 btn-block confirmation-btn"
+															data-dismiss="modal"
+														>
+															<i class="fa fa-times"></i>
+														</button>
+														NO
+													</div>
+													<div class="col-6">
+														<button
+															type="button"
+															class="btn btn-primary border-radius-100 btn-block confirmation-btn"
+															data-dismiss="modal"
+														>
+															<i class="fa fa-check"></i>
+														</button>
+														SI
+													</div>
+												</div>
+											</div>
+										</div>
+									</div>
+								</div>
+				
+			
+			
+			
+			
 		</div>
 		<!-- welcome modal start -->
 		
@@ -140,6 +429,13 @@
 		<script src="../src/plugins/datatables/js/dataTables.responsive.min.js"></script>
 		<script src="../src/plugins/datatables/js/responsive.bootstrap4.min.js"></script>
 		<script src="../vendors/scripts/dashboard3.js"></script>
+		<script src="../src/plugins/highcharts-6.0.7/code/highcharts.js"></script>
+		<script src="https://code.highcharts.com/highcharts-3d.js"></script>
+		<script src="../src/plugins/highcharts-6.0.7/code/highcharts-more.js"></script>
+		<script src="../vendors/scripts/highchart-setting.js"></script>
+
+		<script src="../src/plugins/apexcharts/apexcharts.min.js"></script>
+		<script src="../vendors/scripts/apexcharts-setting.js"></script>
 		<!-- Google Tag Manager (noscript) -->
 		<noscript
 			><iframe
