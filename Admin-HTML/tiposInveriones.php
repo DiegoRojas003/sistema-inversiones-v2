@@ -89,145 +89,84 @@
 		</script>
 		<!-- End Google Tag Manager -->
 	</head>
+
 	<body>
+		<?php
+		include("conexionn.php");
+		
+		$consultot = "SELECT ID_TIPO, Nombre, Descripcion  FROM tipo";
+		$resultadot = mysqli_query($conex, $consultot);
+		?>
 		<div id="template"></div>
 		<div class="main-container">
-			<div class="xs-pd-20-10 pd-ltr-20">
-				<div class="card-box pb-10">
-					<div class="h5 pd-20 mb-0">Registo de Inversiones</div>
+			<!-- Tabla de tipo -->
+			<div class="pd-20 card-box mb-30">
+				<div class="title pb-20 pt-20">
+				<div class="h5 pd-20 mb-0">Tipos de inversiones</div>
 					<table class="data-table table nowrap">
 						<thead>
 							<tr>
 								<th>Identificador</th>
-								<th class="table-plus">Usuario</th>
-								<th>Monto</th>
-								<th>Tipo</th>
-								<th>Fecha</th>
-								<th class="datatable-nosort">Actions</th>
+								<th class="table-plus">Nombre</th>
+								<th>Descripcion</th>
+								<th class="datatable-nosort">Acciones</th>
 							</tr>
 						</thead>
 						<tbody>
-							<tr>
-								<td>001</td>
-								<td>Jonathan Riveros</td>
-								<td>$8'600.000</td>
-								<td>Vivienda</td>
-								<td>08/07/2003</td>
-								
-								<td>
-									<div class="table-actions">
-										<a href="#" data-color="#265ed7"
-											><i class="icon-copy dw dw-edit2"></i
-										></a>
-										<a href="#" data-color="#e95959"
-											><i class="icon-copy dw dw-delete-3"></i
-										></a>
-									</div>
-								</td>
-							</tr>
-							<tr>
-								<td>001</td>
-								<td>Jonathan Riveros</td>
-								<td>$8'600.000</td>
-								<td>Vivienda</td>
-								<td>08/07/2003</td>
-								<td>
-									<div class="table-actions">
-										<a href="#" data-color="#265ed7"
-											><i class="icon-copy dw dw-edit2"></i
-										></a>
-										<a href="#" data-color="#e95959"
-											><i class="icon-copy dw dw-delete-3"></i
-										></a>
-									</div>
-								</td>
-							</tr>
+							<?php
+							while ($fila = mysqli_fetch_assoc($resultadot)) {
+								echo "<tr>";
+								echo "<td>" . $fila['ID_TIPO'] . "</td>";
+								echo "<td>" . $fila['Nombre'] . "</td>";
+								echo "<td>" . $fila['Descripcion'] . "</td>";
+								echo '<td>';
+								echo '<div class="table-actions">';
+								echo '<a href="#" data-color="#265ed7"><i class="icon-copy dw dw-edit2"></i></a>';
+								echo '<a href="#" data-color="#e95959"><i class="icon-copy dw dw-delete-3"></i></a>';
+								echo '</div>';
+								echo '</td>';
+								echo '</tr>';
+							}
+							?>
 						</tbody>
 					</table>
 				</div>
-
+			</div>
+			
+            <!-- Campos de registro -->
+			<div class="xs-pd-20-10 pd-ltr-20">
+	
 				<div class="title pb-20 pt-20">
-					<h2 class="h3 mb-0">Ingreso de inversiones</h2>
+					<h2 class="h3 mb-0">Creación de tipos de inversiones</h2>
 				</div>
 
-				
-					<div class="pd-20 card-box mb-30">
-						<div class="clearfix"></div>
+				<div class="pd-20 card-box mb-30">
+					<form action="registrar.php" method="post">
 						<form>
 							<div class="form-group row">
-								<label class="col-sm-12 col-md-2 col-form-label">Usuario</label>
+								<label class="col-sm-12 col-md-2 col-form-label">Identificador</label>
 								<div class="col-sm-12 col-md-10">
-									<select class="custom-select col-12">
-										<option selected="">Seleccione...</option>
-										<option value="1">One</option>
-										<option value="2">Two</option>
-										<option value="3">Three</option>
-									</select>
-								</div>
-							</div><div class="form-group row">
-								<label class="col-sm-12 col-md-2 col-form-label">Proyecto</label>
-								<div class="col-sm-12 col-md-10">
-									<select class="custom-select col-12">
-										<option selected="">Seleccione...</option>
-										<option value="1">One</option>
-										<option value="2">Two</option>
-										<option value="3">Three</option>
-									</select>
+									<input name= "id_tipo" class="form-control" type="text" placeholder="01, 02 ,03">
 								</div>
 							</div>
 							<div class="form-group row">
-								<label class="col-sm-12 col-md-2 col-form-label">Monto</label>
+								<label class="col-sm-12 col-md-2 col-form-label">Nombre</label>
 								<div class="col-sm-12 col-md-10">
-									<input class="form-control" type="number" placeholder="2500000">
+									<input name= "nombre_tipo" class="form-control" type="text" placeholder="Vivienda">
 								</div>
 							</div>
 							<div class="form-group row">
-								<label class="col-sm-12 col-md-2 col-form-label">Tipo</label>
+								<label class="col-sm-12 col-md-2 col-form-label">Descripcion</label>
 								<div class="col-sm-12 col-md-10">
-									<select class="custom-select col-12">
-										<option selected="">Seleccione...</option>
-										<option value="1">One</option>
-										<option value="2">Two</option>
-										<option value="3">Three</option>
-									</select>
-								</div>
+								<textarea name='descripcion_tipo' placeholder="Ingresa una breve Descripcion del proyecto a crear..." class="form-control" id="exampleFormControlTextarea1" rows="3"></textarea>
 							</div>
-							<div class="form-group row">
-								<label class="col-sm-12 col-md-2 col-form-label">Fecha</label>
-								<div class="col-sm-12 col-md-10">
-									<input class="form-control date-picker" placeholder="Seleccione la fecha" type="text">
-								</div>
 							</div>
-							<div class="form-group row">
-								<label class="col-sm-12 col-md-2 col-form-label">Descripción</label>
-								<div class="col-sm-12 col-md-10">
-									<input class="form-control" type="text" placeholder="Breve descripción o comentario de la inversión">
-								</div>
+							<div class="contenido-boton">
+								<input class="btn btn-primary" type="submit" name="register_tipos" value="Guardar">
 							</div>
-							
-							
-						
-							<div class="form-group row">
-								<label class="col-sm-12 col-md-2 col-form-label">Documento</label>
-								<div class="col-sm-12 col-md-10">
-									<input
-									type="file"
-									class="form-control-file form-control height-auto"
-									/>
-								</div>
-							</div>
-						</form>
-						<div class="contenido-boton">
-							<input class="btn btn-primary" type="submit" value="Guardar" />
-						</div>
-					</div>
-				
-						
-				
-
-				
-
-				
+					</form>	
+				</div>
+					
 			</div>
 		</div>
 		<!-- welcome modal start -->
@@ -255,6 +194,7 @@
 		<script src="../src/plugins/datatables/js/responsive.bootstrap4.min.js"></script>
 		<script src="../vendors/scripts/dashboard3.js"></script>
 		<!-- Google Tag Manager (noscript) -->
+		
 		<noscript
 			><iframe
 				src="https://www.googletagmanager.com/ns.html?id=GTM-NXZMQSS"

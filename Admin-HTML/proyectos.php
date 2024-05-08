@@ -75,6 +75,14 @@
 		<!-- End Google Tag Manager -->
 	</head>
 	<body>
+		<?php
+		include("conexionn.php");
+
+		$consultop = "SELECT ID_Proyecto , Nombre, Fecha, Descripcion, Certificado  FROM proyecto";
+		$resultadop = mysqli_query($conex, $consultop);
+
+		?>
+
 		<div id="template"></div>
 		<div class="main-container">
 			<div class="xs-pd-20-10 pd-ltr-20">
@@ -85,132 +93,80 @@
 							<tr>
 								<th>Identificador</th>
 								<th class="table-plus">Nombre</th>
-								<th>Sector</th>
 								<th>Fecha</th>
-								<th>Capital</th>
-								<th class="datatable-nosort">Actions</th>
+								<th>Descripción</th>
+								<th>Certificado</th>
+								<th class="datatable-nosort">Acciones</th>
 							</tr>
-						</thead>
+						</thead>	
 						<tbody>
-							<tr>
-								<td>001</td>
-								<td>Software-Distribución</td>
-								<td>Digital</td>
-								<td>08/07/2003</td>
-								<td>$8'600.000</td>
-								
-								<td>
-									<div class="table-actions">
-										<a href="#" data-color="#265ed7"
-											><i class="icon-copy dw dw-edit2"></i
-										></a>
-										<a href="#" data-color="#e95959"
-											><i class="icon-copy dw dw-delete-3"></i
-										></a>
-									</div>
-								</td>
-							</tr>
-							<tr>
-								<td>002</td>
-								<td>Banco ya</td>
-								<td>Financiero</td>
-								<td>08/07/2004</td>
-								<td>$5'250.000</td>
-								<td>
-									<div class="table-actions">
-										<a href="#" data-color="#265ed7"
-											><i class="icon-copy dw dw-edit2"></i
-										></a>
-										<a href="#" data-color="#e95959"
-											><i class="icon-copy dw dw-delete-3"></i
-										></a>
-									</div>
-								</td>
-							</tr>
+							<?php
+							while ($fila = mysqli_fetch_assoc($resultadop)) {
+								echo "<tr>";
+								echo "<td>" . $fila['ID_Proyecto'] . "</td>";
+								echo "<td>" . $fila['Nombre'] . "</td>";
+								echo "<td>" . $fila['Fecha'] . "</td>";
+								echo "<td>" . $fila['Descripcion'] . "</td>";
+								echo "<td>";
+								echo '<a href="Descargas/9.png">' . $fila['Certificado'] . '</a>';
+								echo '<td>';
+								echo '<div class="table-actions">';
+								echo '<a href="#" data-color="#265ed7"><i class="icon-copy dw dw-edit2"></i></a>';
+								echo '<a href="#" data-color="#e95959"><i class="icon-copy dw dw-delete-3"></i></a>';
+								echo '</div>';
+								echo '</td>';
+								echo '</tr>';
+							}
+							?>
 						</tbody>
 					</table>
+
 				</div>
 
 				<div class="title pb-20 pt-20">
 					<h2 class="h3 mb-0">Creación de Proyectos</h2>
 				</div>
-
-				
-					<div class="pd-20 card-box mb-30">
-						<div class="clearfix"></div>
-						<form>
-							<div class="form-group row">
-								<label class="col-sm-12 col-md-2 col-form-label">Identificador</label>
-								<div class="col-sm-12 col-md-10">
-									<input class="form-control" type="number" placeholder="01">
-								</div>
+				<div class="pd-20 card-box mb-30">
+					<div class="clearfix"></div>
+					<form action="registrar.php" method="post">
+						<div class="form-group row">
+							<label class="col-sm-12 col-md-2 col-form-label">Identificador</label>
+							<div class="col-sm-12 col-md-10">
+								<input name="id_proyecto" class="form-control" type="number" placeholder="01">
 							</div>
-							<div class="form-group row">
-								<label class="col-sm-12 col-md-2 col-form-label">Nombre</label>
-								<div class="col-sm-12 col-md-10">
-									<input class="form-control" type="text" placeholder="Johnny">
-								</div>
-							</div>
-							<div class="form-group row">
-								<label class="col-sm-12 col-md-2 col-form-label">Fecha de creación</label>
-								<div class="col-sm-12 col-md-10">
-									<input class="form-control date-picker" placeholder="Seleccione la fecha" type="text">
-								</div>
-							</div>
-							<div class="form-group row">
-								<label class="col-sm-12 col-md-2 col-form-label">País</label>
-								<div class="col-sm-12 col-md-10">
-									<select class="custom-select col-12">
-										<option selected="">Choose...</option>
-										<option value="1">One</option>
-										<option value="2">Two</option>
-										<option value="3">Three</option>
-									</select>
-								</div>
-							</div>
-							<div class="form-group row">
-								<label class="col-sm-12 col-md-2 col-form-label">Departamento/Provincia</label>
-								<div class="col-sm-12 col-md-10">
-									<select class="custom-select col-12">
-										<option selected="">Choose...</option>
-										<option value="1">One</option>
-										<option value="2">Two</option>
-										<option value="3">Three</option>
-									</select>
-								</div>
-							</div>
-							<div class="form-group row">
-								<label class="col-sm-12 col-md-2 col-form-label">Ciudad/Municipio</label>
-								<div class="col-sm-12 col-md-10">
-									<select class="custom-select col-12">
-										<option selected="">Choose...</option>
-										<option value="1">One</option>
-										<option value="2">Two</option>
-										<option value="3">Three</option>
-									</select>
-								</div>
-							</div>
-							<div class="form-group row">
-								<label class="col-sm-12 col-md-2 col-form-label">Documento</label>
-								<div class="col-sm-12 col-md-10">
-									<input
-									type="file"
-									class="form-control-file form-control height-auto"
-									/>
-								</div>
-							</div>
-						</form>
-						<div class="contenido-boton">
-							<input class="btn btn-primary" type="submit" value="Guardar" />
 						</div>
-					</div>
-				
-						
-				
-
-				
-
-				
+						<div class="form-group row">
+							<label class="col-sm-12 col-md-2 col-form-label">Nombre</label>
+							<div class="col-sm-12 col-md-10">
+								<input name="nombre_proyecto" class="form-control" type="text" placeholder="Proyecto lavado de carros">
+							</div>
+						</div>
+						<div class="form-group row">
+							<label class="col-sm-12 col-md-2 col-form-label">Fecha de creación</label>
+							<div class="col-sm-12 col-md-10">
+								<input name="fecha_proyecto" class="form-control date-picker" placeholder="Seleccione la fecha" type="text">
+							</div>
+						</div>
+						<div class="form-group row">
+							<label class="col-sm-12 col-md-2 col-form-label">Descripcion</label>
+							<div class="col-sm-12 col-md-10">
+							<textarea name='descripcion_p' placeholder="Ingresa una breve Descripcion del proyecto a crear..." class="form-control" id="exampleFormControlTextarea1" rows="3"></textarea>
+						</div>
+						</div>
+						<div class="form-group row">
+							<label class="col-sm-12 col-md-2 col-form-label">Documento</label>
+							<div  class="col-sm-12 col-md-10">
+								<input name="documento_proyecto"
+								type="file"
+								class="form-control-file form-control height-auto"
+								/>
+							</div>
+						</div>
+						<div class="contenido-boton">
+							<input class="btn btn-primary" type="submit" name="register_proyecto" value="Guardar">
+						</div>
+					</form>
+				</div>
 			</div>
 		</div>
 		<!-- welcome modal start -->

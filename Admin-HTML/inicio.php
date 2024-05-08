@@ -108,10 +108,17 @@
 								<div class="weight-600 font-30 text-blue">Micher Alexander Gonzalez Monroy</div>
 							</h4>
 							<p class="font-18 max-width-600">
-								Lorem ipsum dolor sit amet, consectetur adipisicing elit. Unde
-								hic non repellendus debitis iure, doloremque assumenda. Autem
-								modi, corrupti, nobis ea iure fugiat, veniam non quaerat
-								mollitia animi error corporis.
+								¡Bienvenido! Estamos encantados de tenerte aquí. 
+								Queremos que sepas que estamos completamente disponibles
+								 y comprometidos a atender tus necesidades financieras. 
+								 En nuestro rol, tenemos la capacidad y disposición para 
+								 gestionar y supervisar todos los aportes monetarios, 
+								 así como cualquier contribución especial que desees 
+								 hacer. Además, estamos aquí para facilitar cualquier 
+								 tipo de registro que necesites realizar, ya sea para 
+								 seguir de cerca tus inversiones, realizar seguimientos 
+								 detallados de los fondos o simplemente mantener un registro
+								organizado de tus transacciones financieras.
 							</p>
 						</div>
 					</div>

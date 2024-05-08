@@ -3,7 +3,7 @@
 	<head>
 		<!-- Basic Page Info -->
 		<meta charset="utf-8" />
-		<title>Simulación</title>
+		<title>Liquidación</title>
 
 		<!-- Site favicon -->
 		
@@ -63,26 +63,50 @@
 		<!-- End Google Tag Manager -->
 	</head>
 	<body>
+		<?php
+		include("conexionn.php");
+
+		// Consulta para obtener los datos de la tabla municipio
+		$consulta_proyecto = "SELECT ID_Proyecto, Nombre, Fecha, Descripcion, Certificado FROM proyecto";
+		$resultado_proyecto = mysqli_query($conex, $consulta_proyecto);
+
+		// Crear un array para almacenar los datos
+		$datos_proyecto = array();
+		while ($fila_proyecto = mysqli_fetch_assoc($resultado_proyecto)) {
+			$datos_proyecto[] = $fila_proyecto;
+		}
+		?>
+		
 		<div id="template"></div>
+		<div class="mobile-menu-overlay"></div>
+
 		<div class="main-container">
 			<div class="pd-ltr-20 xs-pd-20-10">
 				<div class="min-height-200px">
 					<div class="page-header">
 						<div class="row">
 							<div class="col-md-6">
-								<div class="form-group">
-									<label>Proyecto</label>
-									<select
-										class="custom-select2 form-control"
-										multiple="multiple"
-										style="width: 100%"
-									>
-										<!--Ingresa aqui las opciones de Proyectos que tenga el usuario -->
-									</select>
-								</div>
+								<div class="form-group row">
+									<label class="col-sm-12 col-md-2 col-form-label">Proyecto</label>
+									<div class="col-sm-12 col-md-10">
+										<select name="proyecto" class="custom-select col-12">
+											<option selected="">Seleccione</option>
+											<?php foreach ($datos_proyecto as $pais): ?>
+												<option value="<?php echo $pais['ID_Proyecto']; ?>">
+													<?php echo  $pais['Nombre']; ?>
+												</option>
+											<?php endforeach; ?>
+										</select>
+									</div>
+								</div>	
 							</div>
 							<div class="contenido-boton">
-								<input class="btn btn-primary" type="submit" value="Consultar" />
+								<input class="btn btn-primary"  value="Liquidar"data-toggle="modal"
+								data-target="#confirmation-modal"
+								type="button" />
+								
+		
+								
 							</div>
 
 
@@ -345,7 +369,52 @@
 				</div>
 			</div>	
 			
-
+			<div
+									class="modal fade"
+									id="confirmation-modal"
+									tabindex="-1"
+									role="dialog"
+									aria-hidden="true"
+								>
+									<div
+										class="modal-dialog modal-dialog-centered"
+										role="document"
+									>
+										<div class="modal-content">
+											<div class="modal-body text-center font-18">
+												<h4 class="padding-top-30 mb-30 weight-500">
+													¿Estas seguro de liquidar?
+													Recuerda que no hay vuelta atrás y no se podrá realizar más inversiones.
+												</h4>
+												<div
+													class="padding-bottom-30 row"
+													style="max-width: 170px; margin: 0 auto"
+												>
+													<div class="col-6">
+														<button
+															type="button"
+															class="btn btn-secondary border-radius-100 btn-block confirmation-btn"
+															data-dismiss="modal"
+														>
+															<i class="fa fa-times"></i>
+														</button>
+														NO
+													</div>
+													<div class="col-6">
+														<button
+															type="button"
+															class="btn btn-primary border-radius-100 btn-block confirmation-btn"
+															data-dismiss="modal"
+														>
+															<i class="fa fa-check"></i>
+														</button>
+														SI
+													</div>
+												</div>
+											</div>
+										</div>
+									</div>
+								</div>
 				
 			
 			
@@ -358,7 +427,7 @@
 		<!-- js -->
 		<script>
 			// Cargar el contenido del header utilizando fetch
-			fetch('template.html')
+			fetch('../Admin-HTML/template.html')
 				.then(response => response.text())
 				.then(data => {
 					// Insertar el contenido del header en el contenedor
@@ -382,10 +451,6 @@
 
 		<script src="../src/plugins/apexcharts/apexcharts.min.js"></script>
 		<script src="../vendors/scripts/apexcharts-setting.js"></script>
-		
-		
-
-		
 		<!-- Google Tag Manager (noscript) -->
 		<noscript
 			><iframe
