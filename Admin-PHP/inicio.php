@@ -433,7 +433,7 @@
 		<!-- js -->
 		<script>
 			// Cargar el contenido del header utilizando fetch
-			fetch('../Admin-HTML/template.html')
+			fetch('../Admin-PHP/template.php')
 				.then(response => response.text())
 				.then(data => {
 					// Insertar el contenido del header en el contenedor

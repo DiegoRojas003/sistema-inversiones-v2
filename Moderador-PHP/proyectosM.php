@@ -40,39 +40,7 @@
 		<link rel="stylesheet" type="text/css" href="../vendors/styles/style.css" />
 		<link rel="stylesheet" href="styles/style.css">
 
-		<!-- Global site tag (gtag.js) - Google Analytics -->
-		<script
-			async
-			src="https://www.googletagmanager.com/gtag/js?id=G-GBZ3SGGX85"
-		></script>
-		<script
-			async
-			src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-2973766580778258"
-			crossorigin="anonymous"
-		></script>
-		<script>
-			window.dataLayer = window.dataLayer || [];
-			function gtag() {
-				dataLayer.push(arguments);
-			}
-			gtag("js", new Date());
-
-			gtag("config", "G-GBZ3SGGX85");
-		</script>
-		<!-- Google Tag Manager -->
-		<script>
-			(function (w, d, s, l, i) {
-				w[l] = w[l] || [];
-				w[l].push({ "gtm.start": new Date().getTime(), event: "gtm.js" });
-				var f = d.getElementsByTagName(s)[0],
-					j = d.createElement(s),
-					dl = l != "dataLayer" ? "&l=" + l : "";
-				j.async = true;
-				j.src = "https://www.googletagmanager.com/gtm.js?id=" + i + dl;
-				f.parentNode.insertBefore(j, f);
-			})(window, document, "script", "dataLayer", "GTM-NXZMQSS");
-		</script>
-		<!-- End Google Tag Manager -->
+		
 	</head>
 	<body>
 		<?php
@@ -83,7 +51,7 @@
 
 		?>
 
-		<div id="template"></div>
+		<div id="templateM"></div>
 		<div class="main-container">
 			<div class="xs-pd-20-10 pd-ltr-20">
 				<div class="card-box pb-10">
@@ -148,7 +116,7 @@
 							</div>
 						</div>
 						<div class="form-group row">
-							<label class="col-sm-12 col-md-2 col-form-label">Descripcion</label>
+							<label class="col-sm-12 col-md-2 col-form-label">Descripción</label>
 							<div class="col-sm-12 col-md-10">
 							<textarea name='descripcion_p' placeholder="Ingresa una breve Descripcion del proyecto a crear..." class="form-control" id="exampleFormControlTextarea1" rows="3"></textarea>
 						</div>
@@ -176,18 +144,18 @@
 		<!-- js -->
 		<script>
 			// Cargar el contenido del header utilizando fetch
-			fetch('../Admin-HTML/template.html')
+			fetch('../Moderador-PHP/templateM.php')
 				.then(response => response.text())
 				.then(data => {
 					// Insertar el contenido del header en el contenedor
-					document.getElementById('template').innerHTML = data;
+					document.getElementById('templateM').innerHTML = data;
 				});
 		</script>
 		<script src="../vendors/scripts/core.js"></script>
 		<script src="../vendors/scripts/script.min.js"></script>
 		<script src="../vendors/scripts/process.js"></script>
 		<script src="../vendors/scripts/layout-settings.js"></script>
-		<script src="../src/plugins/apexcharts/apexcharts.min.js"></script>
+		<script src="../"></script>
 		<script src="../src/plugins/datatables/js/jquery.dataTables.min.js"></script>
 		<script src="../src/plugins/datatables/js/dataTables.bootstrap4.min.js"></script>
 		<script src="../src/plugins/datatables/js/dataTables.responsive.min.js"></script>

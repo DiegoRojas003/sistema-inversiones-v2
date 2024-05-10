@@ -2,12 +2,9 @@
 <div class="header">
     <div class="header-left">
         <div class="menu-icon bi bi-list"></div>
-        <div
-            class="search-toggle-icon bi bi-search"
-            data-toggle="header_search"
-        ></div>
+        
         <div class="header-search">
-				<h2>Administrador</h1>	
+				<h2>Moderador</h1>	
         </div>
     </div>
     <div class="header-right">
@@ -34,7 +31,7 @@
                     <span class="user-icon">
                         <img src="../vendors/images/photo1.jpg" alt="" />
                     </span>
-                    <span class="user-name">Micher A. Gonzalez</span>
+                    <span class="user-name"></span>
                 </a>
                 <div
                     class="dropdown-menu dropdown-menu-right dropdown-menu-icon-list"
@@ -63,7 +60,7 @@
         <h3 class="weight-600 font-16 text-blue">
             Ajustes Visuales
             <span class="btn-block font-weight-400 font-12"
-                >Interfaz de administrador</span
+                >Interfaz Moderador</span
             >
         </h3>
         <div class="close-sidebar" data-toggle="right-sidebar-close">
@@ -242,7 +239,7 @@
         <div class="sidebar-menu">
             <ul id="accordion-menu">
                 <li>
-                    <a href="inicio.html" class="dropdown-toggle no-arrow">
+                    <a href="inicioM.php" class="dropdown-toggle no-arrow">
                         <span class="micon fa fa-home"></span
                         ><span class="mtext">Inicio</span>
                     </a>
@@ -250,33 +247,30 @@
                 <li class="dropdown">
                     <a href="javascript:;" class="dropdown-toggle">
                         <span class="micon bi bi-gear"></span></span
-                        ><span class="mtext">Parámetros</span>
+                        ><span class="mtext">Creación</span>
                     </a>
                     <ul class="submenu">
-                        <li><a href="proyectos.html">Proyectos</a></li> 
-                        <li><a href="ubicacion.html">Ubicación</a></li>
-                        <li><a href="usuarios.html">Usuarios</a></li>
-                        <li><a href="tiposInveriones.html">Tipos de Inversiones</a></li>
-                        <li><a href="inversiones.html">Inversiones</a></li>
-                        <li><a href="tasas.html">Tasas de interés</a></li>
+                        <li><a href="proyectosM.php">Proyectos</a></li>
+                        <li><a href="inversionesM.php">Inversiones</a></li>
+                        <li><a href="usuariosM.php">Inversionistas</a></li>
                     </ul>
                 </li>
                 
                 
                 <li>
-                    <a href="simulacion.html" class="dropdown-toggle no-arrow">
+                    <a href="simulacionM.php" class="dropdown-toggle no-arrow">
                         <span class="micon bi bi-pie-chart-fill"></span
                         ><span class="mtext">Simulación</span>
                     </a>
                 </li>
                 <li>
-                    <a href="liquidacion.html" class="dropdown-toggle no-arrow">
+                    <a href="liquidacionM.php" class="dropdown-toggle no-arrow">
                         <span class="micon fa fa-balance-scale"></span
                         ><span class="mtext">Liquidación</span>
                     </a>
                 </li>
                 <li>
-                    <a href="consultas.html" class="dropdown-toggle no-arrow">
+                    <a href="consultasM.php" class="dropdown-toggle no-arrow">
                         <span class="micon fa fa-table"></span
                         ><span class="mtext">Consultas</span>
                     </a>

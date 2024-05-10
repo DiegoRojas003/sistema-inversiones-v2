@@ -75,42 +75,10 @@
 		<!-- End Google Tag Manager -->
 	</head>
 	<body>
-		<div id="template"></div>
+		<div id="templateI"></div>
 		<div class="main-container">
 			<div class="pd-ltr-20 xs-pd-20-10">
 				<div class="min-height-200px">
-					<div class="page-header">
-						<div class="row">
-							<div class="col-md-6">
-								<div class="form-group">
-									<label>Usuario:</label>
-									<select
-										class="custom-select2 form-control"
-										multiple="multiple"
-										style="width: 100%"
-									>
-									<!--Ingresa aqui las opciones de usuario -->	
-									</select>
-								</div>
-							</div>
-							<div class="col-md-6">
-								<div class="form-group">
-									<label>Proyecto</label>
-									<select
-										class="custom-select2 form-control"
-										multiple="multiple"
-										style="width: 100%"
-									>
-										<!--Ingresa aqui las opciones de Proyectos que tenga el usuario -->
-									</select>
-								</div>
-							</div>
-							
-						</div>
-						<div class="contenido-boton">
-							<input class="btn btn-primary" type="submit" value="Consultar" />
-						</div>
-					</div>
 					<div class="row pb-10">
 						<div class="col-xl-3 col-lg-3 col-md-6 mb-20">
 							<div class="card-box height-100-p widget-style3">
@@ -395,11 +363,11 @@
 		
 		<script>
 			// Cargar el contenido del header utilizando fetch
-			fetch('template.html')
+			fetch('templateI.php')
 				.then(response => response.text())
 				.then(data => {
 					// Insertar el contenido del header en el contenedor
-					document.getElementById('template').innerHTML = data;
+					document.getElementById('templateI').innerHTML = data;
 				});
 		</script>
 		<script src="../vendors/scripts/core.js"></script>
