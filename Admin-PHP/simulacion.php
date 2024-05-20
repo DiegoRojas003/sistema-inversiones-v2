@@ -374,7 +374,7 @@
 		<!-- js -->
 		<script>
 			// Cargar el contenido del header utilizando fetch
-			fetch('template.html')
+			fetch('template.php')
 				.then(response => response.text())
 				.then(data => {
 					// Insertar el contenido del header en el contenedor

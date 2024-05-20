@@ -59,7 +59,6 @@
 					<table class="data-table table nowrap">
 						<thead>
 							<tr>
-								<th>Identificador</th>
 								<th class="table-plus">Nombre</th>
 								<th>Descripcion</th>
 								<th class="datatable-nosort">Acciones</th>
@@ -69,7 +68,6 @@
 							<?php
 							while ($fila = mysqli_fetch_assoc($resultadot)) {
 								echo "<tr>";
-								echo "<td>" . $fila['ID_TIPO'] . "</td>";
 								echo "<td>" . $fila['Nombre'] . "</td>";
 								echo "<td>" . $fila['Descripcion'] . "</td>";
 								echo '<td>';
@@ -96,12 +94,6 @@
 				<div class="pd-20 card-box mb-30">
 					<form action="registrar.php" method="post">
 						<form>
-							<div class="form-group row">
-								<label class="col-sm-12 col-md-2 col-form-label">Identificador</label>
-								<div class="col-sm-12 col-md-10">
-									<input name= "id_tipo" class="form-control" type="text" placeholder="01, 02 ,03">
-								</div>
-							</div>
 							<div class="form-group row">
 								<label class="col-sm-12 col-md-2 col-form-label">Nombre</label>
 								<div class="col-sm-12 col-md-10">

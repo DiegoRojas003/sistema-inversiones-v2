@@ -139,7 +139,6 @@
 					<table class="data-table table nowrap">
 						<thead>
 							<tr>
-								<th>Identificador de Inversion</th>
 								<th class="table-plus">Nombre</th>
 								<th>Monto</th>
 								<th>proyecto</th>
@@ -154,14 +153,14 @@
 							<?php
 							while ($fila = mysqli_fetch_assoc($resultadoIN)) {
 								echo "<tr>";
-								echo "<td>" . $fila['ID_Inversion'] . "</td>";
 								echo "<td>" . $fila['Nombre'] . "</td>";
 								echo "<td>" . $fila['Monto'] . "</td>";
 								echo "<td>" . $fila['proyecto'] . "</td>";
 								echo "<td>" . $fila['Tipo'] . "</td>";
 								echo "<td>" . $fila['Fecha'] . "</td>";
 								echo "<td>" . $fila['Descripcion'] . "</td>";
-								echo "<td>" . $fila['CertificadoInversion'] . "</td>";
+								echo "<td>";
+								echo '<a href="descargar_i.php?id=' . $fila['ID_Inversion'] . '">' . $fila['CertificadoInversion'] . '</a>';
 								echo '<td>';
 								echo '<div class="table-actions">';
 								echo '<a href="#" data-color="#265ed7"><i class="icon-copy dw dw-edit2"></i></a>';
@@ -183,28 +182,22 @@
 				<div class="pd-20 card-box mb-30">
 					<div class="clearfix"></div>
 					<form action="registrar.php" method="post">
-						<div class="form-group row">
-							<label class="col-sm-12 col-md-2 col-form-label">Identificador</label>
-							<div class="col-sm-12 col-md-10">
-								<input name="id_inversion" class="form-control" type="text" placeholder="01, 02, 03, 04, 05.....">
-							</div>
-						</div>
 
 						<div class="form-group row">
 						<label class="col-sm-12 col-md-2 col-form-label">Usuario</label>
-						<div class="col-sm-12 col-md-10">
-							<select name="usuario" class="custom-select col-12">
-								<option selected="">Seleccione</option>
-								<?php foreach ($datos_usuarios as $usuario): ?>
-									<option value="<?php echo $usuario['Nombre'] . ' ' . $usuario['Apellido']; ?>" data-cedula="<?php echo $usuario['ID_Usuario']; ?>">
-										Cédula: <?php echo  $usuario['ID_Usuario']; ?> - <?php echo $usuario['Nombre'] . ' ' . $usuario['Apellido']; ?>
-									</option>
-								<?php endforeach; ?>
-							</select>
-							<!-- Campo oculto inicializado con un valor predeterminado o vacío -->
-							<input type="hidden" name="id_usuario" value="<?php echo isset($datos_usuarios[0]['ID_Usuario']) ? $datos_usuarios[0]['ID_Usuario'] : ''; ?>">
+							<div class="col-sm-12 col-md-10">
+								<select name="usuario" class="custom-select col-12">
+									<option selected="">Seleccione</option>
+									<?php foreach ($datos_usuarios as $usuario): ?>
+										<option value="<?php echo $usuario['Nombre'] . ' ' . $usuario['Apellido']; ?>" data-cedula="<?php echo $usuario['ID_Usuario']; ?>">
+											Cédula: <?php echo  $usuario['ID_Usuario']; ?> - <?php echo $usuario['Nombre'] . ' ' . $usuario['Apellido']; ?>
+										</option>
+									<?php endforeach; ?>
+								</select>
+								<!-- Campo oculto inicializado con un valor predeterminado o vacío -->
+								<input type="hidden" name="id_usuario" value="<?php echo isset($datos_usuarios[0]['ID_Usuario']) ? $datos_usuarios[0]['ID_Usuario'] : ''; ?>">
+							</div>
 						</div>
-					</div>
 
 						<div class="form-group row">
 							<label class="col-sm-12 col-md-2 col-form-label">Monto en Dinero</label>
@@ -256,14 +249,15 @@
 						</div>
 						
 						<div class="form-group row">
-							<label class="col-sm-12 col-md-2 col-form-label">Documento/Recibo</label>
-							<div  class="col-sm-12 col-md-10">
+							<label class="col-sm-12 col-md-2 col-form-label">Documento</label>
+							<div class="col-sm-12 col-md-10">
 								<input name="documento_inversion"
-								type="file"
-								class="form-control-file form-control height-auto"
-								/>
+									type="file"
+									class="form-control-file form-control height-auto"
+									accept=".doc, .docx, .pdf" />
 							</div>
 						</div>
+
 						
 						<div class="contenido-boton">
 							<input name="registar_inversion" class="btn btn-primary" type="submit" value="Guardar" />
