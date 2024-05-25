@@ -114,7 +114,7 @@
 						<?php
 						while ($fila = mysqli_fetch_assoc($resultado)) {
 							echo "<tr>";
-							echo "<td>" . $fila['ID_Pais'] . "</td>";
+							echo "<td> +" . $fila['ID_Pais'] . "</td>";
 							echo "<td>" . $fila['Nombre'] . "</td>";
 							echo '<td>';
 							echo '<div class="table-actions">';
@@ -129,15 +129,15 @@
 				</table>
 				</div>
 			</div>
+
 			<div class="pd-20 card-box mb-30">
 				<div class="title pb-20 pt-20">
 				<div class="h5 pd-20 mb-0">Departamentos o Provinicias</div>
 					<table class="data-table table nowrap">
 						<thead>
 							<tr>
-								<th>Identificador</th>
 								<th class="table-plus">Nombre</th>
-								<th class="table-plus">Identificador del Pais</th>
+								<th class="table-plus">País</th>
 								<th class="datatable-nosort">Acciones</th>
 							</tr>
 						</thead>
@@ -145,9 +145,15 @@
 							<?php
 							while ($fila = mysqli_fetch_assoc($resultadoe)) {
 								echo "<tr>";
-								echo "<td>" . $fila['ID_Departamento'] . "</td>";
 								echo "<td>" . $fila['Nombre'] . "</td>";
-								echo "<td>" . $fila['FK_ID_Pais'] . "</td>";
+
+								// Consulta para obtener el nombre del país
+								$consulta_paiss = "SELECT Nombre FROM pais WHERE ID_Pais = " . $fila['FK_ID_Pais'];
+								$resultado_paiss = mysqli_query($conex, $consulta_paiss);
+								$fila_pais = mysqli_fetch_assoc($resultado_paiss);
+
+								echo "<td>" . $fila_pais['Nombre'] . "</td>";
+								
 								echo '<td>';
 								echo '<div class="table-actions">';
 								echo '<a href="#" data-color="#265ed7"><i class="icon-copy dw dw-edit2"></i></a>';
@@ -161,36 +167,43 @@
 					</table>
 				</div>
 			</div>
+
 			<div class="pd-20 card-box mb-30">
 				<div class="title pb-20 pt-20">
 				<div class="h5 pd-20 mb-0">Municipios o Ciudades</div>
 				<table class="data-table table nowrap">
-					<thead>
-						<tr>
-							<th>Identificador</th>
-							<th class="table-plus">Nombre</th>
-							<th class="table-plus">Identificador del Departamento</th>
-							<th class="datatable-nosort">Acciones</th>
-						</tr>
-					</thead>
-					<tbody>
-						<?php
-						while ($fila = mysqli_fetch_assoc($resultadoi)) {
-							echo "<tr>";
-							echo "<td>" . $fila['ID_Municipio'] . "</td>";
-							echo "<td>" . $fila['Nombre'] . "</td>";
-							echo "<td>" . $fila['FK_ID_Departamento'] . "</td>";
-							echo '<td>';
-							echo '<div class="table-actions">';
-							echo '<a href="#" data-color="#265ed7"><i class="icon-copy dw dw-edit2"></i></a>';
-							echo '<a href="#" data-color="#e95959"><i class="icon-copy dw dw-delete-3"></i></a>';
-							echo '</div>';
-							echo '</td>';
-							echo '</tr>';
-						}
-						?>
-					</tbody>
-				</table>
+						<thead>
+							<tr>
+								<th class="table-plus">Nombre</th>
+								<th class="table-plus">Departamento</th>
+								<th class="datatable-nosort">Acciones</th>
+							</tr>
+						</thead>
+						<tbody>
+							<?php
+							while ($fila = mysqli_fetch_assoc($resultadoi)) {
+								echo "<tr>";
+								echo "<td>" . $fila['Nombre'] . "</td>";
+
+								// Consulta para obtener el nombre del departamento
+								$consulta_departamentoo = "SELECT Nombre FROM departamento WHERE ID_Departamento = " . $fila['FK_ID_Departamento'];
+								$resultado_departamentoo = mysqli_query($conex, $consulta_departamentoo);
+								$fila_departamentoo = mysqli_fetch_assoc($resultado_departamentoo);
+
+								echo "<td>" . $fila_departamentoo['Nombre'] . "</td>";
+								
+								echo '<td>';
+								echo '<div class="table-actions">';
+								echo '<a href="#" data-color="#265ed7"><i class="icon-copy dw dw-edit2"></i></a>';
+								echo '<a href="#" data-color="#e95959"><i class="icon-copy dw dw-delete-3"></i></a>';
+								echo '</div>';
+								echo '</td>';
+								echo '</tr>';
+							}
+							?>
+						</tbody>
+					</table>
+
 
 				</div>
 			</div>
@@ -207,7 +220,7 @@
 							<div class="form-group row">
 								<label class="col-sm-12 col-md-2 col-form-label">Identificador</label>
 								<div class="col-sm-12 col-md-10">
-									<input name="id_pais" class="form-control" type="text" placeholder="01,02,03,04,05">
+									<input name="id_pais" class="form-control" type="number" placeholder="01,02,03,04,05">
 								</div>
 							</div>
 							<div class="form-group row">
@@ -224,14 +237,9 @@
 					<div class="pd-20 card-box mb-30">
 						<form action="registrar.php" method="post">
 							
+							
 							<div class="form-group row">
-								<label class="col-sm-12 col-md-2 col-form-label">Identificador</label>
-								<div class="col-sm-12 col-md-10">
-									<input name="id_departamento" class="form-control" type="text" placeholder="01,02,03,04,05">
-								</div>
-							</div>
-							<div class="form-group row">
-								<label class="col-sm-12 col-md-2 col-form-label">departamento</label>
+								<label class="col-sm-12 col-md-2 col-form-label">Departamento</label>
 								<div class="col-sm-12 col-md-10">
 									<input name="departamentoo" class="form-control" type="text" placeholder="Cundinamarca">
 								</div>
@@ -256,13 +264,6 @@
 					</div>
 					<div class="pd-20 card-box mb-30">
 						<form action="registrar.php" method="post">
-								
-								<div class="form-group row">
-									<label class="col-sm-12 col-md-2 col-form-label">Identificador</label>
-									<div class="col-sm-12 col-md-10">
-										<input name="id_municipio" class="form-control" type="text" placeholder="01,02,03,04,05">
-									</div>
-								</div>
 								<div class="form-group row">
 									<label class="col-sm-12 col-md-2 col-form-label">municipio</label>
 									<div class="col-sm-12 col-md-10">

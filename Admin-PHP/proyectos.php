@@ -43,6 +43,7 @@
 		
 	</head>
 	<body>
+		
 		<?php
 		include("conexionn.php");
 
@@ -76,7 +77,7 @@
 								echo "<td>" . $fila['Fecha'] . "</td>";
 								echo "<td>" . $fila['Descripcion'] . "</td>";
 								echo "<td>";
-								echo '<a href="Descargas/9.png">' . $fila['Certificado'] . '</a>';
+								echo '<a href="descargar_p.php?id=' . $fila['ID_Proyecto'] . '">' . $fila['Certificado'] . '</a>';
 								echo '<td>';
 								echo '<div class="table-actions">';
 								echo '<a href="#" data-color="#265ed7"><i class="icon-copy dw dw-edit2"></i></a>';
@@ -123,13 +124,14 @@
 						</div>
 						<div class="form-group row">
 							<label class="col-sm-12 col-md-2 col-form-label">Documento</label>
-							<div  class="col-sm-12 col-md-10">
+							<div class="col-sm-12 col-md-10">
 								<input name="documento_proyecto"
-								type="file"
-								class="form-control-file form-control height-auto"
-								/>
+									type="file"
+									class="form-control-file form-control height-auto"
+									accept=".doc, .docx, .pdf" />
 							</div>
 						</div>
+
 						<div class="contenido-boton">
 							<input class="btn btn-primary" type="submit" name="register_proyecto" value="Guardar">
 						</div>

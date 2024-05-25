@@ -1,6 +1,21 @@
 <!DOCTYPE html>
 <html>
 	<head>
+		<script>
+			function mostrarProyecto() {
+				var rol = document.getElementById("rol").value;
+				var proyectoField = document.getElementById("proyectoField");
+				var proyectoInput = document.getElementById("proyecto");
+
+				// Si el rol seleccionado es Administrador (valor 1), ocultar el campo de proyecto y establecer su valor en "todos"
+				if (rol == 1) {
+					proyectoField.style.display = "none";
+					proyectoInput.value = "Todos"; // Establecer el valor en "todos"
+				} else {
+					proyectoField.style.display = "block";
+				}
+			}
+		</script>
 		<!-- Basic Page Info -->
 		<meta charset="utf-8" />
 		<title>Parámetros-Usuarios</title>
@@ -146,9 +161,41 @@
 								echo "<td>" . $fila['Correo'] . "</td>";
 								echo "<td>" . $fila['Contraseña'] . "</td>";
 								echo "<td>" . $fila['Fecha'] . "</td>";
-								echo "<td>" . $fila['Proyecto'] . "</td>";
-								echo "<td>" . $fila['FK_ID_Municipio'] . "</td>";
-								echo "<td>" . $fila['FK_ID_Rol'] . "</td>";
+								
+								// Buscar el nombre del proyecto
+								$proyecto_nombre = "";
+								foreach ($datos_proyecto as $proyecto) {
+									if ($proyecto['ID_Proyecto'] == $fila['Proyecto']) {
+										$proyecto_nombre = $proyecto['Nombre'];
+										break;
+									}
+								}
+								// Si el nombre del proyecto está vacío, establecerlo en "TODOS"
+								if (empty($proyecto_nombre)) {
+									$proyecto_nombre = "TODOS";
+								}
+								echo "<td>" . $proyecto_nombre . "</td>";
+
+								// Buscar el nombre del municipio
+								$municipio_nombre = "";
+								foreach ($datos_Municipio as $municipio) {
+									if ($municipio['ID_Municipio'] == $fila['FK_ID_Municipio']) {
+										$municipio_nombre = $municipio['Nombre'];
+										break;
+									}
+								}
+								echo "<td>" . $municipio_nombre . "</td>";
+
+								// Buscar el nombre del rol
+								$rol_nombre = "";
+								foreach ($datos_rol as $rol) {
+									if ($rol['ID_Rol'] == $fila['FK_ID_Rol']) {
+										$rol_nombre = $rol['Nombre'];
+										break;
+									}
+								}
+								echo "<td>" . $rol_nombre . "</td>";
+
 								echo '<td>';
 								echo '<div class="table-actions">';
 								echo '<a href="#" data-color="#265ed7"><i class="icon-copy dw dw-edit2"></i></a>';
@@ -160,6 +207,8 @@
 							?>
 						</tbody>
 					</table>
+
+
 				</div>
 
 				<div class="title pb-20">
@@ -196,7 +245,6 @@
 					<table class="data-table table nowrap">
 						<thead>
 							<tr>
-								<th>Identificador</th>
 								<th class="table-plus">Nombre</th>
 							</tr>
 						</thead>
@@ -204,9 +252,7 @@
 							<?php
 							while ($fila = mysqli_fetch_assoc($resultadoi)) {
 								echo "<tr>";
-								echo "<td>" . $fila['ID_Municipio'] . "</td>";
 								echo "<td>" . $fila['Nombre'] . "</td>";
-								echo '<td>';
 							}
 							?>
 						</tbody>
@@ -218,36 +264,21 @@
 					<table class="data-table table nowrap">
 						<thead>
 							<tr>
-								<th>Identificador</th>
 								<th class="table-plus">Nombre</th>
 								<th class="table-plus">Descripcion</th>
-								<th class="datatable-nosort">Acciones</th>
 							</tr>
 						</thead>
 						<tbody>
 							<?php
 							while ($fila = mysqli_fetch_assoc($resultador)) {
 								echo "<tr>";
-								echo "<td>" . $fila['ID_Rol'] . "</td>";
 								echo "<td>" . $fila['Nombre'] . "</td>";
 								echo "<td>" . $fila['Descripcion'] . "</td>";
-								echo '<td>';
-								echo '<div class="table-actions">';
-								echo '<a href="#" data-color="#265ed7"><i class="icon-copy dw dw-edit2"></i></a>';
-								echo '<a href="#" data-color="#e95959"><i class="icon-copy dw dw-delete-3"></i></a>';
-								echo '</div>';
-								echo '</td>';
-								echo '</tr>';
 							}
 							?>
 						</tbody>
 					</table>
 				</div>
-
-
-				
-
-					
 
 				<div class="title pb-20 pt-20">
 					<h2 class="h3 mb-0">Creación de Usuarios</h2>
@@ -277,7 +308,7 @@
 							<div class="form-group row">
 								<label class="col-sm-12 col-md-2 col-form-label">Teléfono</label>
 								<div class="col-sm-12 col-md-10">
-									<input name= "telefono"  class="form-control" placeholder="322 2535668" type="tel">
+									<input name= "telefono"  class="form-control" type="number" placeholder="322 2535668" >
 								</div>
 							</div>
 							<div class="form-group row">
@@ -294,6 +325,12 @@
 									<input name= "contrasena" class="form-control" placeholder="password" type="password">
 								</div>
 							</div>
+							<div class="form-group row">
+								<label class="col-sm-12 col-md-2 col-form-label">Confirmacion de Contraseña</label>
+								<div class="col-sm-12 col-md-10">
+									<input name= "contrasena2" class="form-control" placeholder="password" type="password">
+								</div>
+							</div>
 							
 							<div class="form-group row">
 								<label class="col-sm-12 col-md-2 col-form-label">Fecha de nacimiento</label>
@@ -301,15 +338,28 @@
 									<input name= "fecha" class="form-control date-picker" placeholder="Select Date" type="text">
 								</div>
 							</div>
-
 							<div class="form-group row">
-								<label class="col-sm-12 col-md-2 col-form-label">Proyecto</label>
+								<label class="col-sm-12 col-md-2 col-form-label">Rol</label>
 								<div class="col-sm-12 col-md-10">
-									<select name="proyecto" class="custom-select col-12">
+									<select name="rol" id="rol" class="custom-select col-12" onchange="mostrarProyecto()">
 										<option selected="">Seleccione</option>
-										<?php foreach ($datos_proyecto as $pais): ?>
-											<option value="<?php echo $pais['ID_Proyecto']; ?>">
-												<?php echo  $pais['Nombre']; ?>
+										<?php foreach ($datos_rol as $rol): ?>
+											<option value="<?php echo $rol['ID_Rol']; ?>">
+												<?php echo $rol['Nombre']; ?>
+											</option>
+										<?php endforeach; ?>
+									</select>
+								</div>
+							</div>
+
+							<div class="form-group row" id="proyectoField">
+								<label class="col-sm-12 col-md-2 col-form-label">Proyecto</label>
+								<div class="col-sm-12 col-md-10"> <!-- Dividimos el espacio con el campo de selección de proyecto -->
+									<select name="proyecto" id="proyecto" class="custom-select col-12">
+										<option value="Todos" selected="">Todos</option>
+										<?php foreach ($datos_proyecto as $proyecto): ?>
+											<option value="<?php echo $proyecto['ID_Proyecto']; ?>">
+												<?php echo $proyecto['Nombre']; ?>
 											</option>
 										<?php endforeach; ?>
 									</select>
@@ -329,19 +379,7 @@
 									</select>
 								</div>
 							</div>
-							<div class="form-group row">
-								<label class="col-sm-12 col-md-2 col-form-label">Rol</label>
-								<div class="col-sm-12 col-md-10">
-									<select name="rol" class="custom-select col-12">
-										<option selected="">Seleccione</option>
-										<?php foreach ($datos_rol as $rol): ?>
-											<option value="<?php echo $rol['ID_Rol']; ?>">
-												<?php echo $rol['Nombre']  ; ?>
-											</option>
-										<?php endforeach; ?>
-									</select>
-								</div>
-							</div>
+							
 							<div class="contenido-boton">
 								<input class="btn btn-primary" type="submit" name="register_usuarios" value="Guardar">
 							</div>
