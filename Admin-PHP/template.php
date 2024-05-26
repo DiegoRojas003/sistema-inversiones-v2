@@ -261,13 +261,13 @@
                 
                 
                 <li>
-                    <a href="simulacion.php" class="dropdown-toggle no-arrow">
+                    <a href="../mantenimiento.html" class="dropdown-toggle no-arrow">
                         <span class="micon bi bi-pie-chart-fill"></span
                         ><span class="mtext">Simulación</span>
                     </a>
                 </li>
                 <li>
-                    <a href="liquidacion.php" class="dropdown-toggle no-arrow">
+                    <a href="../mantenimiento.html" class="dropdown-toggle no-arrow">
                         <span class="micon fa fa-balance-scale"></span
                         ><span class="mtext">Liquidación</span>
                     </a>
