@@ -1,4 +1,15 @@
 <?php
+// Iniciar la sesión
+session_start();
+
+// Verificar si el usuario está autenticado
+if (!isset($_SESSION['authenticated']) || $_SESSION['authenticated'] !== true) {
+    // Si el usuario no está autenticado, redirigirlo a la página de inicio de sesión
+    header("Location: http://localhost/sistema-inversiones-v2/inicio.php"); // Cambia 'inicio-de-sesion.php' por la ruta de tu página de inicio de sesión
+    exit();
+}
+?>
+<?php
 include("conexionn.php");
 // header('Location: ubicacion.php');
 if (isset($_POST['register_pais'])) {
@@ -124,7 +135,7 @@ if (isset($_POST['register_proyecto'])) {
         $documento_proyecto = trim($_POST['documento_proyecto']);
 
         // Verificar si algún campo está en blanco
-        if (empty($id_proyecto) || empty($nombre_proyecto) || empty($fecha_proyecto) || empty($descripcion_p) || empty($documento_proyecto)) {
+        if (empty($id_proyecto) || empty($nombre_proyecto) || empty($fecha_proyecto) || empty($descripcion_p) ) {
             echo "<script>alert('Por favor, llena todos los campos.');</script>";
             // Actualizar la página después de mostrar el mensaje de error
             echo "<script>window.location.replace('proyectos.php');</script>";
@@ -329,23 +340,9 @@ if (isset($_POST['registar_inversion'])) {
                 if (mysqli_stmt_num_rows($stmt_proyecto) > 0) {
                     mysqli_stmt_bind_result($stmt_proyecto, $id_proyecto);
                     mysqli_stmt_fetch($stmt_proyecto);
-
-                    // Verificar si ya existe la relación en la tabla proyecto_usuario
-                    $consulta_existencia = "SELECT * FROM proyecto_usuario WHERE FK_ID_Usuario = ? AND FK_ID_Proyecto = ?";
-                    $stmt_existencia = mysqli_prepare($conex, $consulta_existencia);
-                    mysqli_stmt_bind_param($stmt_existencia, "ss", $id_usuario, $id_proyecto);
-                    mysqli_stmt_execute($stmt_existencia);
-                    mysqli_stmt_store_result($stmt_existencia);
-
-                    // Si no existe, insertar la relación
-                    if (mysqli_stmt_num_rows($stmt_existencia) == 0) {
-                        $consulta_insertar = "INSERT INTO proyecto_usuario (FK_ID_Usuario, FK_ID_Proyecto) VALUES (?, ?)";
-                        $stmt_insertar = mysqli_prepare($conex, $consulta_insertar);
-                        mysqli_stmt_bind_param($stmt_insertar, "ss", $id_usuario, $id_proyecto);
-                        mysqli_stmt_execute($stmt_insertar);
-                    }
                 } else {
                     echo "<script>alert('El proyecto no existe. Por favor, ingresa un proyecto válido.');</script>";
+                    exit; // Detener la ejecución si el proyecto no existe
                 }
 
                 // Insertar el nuevo registro en la tabla inversion2
@@ -374,5 +371,40 @@ if (isset($_POST['registar_inversion'])) {
 }
 
 
+if (isset($_POST['register_proyecto_usuario'])) {
+    if (empty($_POST['proyecto']) || empty($_POST['usuarios']) ) {
+            echo "<script>alert('Por favor, llena todos los campos.');</script>";
+            // Actualizar la página después de mostrar el mensaje de error
+            echo "<script>window.location.replace('proyectos.php');</script>";
+    } else {
+        // Verificar si se seleccionó un proyecto y al menos un usuario
+        if (isset($_POST['proyecto']) && isset($_POST['usuarios'])) {
+            // Obtener el ID del proyecto
+            $id_proyecto = $_POST['proyecto'];
+            
+            // Recorrer los usuarios seleccionados y registrarlos en proyecto_usuario
+            foreach ($_POST['usuarios'] as $usuario) {
+                try {
+                    // Realizar la inserción en la tabla proyecto_usuario
+                    $consulta_insertar = "INSERT INTO proyecto_usuario (FK_ID_Usuario, FK_ID_Proyecto) VALUES (?, ?)";
+                    $stmt_insertar = mysqli_prepare($conex, $consulta_insertar);
+                    mysqli_stmt_bind_param($stmt_insertar, "ss", $usuario, $id_proyecto);
+                    mysqli_stmt_execute($stmt_insertar);
+                } catch (mysqli_sql_exception $e) {
+                    // Mostrar un mensaje de error si ocurre una excepción
+                    echo "<script>alert('El usuario ya está vinculado al proyecto');</script>";
+                    echo "<script>window.location.replace('proyectos.php');</script>";
+                }
+            }
+            
+            // Mostrar un mensaje de éxito
+            echo "<script>alert('Usuarios vinculados al proyecto correctamente');</script>";
+            echo "<script>window.location.replace('proyectos.php');</script>";
+            
+        }
+    }
+    
+}
 
-?>
+
+

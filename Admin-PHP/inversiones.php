@@ -1,3 +1,15 @@
+<?php
+// Iniciar la sesión
+session_start();
+
+// Verificar si el usuario está autenticado
+if (!isset($_SESSION['authenticated']) || $_SESSION['authenticated'] !== true) {
+    // Si el usuario no está autenticado, redirigirlo a la página de inicio de sesión
+    header("Location: http://localhost/sistema-inversiones-v2/inicio.php"); // Cambia 'inicio-de-sesion.php' por la ruta de tu página de inicio de sesión
+    exit();
+}
+?>
+
 <!DOCTYPE html>
 <html>
 	<head>
@@ -64,7 +76,7 @@
 		include("conexionn.php");
 
 		// Consulta para obtener los datos de la tabla usuarios
-		$consulta_usuarios = "SELECT ID_Usuario, Nombre, Apellido, Telefono, Correo, Contraseña, Fecha, Proyecto, FK_ID_Municipio, FK_ID_Rol FROM usuario2";
+		$consulta_usuarios = "SELECT ID_Usuario, Nombre, Apellido, Telefono, Correo, Contraseña, Fecha, FK_ID_Municipio, FK_ID_Rol FROM usuario2";
 		$resultado_usuarios = mysqli_query($conex, $consulta_usuarios);
 
 		// Crear un array para almacenar los datos
@@ -183,21 +195,24 @@
 					<div class="clearfix"></div>
 					<form action="registrar.php" method="post">
 
-						<div class="form-group row">
+					<div class="form-group row">
 						<label class="col-sm-12 col-md-2 col-form-label">Usuario</label>
-							<div class="col-sm-12 col-md-10">
-								<select name="usuario" class="custom-select col-12">
-									<option selected="">Seleccione</option>
-									<?php foreach ($datos_usuarios as $usuario): ?>
+						<div class="col-sm-12 col-md-10">
+							<select name="usuario" class="custom-select col-12">
+								<option selected="">Seleccione</option>
+								<?php foreach ($datos_usuarios as $usuario): ?>
+									<?php if ($usuario['FK_ID_Rol'] != 1): // Condición para excluir usuarios con FK_ID_Rol = 1 ?>
 										<option value="<?php echo $usuario['Nombre'] . ' ' . $usuario['Apellido']; ?>" data-cedula="<?php echo $usuario['ID_Usuario']; ?>">
 											Cédula: <?php echo  $usuario['ID_Usuario']; ?> - <?php echo $usuario['Nombre'] . ' ' . $usuario['Apellido']; ?>
 										</option>
-									<?php endforeach; ?>
-								</select>
-								<!-- Campo oculto inicializado con un valor predeterminado o vacío -->
-								<input type="hidden" name="id_usuario" value="<?php echo isset($datos_usuarios[0]['ID_Usuario']) ? $datos_usuarios[0]['ID_Usuario'] : ''; ?>">
-							</div>
+									<?php endif; ?>
+								<?php endforeach; ?>
+							</select>
+							<!-- Campo oculto inicializado con un valor predeterminado o vacío -->
+							<input type="hidden" name="id_usuario" value="<?php echo isset($datos_usuarios[0]['ID_Usuario']) ? $datos_usuarios[0]['ID_Usuario'] : ''; ?>">
 						</div>
+					</div>
+
 
 						<div class="form-group row">
 							<label class="col-sm-12 col-md-2 col-form-label">Monto en Dinero</label>

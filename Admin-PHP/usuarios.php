@@ -1,3 +1,15 @@
+<?php
+// Iniciar la sesión
+session_start();
+
+// Verificar si el usuario está autenticado
+if (!isset($_SESSION['authenticated']) || $_SESSION['authenticated'] !== true) {
+    // Si el usuario no está autenticado, redirigirlo a la página de inicio de sesión
+    header("Location: http://localhost/sistema-inversiones-v2/inicio.php"); // Cambia 'inicio-de-sesion.php' por la ruta de tu página de inicio de sesión
+    exit();
+}
+?>
+
 <!DOCTYPE html>
 <html>
 	<head>
@@ -112,7 +124,7 @@
 	}
 
 
-	$consultou = "SELECT ID_Usuario , Nombre, Apellido, Telefono, Correo, Contraseña, Fecha, Proyecto, FK_ID_Municipio, FK_ID_Rol  FROM usuario2";
+	$consultou = "SELECT ID_Usuario , Nombre, Apellido, Telefono, Correo, Contraseña, Fecha, FK_ID_Municipio, FK_ID_Rol  FROM usuario2";
 		$resultadou = mysqli_query($conex, $consultou);
 
 	$consultop = "SELECT ID_Proyecto , Nombre, Fecha, Descripcion, Certificado  FROM proyecto";
@@ -144,7 +156,6 @@
 								<th>Correo</th>
 								<th>Contraseña</th>
 								<th>Fecha</th>
-								<th>Proyecto</th>
 								<th>Municipio</th>
 								<th>Rol</th>
 								<th class="datatable-nosort">Acciones</th>
@@ -162,19 +173,6 @@
 								echo "<td>" . $fila['Contraseña'] . "</td>";
 								echo "<td>" . $fila['Fecha'] . "</td>";
 								
-								// Buscar el nombre del proyecto
-								$proyecto_nombre = "";
-								foreach ($datos_proyecto as $proyecto) {
-									if ($proyecto['ID_Proyecto'] == $fila['Proyecto']) {
-										$proyecto_nombre = $proyecto['Nombre'];
-										break;
-									}
-								}
-								// Si el nombre del proyecto está vacío, establecerlo en "TODOS"
-								if (empty($proyecto_nombre)) {
-									$proyecto_nombre = "TODOS";
-								}
-								echo "<td>" . $proyecto_nombre . "</td>";
 
 								// Buscar el nombre del municipio
 								$municipio_nombre = "";
@@ -344,27 +342,16 @@
 									<select name="rol" id="rol" class="custom-select col-12" onchange="mostrarProyecto()">
 										<option selected="">Seleccione</option>
 										<?php foreach ($datos_rol as $rol): ?>
-											<option value="<?php echo $rol['ID_Rol']; ?>">
-												<?php echo $rol['Nombre']; ?>
-											</option>
+											<?php if ($rol['ID_Rol'] != 1): // Excluir rol con ID 1 ?>
+												<option value="<?php echo $rol['ID_Rol']; ?>">
+													<?php echo $rol['Nombre']; ?>
+												</option>
+											<?php endif; ?>
 										<?php endforeach; ?>
 									</select>
 								</div>
 							</div>
 
-							<div class="form-group row" id="proyectoField">
-								<label class="col-sm-12 col-md-2 col-form-label">Proyecto</label>
-								<div class="col-sm-12 col-md-10"> <!-- Dividimos el espacio con el campo de selección de proyecto -->
-									<select name="proyecto" id="proyecto" class="custom-select col-12">
-										<option value="Todos" selected="">Todos</option>
-										<?php foreach ($datos_proyecto as $proyecto): ?>
-											<option value="<?php echo $proyecto['ID_Proyecto']; ?>">
-												<?php echo $proyecto['Nombre']; ?>
-											</option>
-										<?php endforeach; ?>
-									</select>
-								</div>
-							</div>
 							
 							<div class="form-group row">
 								<label class="col-sm-12 col-md-2 col-form-label">Ciudad</label>

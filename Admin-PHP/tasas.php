@@ -1,3 +1,15 @@
+<?php
+// Iniciar la sesión
+session_start();
+
+// Verificar si el usuario está autenticado
+if (!isset($_SESSION['authenticated']) || $_SESSION['authenticated'] !== true) {
+    // Si el usuario no está autenticado, redirigirlo a la página de inicio de sesión
+    header("Location: http://localhost/sistema-inversiones-v2/inicio.php"); // Cambia 'inicio-de-sesion.php' por la ruta de tu página de inicio de sesión
+    exit();
+}
+?>
+
 <!DOCTYPE html>
 <html>
 	<head>
@@ -54,21 +66,31 @@
 			];
 
 			let hayCamposVacios = false;
+			let alertaMostrada = false; // Variable para controlar si se mostró la alerta
 
+			// Verificar campos en blanco
 			campos.forEach(campo => {
 				const valor = document.getElementById(campo).value;
 				if (valor === "") {
 					hayCamposVacios = true;
-					alert(`El campo ${campo} está vacío`);
 				}
-			});	
+			});
 
+			// Si hay campos vacíos y la alerta aún no se ha mostrado, mostrarla
+			if (hayCamposVacios && !alertaMostrada) {
+				alertaMostrada = true; // Marcamos que la alerta ha sido mostrada
+				alert(`Hay campos en blanco. Por favor, completa todos los campos antes de guardar.`);
+			}
+
+			// Si no hay campos vacíos, realizar otras operaciones
 			if (!hayCamposVacios) {
 				calcularVariables();
 				guardarDatos();
 				vaciarCampos(campos);
 			}
 		}
+
+
 
 		function porcentajeADecimal(value) {
 			return parseFloat(value) / 100;

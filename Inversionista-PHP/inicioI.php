@@ -1,3 +1,17 @@
+<?php
+// Iniciar la sesión
+session_start();
+
+// Verificar si el usuario está autenticado
+if (!isset($_SESSION['authenticated']) || $_SESSION['authenticated'] !== true) {
+    // Si el usuario no está autenticado, redirigirlo a la página de inicio de sesión
+    header("Location: http://localhost/sistema-inversiones-v2/inicio.php"); // Cambia 'inicio-de-sesion.php' por la ruta de tu página de inicio de sesión
+    exit();
+}
+// Obtener el nombre y apellido del usuario de la sesión
+$nombre = isset($_SESSION['nombre']) ? $_SESSION['nombre'] : '';
+$apellido = isset($_SESSION['apellido']) ? $_SESSION['apellido'] : '';
+?>
 <!DOCTYPE html>
 <html>
 	<head>
@@ -61,7 +75,7 @@
 
 		
 
-		<?php include('template.php'); ?>
+		<?php include('templateI.php'); ?>
 		<div class="mobile-menu-overlay"></div>
 
 		<div class="main-container">
@@ -74,20 +88,15 @@
 						<div class="col-md-8">
 							<h4 class="font-20 weight-500 mb-10 text-capitalize">
 								Bienvenido de nuevo
-								<div class="weight-600 font-30 text-blue">Micher Alexander Gonzalez Monroy</div>
+								<div class="weight-600 font-30 text-blue"><?php echo $nombre . ' ' . $apellido; ?></div>
 							</h4>
 							<p class="font-18 max-width-600">
-								¡Bienvenido! Estamos encantados de tenerte aquí. 
-								Queremos que sepas que estamos completamente disponibles
-								 y comprometidos a atender tus necesidades financieras. 
-								 En nuestro rol, tenemos la capacidad y disposición para 
-								 gestionar y supervisar todos los aportes monetarios, 
-								 así como cualquier contribución especial que desees 
-								 hacer. Además, estamos aquí para facilitar cualquier 
-								 tipo de registro que necesites realizar, ya sea para 
-								 seguir de cerca tus inversiones, realizar seguimientos 
-								 detallados de los fondos o simplemente mantener un registro
-								organizado de tus transacciones financieras.
+							¡Hola y bienvenido a nuestro servicio de gestión de 
+							inversiones personalizadas! Estamos aquí para cuidar 
+							y hacer crecer tus inversiones. Nos ocupamos de todo, 
+							desde supervisar tus aportes financieros hasta proporcionarte 
+							actualizaciones regulares sobre el rendimiento de tus fondos. 
+							¡Confía en nosotros para alcanzar tus objetivos financieros!
 							</p>
 						</div>
 					</div>

@@ -1,3 +1,19 @@
+<?php
+// Iniciar la sesión
+session_start();
+
+// Verificar si el usuario está autenticado
+if (!isset($_SESSION['authenticated']) || $_SESSION['authenticated'] !== true) {
+    // Si el usuario no está autenticado, redirigirlo a la página de inicio de sesión
+    header("Location: http://localhost/sistema-inversiones-v2/inicio.php");
+    exit();
+}
+
+// Obtener el nombre y apellido del usuario de la sesión
+$nombre = isset($_SESSION['nombre']) ? $_SESSION['nombre'] : '';
+$apellido = isset($_SESSION['apellido']) ? $_SESSION['apellido'] : '';
+?>
+
 <div id="template">
     <div class="header">
         <div class="header-left">
@@ -22,13 +38,13 @@
                         <span class="user-icon">
                             <img src="../vendors/images/photo1.jpg" alt="" />
                         </span>
-                        <span class="user-name">Micher A. Gonzalez</span>
+                        <span class="user-name"><?php echo $nombre . ' ' . $apellido; ?></span>
                     </a>
                     <div class="dropdown-menu dropdown-menu-right dropdown-menu-icon-list">
                         <a class="dropdown-item" href="profile.html"><i class="dw dw-user1"></i> Profile</a>
                         <a class="dropdown-item" href="profile.html"><i class="dw dw-settings2"></i> Setting</a>
                         <a class="dropdown-item" href="faq.html"><i class="dw dw-help"></i> Help</a>
-                        <a class="dropdown-item" href="login.html"><i class="dw dw-logout"></i> Log Out</a>
+                        <a class="dropdown-item" href="http://localhost/sistema-inversiones-v2/cerrar-sesion.php"><i class="dw dw-logout"></i> Log Out</a>
                     </div>
                 </div>
             </div>
@@ -185,3 +201,5 @@
     </div>
     <div class="mobile-menu-overlay"></div>
 </div>
+php
+

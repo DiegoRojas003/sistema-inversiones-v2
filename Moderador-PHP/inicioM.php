@@ -1,3 +1,14 @@
+<?php
+// Iniciar la sesión
+session_start();
+
+// Verificar si el usuario está autenticado
+if (!isset($_SESSION['authenticated']) || $_SESSION['authenticated'] !== true) {
+    // Si el usuario no está autenticado, redirigirlo a la página de inicio de sesión
+    header("Location: http://localhost/sistema-inversiones-v2/inicio.php"); // Cambia 'inicio-de-sesion.php' por la ruta de tu página de inicio de sesión
+    exit();
+}
+?>
 <!DOCTYPE html>
 <html>
 	<head>
@@ -59,9 +70,9 @@
 	</head>
 	<body>
 
-		
+		<?php include('templateM.php'); ?>
 
-		<?php include('template.php'); ?>
+		
 		<div class="mobile-menu-overlay"></div>
 
 		<div class="main-container">

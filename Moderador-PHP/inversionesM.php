@@ -1,3 +1,14 @@
+<?php
+// Iniciar la sesión
+session_start();
+
+// Verificar si el usuario está autenticado
+if (!isset($_SESSION['authenticated']) || $_SESSION['authenticated'] !== true) {
+    // Si el usuario no está autenticado, redirigirlo a la página de inicio de sesión
+    header("Location: http://localhost/sistema-inversiones-v2/inicio.php"); // Cambia 'inicio-de-sesion.php' por la ruta de tu página de inicio de sesión
+    exit();
+}
+?>
 <!DOCTYPE html>
 <html>
 	<head>
@@ -131,7 +142,7 @@
 		</script>
 		
 
-		<?php include('template.php'); ?>
+		<?php include('templateM.php'); ?>
 		<div class="main-container">
 			<div class="xs-pd-20-10 pd-ltr-20">
 				<div class="card-box pb-10">

@@ -1,3 +1,15 @@
+<?php
+// Iniciar la sesión
+session_start();
+
+// Verificar si el usuario está autenticado
+if (!isset($_SESSION['authenticated']) || $_SESSION['authenticated'] !== true) {
+    // Si el usuario no está autenticado, redirigirlo a la página de inicio de sesión
+    header("Location: http://localhost/sistema-inversiones-v2/inicio.php"); // Cambia 'inicio-de-sesion.php' por la ruta de tu página de inicio de sesión
+    exit();
+}
+?>
+
 <!DOCTYPE html>
 <html>
 
@@ -28,13 +40,35 @@
 
 <body>
 	<?php include('template.php'); ?>
+	
 	<?php
 		include("conexionn.php");
 
-		$consultop = "SELECT ID_Proyecto , Nombre, Fecha, Descripcion, Certificado  FROM proyecto";
+		$consultop = "SELECT ID_Proyecto, Nombre, Fecha, Descripcion, Certificado FROM proyecto";
 		$resultadop = mysqli_query($conex, $consultop);
 
-		?>
+		// Crear un array para almacenar los datos
+		$datos_proyecto = array();
+		while ($fila_proyecto = mysqli_fetch_assoc($resultadop)) {
+			$datos_proyecto[] = $fila_proyecto;
+		}
+
+		// Consulta para obtener los datos de la tabla usuarios
+		$consulta_usuarios = "SELECT ID_Usuario, Nombre, Apellido, Telefono, Correo, Contraseña, Fecha, FK_ID_Municipio, FK_ID_Rol FROM usuario2";
+		$resultado_usuarios = mysqli_query($conex, $consulta_usuarios);
+
+		// Crear un array para almacenar los datos
+		$datos_usuarios = array();
+		while ($fila_usuarios = mysqli_fetch_assoc($resultado_usuarios)) {
+			$datos_usuarios[] = $fila_usuarios;
+		}
+
+		$consultopr = "SELECT ID_Proyecto , Nombre, Fecha, Descripcion, Certificado  FROM proyecto";
+		$resultadopr = mysqli_query($conex, $consultopr);
+		
+	?>
+	
+
 
 	
 	<div class="main-container">
@@ -54,7 +88,7 @@
 					</thead>
 					<tbody>
 						<?php
-							while ($fila = mysqli_fetch_assoc($resultadop)) {
+							while ($fila = mysqli_fetch_assoc($resultadopr)) {
 								echo "<tr>";
 								echo "<td>" . $fila['ID_Proyecto'] . "</td>";
 								echo "<td>" . $fila['Nombre'] . "</td>";
@@ -79,77 +113,50 @@
 			</div>
 			
 			<div class="pd-20 card-box mb-30">
-
 				<div class="clearfix">
 					<div class="pull-left">
-						
 						<p class="mb-30">Seleccione el proyecto y los usuarios que desea vincular a dicho proyecto:</p>
 					</div>
 				</div>
-				<form>
+				<form action="registrar.php" method="POST">
+					<!-- Input hidden para el ID del proyecto -->
+					
 					<div class="row">
 						<div class="col-md-6">
 							<div class="form-group">
 								<label>Proyecto:</label>
-								<select class="custom-select2 form-control" name="state"
-									style="width: 100%; height: 38px">
-									<optgroup label="Alaskan/Hawaiian Time Zone">
-										<option value="AK">Alaska</option>
-										<option value="HI">Hawaii</option>
-									</optgroup>
-									<optgroup label="Pacific Time Zone">
-										<option value="CA">California</option>
-										<option value="NV">Nevada</option>
-										<option value="OR">Oregon</option>
-										<option value="WA">Washington</option>
-									</optgroup>
-									<optgroup label="Mountain Time Zone">
-										<option value="AZ">Arizona</option>
-										<option value="CO">Colorado</option>
-										<option value="ID">Idaho</option>
-										<option value="MT">Montana</option>
-										<option value="NE">Nebraska</option>
-										<option value="NM">New Mexico</option>
-										<option value="ND">North Dakota</option>
-										<option value="UT">Utah</option>
-										<option value="WY">Wyoming</option>
-									</optgroup>
+								<select class="custom-select2 form-control" name="proyecto" style="width: 100%; height: 38px">
+									<option selected=""></option>
+									<?php foreach ($datos_proyecto as $proyecto):?>
+										<option value="<?php echo $proyecto['ID_Proyecto']; ?>">
+											<?php echo $proyecto['Nombre']; ?>
+										</option>
+									<?php endforeach; ?>
 								</select>
 							</div>
 						</div>
+
 						<div class="col-md-6">
 							<div class="form-group">
 								<label>Usuarios:</label>
-								<select class="custom-select2 form-control" multiple="multiple" style="width: 100%">
-									<optgroup label="Alaskan/Hawaiian Time Zone">
-										<option value="AK">Alaska</option>
-										<option value="HI">Hawaii</option>
-									</optgroup>
-									<optgroup label="Pacific Time Zone">
-										<option value="CA">California</option>
-										<option value="NV">Nevada</option>
-										<option value="OR">Oregon</option>
-										<option value="WA">Washington</option>
-									</optgroup>
-									<optgroup label="Mountain Time Zone">
-										<option value="AZ">Arizona</option>
-										<option value="CO">Colorado</option>
-										<option value="ID">Idaho</option>
-										<option value="MT">Montana</option>
-										<option value="NE">Nebraska</option>
-										<option value="NM">New Mexico</option>
-										<option value="ND">North Dakota</option>
-										<option value="UT">Utah</option>
-										<option value="WY">Wyoming</option>
-									</optgroup>
+								<select  class="custom-select2 form-control" multiple="multiple" name="usuarios[]" style="width: 100%">
+									<?php foreach ($datos_usuarios as $usuario): ?>
+										<?php if ($usuario['FK_ID_Rol'] != 1): // Condición para excluir usuarios con FK_ID_Rol = 1 ?>
+											<option name="id_usuario"  value="<?php  echo $usuario['ID_Usuario']; ?>">
+												Cédula: <?php echo  $usuario['ID_Usuario']; ?> - <?php echo $usuario['Nombre'] . ' ' . $usuario['Apellido']; ?>
+											</option>
+										<?php endif; ?>
+									<?php endforeach; ?>
 								</select>
 							</div>
 						</div>
 					</div>
-				</form>
-				<div class="contenido-boton">
-						<input class="btn btn-primary" type="submit" name="register_proyecto" value="Guardar">
+					
+					<!-- Botón para guardar -->
+					<div class="contenido-boton">
+						<input class="btn btn-primary" type="submit" name="register_proyecto_usuario" value="Guardar">
 					</div>
+				</form>
 			</div>
 
 			<div class="title pb-20 pt-20">

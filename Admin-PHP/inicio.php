@@ -1,3 +1,20 @@
+<?php
+// Iniciar la sesión
+session_start();
+
+// Verificar si el usuario está autenticado
+if (!isset($_SESSION['authenticated']) || $_SESSION['authenticated'] !== true) {
+    // Si el usuario no está autenticado, redirigirlo a la página de inicio de sesión
+    header("Location: http://localhost/sistema-inversiones-v2/inicio.php");
+    exit();
+}
+
+// Obtener el nombre y apellido del usuario de la sesión
+$nombre = isset($_SESSION['nombre']) ? $_SESSION['nombre'] : '';
+$apellido = isset($_SESSION['apellido']) ? $_SESSION['apellido'] : '';
+?>
+
+
 <!DOCTYPE html>
 <html>
 	<head>
@@ -105,7 +122,7 @@
 						<div class="col-md-8">
 							<h4 class="font-20 weight-500 mb-10 text-capitalize">
 								Bienvenido de nuevo
-								<div class="weight-600 font-30 text-blue">Micher Alexander Gonzalez Monroy</div>
+								<div class="weight-600 font-30 text-blue"><?php echo $nombre . ' ' . $apellido; ?></div>
 							</h4>
 							<p class="font-18 max-width-600">
 								¡Bienvenido! Estamos encantados de tenerte aquí. 

@@ -1,3 +1,69 @@
+<?php
+// Iniciar la sesión
+session_start();
+
+// Verificar si el usuario está autenticado
+if (!isset($_SESSION['authenticated']) || $_SESSION['authenticated'] !== true) {
+    // Si el usuario no está autenticado, redirigirlo a la página de inicio de sesión
+    header("Location: http://localhost/sistema-inversiones-v2/inicio.php");
+    exit();
+}
+
+include("conexionn.php");
+
+// Obtener el ID del usuario desde la sesión
+$id_usuario = $_SESSION['cedula'];
+
+// Consulta para obtener los proyectos vinculados al usuario
+$consulta_proyecto = "SELECT p.ID_Proyecto, p.Nombre, p.Fecha, p.Descripcion, p.Certificado 
+                      FROM proyecto p
+                      JOIN proyecto_usuario pu ON p.ID_Proyecto = pu.FK_ID_Proyecto
+                      WHERE pu.FK_ID_Usuario = '$id_usuario'";
+$resultado_proyecto = mysqli_query($conex, $consulta_proyecto);
+
+// Crear un array para almacenar los datos
+$datos_proyecto = array();
+while ($fila_proyecto = mysqli_fetch_assoc($resultado_proyecto)) {
+    $datos_proyecto[] = $fila_proyecto;
+}
+
+if ($_SERVER["REQUEST_METHOD"] == "POST") {
+    // Obtén la ID del proyecto seleccionado
+    $proyectoSeleccionado = $_POST["proyecto"];
+    
+    // Guarda la ID del proyecto en una variable de sesión
+    $_SESSION["proyecto_seleccionado"] = $proyectoSeleccionado;
+    
+    // Redirige al usuario según su rol
+    switch ($_SESSION['rol']) {
+        case 2:
+            header("Location: Moderador-PHP/inicioM.php");
+            exit();
+        case 3:
+            header("Location: Inversionista-PHP/inicioI.php");
+            exit();
+        default:
+            header("Location: index.html");
+            exit();
+    }
+}
+?>
+
+<script>
+    function seleccionarProyecto() {
+        var proyectoSeleccionado = document.getElementById("proyecto").value;
+        if (proyectoSeleccionado == "") {
+            alert("Por favor, seleccione un proyecto.");
+            return;
+        }
+        
+        // Envía el formulario para guardar el proyecto seleccionado
+        document.getElementById("formulario_seleccion_proyecto").submit();
+    }
+</script>
+
+
+
 <!DOCTYPE html>
 <html>
 	<head>
@@ -110,19 +176,21 @@
                             <h6 class="mb-20">
 								Hemos encontrado más proyectos vinculados a tu cuenta
 							</h6>
-                            <div class="form-group row">
-								<label class="col-sm-12 col-md-2 col-form-label">Proyectos</label>
-								<div class="col-sm-12 col-md-10">
-									<select name="rol" id="rol" class="custom-select col-12" onchange="mostrarProyecto()">
-										<option selected="">Seleccione</option>
-										<?php foreach ($datos_rol as $rol): ?>
-											<option value="<?php echo $rol['ID_Rol']; ?>">
-												<?php echo $rol['Nombre']; ?>
-											</option>
-										<?php endforeach; ?>
-									</select>
+                            <form id="formulario_seleccion_proyecto" method="POST" action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]); ?>">
+								<div class="form-group row">
+									<label class="col-sm-12 col-md-2 col-form-label">Proyectos</label>
+									<div class="col-sm-12 col-md-10">
+										<select name="proyecto" id="proyecto" class="custom-select col-12">
+											<option selected=""></option>
+											<?php foreach ($datos_proyecto as $proyecto): ?>
+												<option value="<?php echo $proyecto['ID_Proyecto']; ?>">
+													<?php echo $proyecto['Nombre']; ?>
+												</option>
+											<?php endforeach; ?>
+										</select>
+									</div>
 								</div>
-							</div>
+							</form>
                             <h6 class="mb-20">
 								Seleccione un proyecto de elección
 							</h6>
@@ -133,11 +201,8 @@
                                         use code for form submit
                                         <input class="btn btn-primary btn-lg btn-block" type="submit" value="Submit">
                                     -->
-                                        <a
-                                            class="btn btn-primary btn-lg btn-block"
-                                            href="index.html"
-                                            >Ingresar</a
-                                        >
+										<a class="btn btn-primary btn-lg btn-block" href="#" onclick="seleccionarProyecto()">Ingresar</a>
+
                                     </div>
                                 </div>
                                 <div class="col-2">
@@ -152,7 +217,7 @@
                                     <div class="input-group mb-0">
                                         <a
                                             class="btn btn-outline-primary btn-lg btn-block"
-                                            href="inicio.html"
+                                            href="http://localhost/sistema-inversiones-v2/cerrar-sesion.php"
                                             >Volver</a
                                         >
                                     </div>

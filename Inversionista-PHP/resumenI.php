@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html>
 	<head>
@@ -75,7 +76,18 @@
 		<!-- End Google Tag Manager -->
 	</head>
 	<body>
-	<?php include('template.php'); ?>
+	<?php
+		// Iniciar la sesión
+		session_start();
+
+		// Verificar si el usuario está autenticado
+		if (!isset($_SESSION['authenticated']) || $_SESSION['authenticated'] !== true) {
+			// Si el usuario no está autenticado, redirigirlo a la página de inicio de sesión
+			header("Location: http://localhost/sistema-inversiones-v2/inicio.php"); // Cambia 'inicio-de-sesion.php' por la ruta de tu página de inicio de sesión
+			exit();
+		}
+	?>
+	<?php include('templateI.php'); ?>
 		<div class="main-container">
 			<div class="pd-ltr-20 xs-pd-20-10">
 				<div class="min-height-200px">
