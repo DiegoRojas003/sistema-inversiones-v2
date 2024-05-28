@@ -50,7 +50,7 @@
 		$consultot = "SELECT ID_TIPO, Nombre, Descripcion  FROM tipo";
 		$resultadot = mysqli_query($conex, $consultot);
 		?>
-		<div id="template"></div>
+		<?php include('template.php'); ?>
 		<div class="main-container">
 			<!-- Tabla de tipo -->
 			<div class="pd-20 card-box mb-30">
@@ -115,15 +115,7 @@
 			</div>
 		</div>
 		
-		<script>
-			// Cargar el contenido del header utilizando fetch
-			fetch('../Admin-PHP/template.php')
-				.then(response => response.text())
-				.then(data => {
-					// Insertar el contenido del header en el contenedor
-					document.getElementById('template').innerHTML = data;
-			});
-		</script>
+		
 		
 		<script src="../vendors/scripts/core.js"></script>
 		<script src="../vendors/scripts/script.min.js"></script>

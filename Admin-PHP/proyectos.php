@@ -1,50 +1,34 @@
 <!DOCTYPE html>
 <html>
-	<head>
-		<!-- Basic Page Info -->
-		<meta charset="utf-8" />
-		<title>Parámetros-Proyectos</title>
 
-		<!-- Site favicon -->
-		
+<head>
+	<!-- Basic Page Info -->
+	<meta charset="utf-8" />
+	<title>Parámetros-Proyectos</title>
 
-		<!-- Mobile Specific Metas -->
-		<meta
-			name="viewport"
-			content="width=device-width, initial-scale=1, maximum-scale=1"
-		/>
+	<!-- Site favicon -->
 
-		<!-- Google Font -->
-		<link
-			href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap"
-			rel="stylesheet"
-		/>
-		<!-- CSS -->
-		<link rel="stylesheet" type="text/css" href="../vendors/styles/core.css" />
-		<link
-			rel="stylesheet"
-			type="text/css"
-			href="../vendors/styles/icon-font.min.css"
-		/>
-		<link
-			rel="stylesheet"
-			type="text/css"
-			href="../src/plugins/datatables/css/dataTables.bootstrap4.min.css"
-			
-		/>
-		<link
-			rel="stylesheet"
-			type="text/css"
-			href="../src/plugins/datatables/css/responsive.bootstrap4.min.css"
-		/>
-		<link rel="stylesheet" type="text/css" href="../vendors/styles/style.css" />
-		<link rel="stylesheet" href="styles/style.css">
 
-		
-	</head>
-	<body>
-		
-		<?php
+	<!-- Mobile Specific Metas -->
+	<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
+
+	<!-- Google Font -->
+	<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap"
+		rel="stylesheet" />
+	<!-- CSS -->
+	<link rel="stylesheet" type="text/css" href="../vendors/styles/core.css" />
+	<link rel="stylesheet" type="text/css" href="../vendors/styles/icon-font.min.css" />
+	<link rel="stylesheet" type="text/css" href="../src/plugins/datatables/css/dataTables.bootstrap4.min.css" />
+	<link rel="stylesheet" type="text/css" href="../src/plugins/datatables/css/responsive.bootstrap4.min.css" />
+	<link rel="stylesheet" type="text/css" href="../vendors/styles/style.css" />
+	<link rel="stylesheet" href="styles/style.css">
+
+
+</head>
+
+<body>
+	<?php include('template.php'); ?>
+	<?php
 		include("conexionn.php");
 
 		$consultop = "SELECT ID_Proyecto , Nombre, Fecha, Descripcion, Certificado  FROM proyecto";
@@ -52,24 +36,24 @@
 
 		?>
 
-		<div id="template"></div>
-		<div class="main-container">
-			<div class="xs-pd-20-10 pd-ltr-20">
-				<div class="card-box pb-10">
-					<div class="h5 pd-20 mb-0">Proyectos</div>
-					<table class="data-table table nowrap">
-						<thead>
-							<tr>
-								<th>Identificador</th>
-								<th class="table-plus">Nombre</th>
-								<th>Fecha</th>
-								<th>Descripción</th>
-								<th>Certificado</th>
-								<th class="datatable-nosort">Acciones</th>
-							</tr>
-						</thead>	
-						<tbody>
-							<?php
+	
+	<div class="main-container">
+		<div class="xs-pd-20-10 pd-ltr-20">
+			<div id="contenedor-proyectos" class="card-box pb-10">
+				<div class="h5 pd-20 mb-0">Proyectos</div>
+				<table class="data-table table nowrap">
+					<thead>
+						<tr>
+							<th>Identificador</th>
+							<th class="table-plus">Nombre</th>
+							<th>Fecha</th>
+							<th>Descripción</th>
+							<th>Certificado</th>
+							<th class="datatable-nosort">Acciones</th>
+						</tr>
+					</thead>
+					<tbody>
+						<?php
 							while ($fila = mysqli_fetch_assoc($resultadop)) {
 								echo "<tr>";
 								echo "<td>" . $fila['ID_Proyecto'] . "</td>";
@@ -87,91 +71,157 @@
 								echo '</tr>';
 							}
 							?>
-						</tbody>
-					</table>
+					</tbody>
+				</table>
+			</div>
+			<div class="title pb-20 pt-20">
+				<h2 class="h3 mb-0">Asignación de Usuarios</h2>
+			</div>
+			
+			<div class="pd-20 card-box mb-30">
 
+				<div class="clearfix">
+					<div class="pull-left">
+						
+						<p class="mb-30">Seleccione el proyecto y los usuarios que desea vincular a dicho proyecto:</p>
+					</div>
 				</div>
+				<form>
+					<div class="row">
+						<div class="col-md-6">
+							<div class="form-group">
+								<label>Proyecto:</label>
+								<select class="custom-select2 form-control" name="state"
+									style="width: 100%; height: 38px">
+									<optgroup label="Alaskan/Hawaiian Time Zone">
+										<option value="AK">Alaska</option>
+										<option value="HI">Hawaii</option>
+									</optgroup>
+									<optgroup label="Pacific Time Zone">
+										<option value="CA">California</option>
+										<option value="NV">Nevada</option>
+										<option value="OR">Oregon</option>
+										<option value="WA">Washington</option>
+									</optgroup>
+									<optgroup label="Mountain Time Zone">
+										<option value="AZ">Arizona</option>
+										<option value="CO">Colorado</option>
+										<option value="ID">Idaho</option>
+										<option value="MT">Montana</option>
+										<option value="NE">Nebraska</option>
+										<option value="NM">New Mexico</option>
+										<option value="ND">North Dakota</option>
+										<option value="UT">Utah</option>
+										<option value="WY">Wyoming</option>
+									</optgroup>
+								</select>
+							</div>
+						</div>
+						<div class="col-md-6">
+							<div class="form-group">
+								<label>Usuarios:</label>
+								<select class="custom-select2 form-control" multiple="multiple" style="width: 100%">
+									<optgroup label="Alaskan/Hawaiian Time Zone">
+										<option value="AK">Alaska</option>
+										<option value="HI">Hawaii</option>
+									</optgroup>
+									<optgroup label="Pacific Time Zone">
+										<option value="CA">California</option>
+										<option value="NV">Nevada</option>
+										<option value="OR">Oregon</option>
+										<option value="WA">Washington</option>
+									</optgroup>
+									<optgroup label="Mountain Time Zone">
+										<option value="AZ">Arizona</option>
+										<option value="CO">Colorado</option>
+										<option value="ID">Idaho</option>
+										<option value="MT">Montana</option>
+										<option value="NE">Nebraska</option>
+										<option value="NM">New Mexico</option>
+										<option value="ND">North Dakota</option>
+										<option value="UT">Utah</option>
+										<option value="WY">Wyoming</option>
+									</optgroup>
+								</select>
+							</div>
+						</div>
+					</div>
+				</form>
+				<div class="contenido-boton">
+						<input class="btn btn-primary" type="submit" name="register_proyecto" value="Guardar">
+					</div>
+			</div>
 
-				<div class="title pb-20 pt-20">
-					<h2 class="h3 mb-0">Creación de Proyectos</h2>
-				</div>
-				<div class="pd-20 card-box mb-30">
-					<div class="clearfix"></div>
-					<form action="registrar.php" method="post">
-						<div class="form-group row">
-							<label class="col-sm-12 col-md-2 col-form-label">Identificador</label>
-							<div class="col-sm-12 col-md-10">
-								<input name="id_proyecto" class="form-control" type="number" placeholder="01">
-							</div>
-						</div>
-						<div class="form-group row">
-							<label class="col-sm-12 col-md-2 col-form-label">Nombre</label>
-							<div class="col-sm-12 col-md-10">
-								<input name="nombre_proyecto" class="form-control" type="text" placeholder="Proyecto lavado de carros">
-							</div>
-						</div>
-						<div class="form-group row">
-							<label class="col-sm-12 col-md-2 col-form-label">Fecha de creación</label>
-							<div class="col-sm-12 col-md-10">
-								<input name="fecha_proyecto" class="form-control date-picker" placeholder="Seleccione la fecha" type="text">
-							</div>
-						</div>
-						<div class="form-group row">
-							<label class="col-sm-12 col-md-2 col-form-label">Descripcion</label>
-							<div class="col-sm-12 col-md-10">
-							<textarea name='descripcion_p' placeholder="Ingresa una breve Descripcion del proyecto a crear..." class="form-control" id="exampleFormControlTextarea1" rows="3"></textarea>
-						</div>
-						</div>
-						<div class="form-group row">
-							<label class="col-sm-12 col-md-2 col-form-label">Documento</label>
-							<div class="col-sm-12 col-md-10">
-								<input name="documento_proyecto"
-									type="file"
-									class="form-control-file form-control height-auto"
-									accept=".doc, .docx, .pdf" />
-							</div>
-						</div>
+			<div class="title pb-20 pt-20">
+				<h2 class="h3 mb-0">Creación de Proyectos</h2>
+			</div>
 
-						<div class="contenido-boton">
-							<input class="btn btn-primary" type="submit" name="register_proyecto" value="Guardar">
+			<div class="pd-20 card-box mb-30">
+				<div class="clearfix"></div>
+				<form action="registrar.php" method="post">
+					<div class="form-group row">
+						<label class="col-sm-12 col-md-2 col-form-label">Identificador</label>
+						<div class="col-sm-12 col-md-10">
+							<input name="id_proyecto" class="form-control" type="number" placeholder="01">
 						</div>
-					</form>
-				</div>
+					</div>
+					<div class="form-group row">
+						<label class="col-sm-12 col-md-2 col-form-label">Nombre</label>
+						<div class="col-sm-12 col-md-10">
+							<input name="nombre_proyecto" class="form-control" type="text"
+								placeholder="Proyecto lavado de carros">
+						</div>
+					</div>
+					<div class="form-group row">
+						<label class="col-sm-12 col-md-2 col-form-label">Fecha de creación</label>
+						<div class="col-sm-12 col-md-10">
+							<input name="fecha_proyecto" class="form-control date-picker"
+								placeholder="Seleccione la fecha" type="text">
+						</div>
+					</div>
+					<div class="form-group row">
+						<label class="col-sm-12 col-md-2 col-form-label">Descripcion</label>
+						<div class="col-sm-12 col-md-10">
+							<textarea name='descripcion_p'
+								placeholder="Ingresa una breve Descripcion del proyecto a crear..." class="form-control"
+								id="exampleFormControlTextarea1" rows="3"></textarea>
+						</div>
+					</div>
+					<div class="form-group row">
+						<label class="col-sm-12 col-md-2 col-form-label">Documento</label>
+						<div class="col-sm-12 col-md-10">
+							<input name="documento_proyecto" type="file"
+								class="form-control-file form-control height-auto" accept=".doc, .docx, .pdf" />
+						</div>
+					</div>
+
+					<div class="contenido-boton">
+						<input class="btn btn-primary" type="submit" name="register_proyecto" value="Guardar">
+					</div>
+				</form>
 			</div>
 		</div>
-		<!-- welcome modal start -->
-		
-		
-		<!-- welcome modal end -->
-		<!-- js -->
-		<script>
-			// Cargar el contenido del header utilizando fetch
-			fetch('../Admin-PHP/template.php')
-				.then(response => response.text())
-				.then(data => {
-					// Insertar el contenido del header en el contenedor
-					document.getElementById('template').innerHTML = data;
-				});
-		</script>
-		<script src="../vendors/scripts/core.js"></script>
-		<script src="../vendors/scripts/script.min.js"></script>
-		<script src="../vendors/scripts/process.js"></script>
-		<script src="../vendors/scripts/layout-settings.js"></script>
-		<script src="../"></script>
-		<script src="../src/plugins/datatables/js/jquery.dataTables.min.js"></script>
-		<script src="../src/plugins/datatables/js/dataTables.bootstrap4.min.js"></script>
-		<script src="../src/plugins/datatables/js/dataTables.responsive.min.js"></script>
-		<script src="../src/plugins/datatables/js/responsive.bootstrap4.min.js"></script>
-		<script src="../vendors/scripts/dashboard3.js"></script>
-		<!-- Google Tag Manager (noscript) -->
-		<noscript
-			><iframe
-				src="https://www.googletagmanager.com/ns.html?id=GTM-NXZMQSS"
-				height="0"
-				width="0"
-				style="display: none; visibility: hidden"
-			></iframe
-		></noscript>
-		<!-- End Google Tag Manager (noscript) -->
-	</body>
+	</div>
+	<!-- welcome modal start -->
+
+
+	<!-- welcome modal end -->
+	<!-- js -->
+
+	<script src="../vendors/scripts/core.js"></script>
+	<script src="../vendors/scripts/script.min.js"></script>
+	<script src="../vendors/scripts/process.js"></script>
+	<script src="../vendors/scripts/layout-settings.js"></script>
+
+	<script src="../src/plugins/datatables/js/jquery.dataTables.min.js"></script>
+	<script src="../src/plugins/datatables/js/dataTables.bootstrap4.min.js"></script>
+	<script src="../src/plugins/datatables/js/dataTables.responsive.min.js"></script>
+	<script src="../src/plugins/datatables/js/responsive.bootstrap4.min.js"></script>
+	<script src="../vendors/scripts/dashboard3.js"></script>
+	<!-- Google Tag Manager (noscript) -->
+	<noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-NXZMQSS" height="0" width="0"
+			style="display: none; visibility: hidden"></iframe></noscript>
+	<!-- End Google Tag Manager (noscript) -->
+</body>
+
 </html>

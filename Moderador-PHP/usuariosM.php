@@ -110,7 +110,7 @@
 		$resultador = mysqli_query($conex, $consultor);
 
 	?>
-		<div id="templateM"></div>
+		<?php include('template.php'); ?>
 		
 		<div class="main-container">
 			<div class="xs-pd-20-10 pd-ltr-20">
@@ -357,15 +357,7 @@
 		
 		<!-- welcome modal end -->
 		<!-- js -->
-		<script>
-			// Cargar el contenido del header utilizando fetch
-			fetch('../Moderador-PHP/templateM.php')
-				.then(response => response.text())
-				.then(data => {
-					// Insertar el contenido del header en el contenedor
-					document.getElementById('templateM').innerHTML = data;
-				});
-		</script>
+		
 		<script src="../vendors/scripts/core.js"></script>
 		<script src="../vendors/scripts/script.min.js"></script>
 		<script src="../vendors/scripts/process.js"></script>

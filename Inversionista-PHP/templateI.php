@@ -1,4 +1,4 @@
-
+<div id="template">
 <div class="header">
     <div class="header-left">
         <div class="menu-icon bi bi-list"></div>
@@ -271,3 +271,4 @@
     </div>
 </div>
 <div class="mobile-menu-overlay"></div>
+</div>

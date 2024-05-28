@@ -61,7 +61,7 @@
 
 		
 
-		<div id="templateI"></div>
+		<?php include('template.php'); ?>
 		<div class="mobile-menu-overlay"></div>
 
 		<div class="main-container">
@@ -400,15 +400,7 @@
 				
 		<!-- welcome modal end -->
 		<!-- js -->
-		<script>
-			// Cargar el contenido del header utilizando fetch
-			fetch('../Inversionista-PHP/templateI.php')
-				.then(response => response.text())
-				.then(data => {
-					// Insertar el contenido del header en el contenedor
-					document.getElementById('templateI').innerHTML = data;
-				});
-		</script>
+		
 		<script src="../vendors/scripts/core.js"></script>
 		<script src="../vendors/scripts/script.min.js"></script>
 		<script src="../vendors/scripts/process.js"></script>

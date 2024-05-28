@@ -77,7 +77,7 @@
 		}
 		?>
 		
-		<div id="template"></div>
+		<?php include('template.php'); ?>
 		<div class="mobile-menu-overlay"></div>
 
 		<div class="main-container">
@@ -425,15 +425,7 @@
 		
 		<!-- welcome modal end -->
 		<!-- js -->
-		<script>
-			// Cargar el contenido del header utilizando fetch
-			fetch('../Admin-PHP/template.php')
-				.then(response => response.text())
-				.then(data => {
-					// Insertar el contenido del header en el contenedor
-					document.getElementById('template').innerHTML = data;
-				});
-		</script>
+		
 		<script src="../vendors/scripts/core.js"></script>
 		<script src="../vendors/scripts/script.min.js"></script>
 		<script src="../vendors/scripts/process.js"></script>

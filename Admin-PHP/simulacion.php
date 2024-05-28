@@ -76,7 +76,7 @@
 			$datos_proyecto[] = $fila_proyecto;
 		}
 		?>
-		<div id="template"></div>
+		<?php include('template.php'); ?>
 		<div class="main-container">
 			<div class="pd-ltr-20 xs-pd-20-10">
 				<div class="min-height-200px">
@@ -372,15 +372,7 @@
 		
 		<!-- welcome modal end -->
 		<!-- js -->
-		<script>
-			// Cargar el contenido del header utilizando fetch
-			fetch('template.php')
-				.then(response => response.text())
-				.then(data => {
-					// Insertar el contenido del header en el contenedor
-					document.getElementById('template').innerHTML = data;
-				});
-		</script>
+		
 		<script src="../vendors/scripts/core.js"></script>
 		<script src="../vendors/scripts/script.min.js"></script>
 		<script src="../vendors/scripts/process.js"></script>
