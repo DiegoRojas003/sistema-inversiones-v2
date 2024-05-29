@@ -61,28 +61,28 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $_SESSION['nombre'] = $nombre;
         $_SESSION['apellido'] = $apellido;
     
-        // Redireccionar según el rol
-        switch ($rol) {
-            case 1:
-                header("Location: Admin-PHP/inicio.php");
-                exit();
-            case 2:
-            case 3:
-                // Verificar proyectos del usuario
-                $proyectos = obtener_proyectos($conn, $id_usuario);
-                if (count($proyectos) == 1) {
-                    $redirect_page = ($rol == 2) ? "Moderador-PHP/inicioM.php" : "Inversionista-PHP/inicioI.php";
-                    header("Location: $redirect_page");
+        // Verificar proyectos del usuario
+        $proyectos = obtener_proyectos($conn, $id_usuario);
+
+        if (count($proyectos) == 0) {
+            // Si el usuario no tiene proyectos
+            echo "<script>alert('El usuario no tiene proyectos asignados. Por favor, comuníquese con el administrador.');</script>";
+            echo "<script>window.location.replace('http://localhost/sistema-inversiones-v2/cerrar-sesion.php');</script>";
+            exit();
+        } elseif (count($proyectos) == 1) {
+            // Si el usuario tiene solo un proyecto, redirigir según el rol
+            switch ($rol) {
+                case 2:
+                    header("Location: Moderador-PHP/inicioM.php");
                     exit();
-                } else {
-                    // Si tiene más de un proyecto, dirigir a la página de selección de proyecto
-                    header("Location: eleccionproyecto.php");
+                case 3:
+                    header("Location: Inversionista-PHP/inicioI.php");
                     exit();
-                }
-            default:
-                // Rol no válido
-                echo "Rol no válido";
-                exit();
+            }
+        } else {
+            // Si tiene más de un proyecto, dirigir a la página de selección de proyecto
+            header("Location: eleccionproyecto.php");
+            exit();
         }
     } else {
         // No se encontraron coincidencias para el usuario y la contraseña
@@ -115,6 +115,7 @@ function obtener_proyectos($conn, $id_usuario) {
     return $proyectos;
 }
 ?>
+
 
 <!DOCTYPE html>
 <html>

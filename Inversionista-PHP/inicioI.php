@@ -11,7 +11,20 @@ if (!isset($_SESSION['authenticated']) || $_SESSION['authenticated'] !== true) {
 // Obtener el nombre y apellido del usuario de la sesión
 $nombre = isset($_SESSION['nombre']) ? $_SESSION['nombre'] : '';
 $apellido = isset($_SESSION['apellido']) ? $_SESSION['apellido'] : '';
+
+
+if (!isset($_SESSION['authenticated']) || $_SESSION['authenticated'] !== true) {
+    header("Location: ../inicio.php");
+    exit();
+}
+
+// Validar si se ha seleccionado un proyecto (puedes establecer una variable de sesión para el proyecto seleccionado)
+if (!isset($_SESSION['selected_project'])) {
+    header("Location: ../eleccionproyecto.php");
+    exit();
+}
 ?>
+
 <!DOCTYPE html>
 <html>
 	<head>

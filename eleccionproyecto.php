@@ -1,4 +1,5 @@
 <?php
+
 // Iniciar la sesión
 session_start();
 
@@ -15,7 +16,7 @@ include("conexionn.php");
 $id_usuario = $_SESSION['cedula'];
 
 // Consulta para obtener los proyectos vinculados al usuario
-$consulta_proyecto = "SELECT p.ID_Proyecto, p.Nombre, p.Fecha, p.Descripcion, p.Certificado 
+$consulta_proyecto = "SELECT p.ID_Proyecto, p.Nombre 
                       FROM proyecto p
                       JOIN proyecto_usuario pu ON p.ID_Proyecto = pu.FK_ID_Proyecto
                       WHERE pu.FK_ID_Usuario = '$id_usuario'";
@@ -28,41 +29,31 @@ while ($fila_proyecto = mysqli_fetch_assoc($resultado_proyecto)) {
 }
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
-    // Obtén la ID del proyecto seleccionado
+    // Obtener la ID del proyecto seleccionado
     $proyectoSeleccionado = $_POST["proyecto"];
     
-    // Guarda la ID del proyecto en una variable de sesión
-    $_SESSION["proyecto_seleccionado"] = $proyectoSeleccionado;
-    
-    // Redirige al usuario según su rol
-    switch ($_SESSION['rol']) {
-        case 2:
-            header("Location: Moderador-PHP/inicioM.php");
-            exit();
-        case 3:
-            header("Location: Inversionista-PHP/inicioI.php");
-            exit();
-        default:
-            header("Location: index.html");
-            exit();
+    // Verifica que se haya seleccionado un proyecto
+    if (empty($proyectoSeleccionado)) {
+        echo "<script>alert('Por favor, seleccione un proyecto.');</script>";
+    } else {
+        // Guarda la ID del proyecto en una variable de sesión
+        $_SESSION["proyecto_seleccionado"] = $proyectoSeleccionado;
+        
+        // Redirige al usuario según su rol
+        switch ($_SESSION['rol']) {
+            case 2:
+                header("Location: http://localhost/sistema-inversiones-v2/Moderador-PHP/inicioM.php");
+                exit();
+            case 3:
+                header("Location: http://localhost/sistema-inversiones-v2/Inversionista-PHP/inicioI.php");
+                exit();
+            default:
+                header("Location: http://localhost/sistema-inversiones-v2/index.html");
+                exit();
+        }
     }
 }
 ?>
-
-<script>
-    function seleccionarProyecto() {
-        var proyectoSeleccionado = document.getElementById("proyecto").value;
-        if (proyectoSeleccionado == "") {
-            alert("Por favor, seleccione un proyecto.");
-            return;
-        }
-        
-        // Envía el formulario para guardar el proyecto seleccionado
-        document.getElementById("formulario_seleccion_proyecto").submit();
-    }
-</script>
-
-
 
 <!DOCTYPE html>
 <html>
@@ -190,19 +181,10 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 										</select>
 									</div>
 								</div>
-							</form>
-                            <h6 class="mb-20">
-								Seleccione un proyecto de elección
-							</h6>
                             <div class="row align-items-center">
                                 <div class="col-5">
                                     <div class="input-group mb-0">
-                                        <!--
-                                        use code for form submit
-                                        <input class="btn btn-primary btn-lg btn-block" type="submit" value="Submit">
-                                    -->
 										<a class="btn btn-primary btn-lg btn-block" href="#" onclick="seleccionarProyecto()">Ingresar</a>
-
                                     </div>
                                 </div>
                                 <div class="col-2">
@@ -223,12 +205,26 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                                     </div>
                                 </div>
                             </div>
+							</form>
                         </div>
 					</div>
 					
 				</div>
 			</div>
 		</div>
+		<script>
+			function seleccionarProyecto() {
+				console.log("seleccionarProyecto llamado");
+				var proyectoSeleccionado = document.getElementById("proyecto").value;
+				if (proyectoSeleccionado == "") {
+					alert("Por favor, seleccione un proyecto.");
+					return;
+				}
+				document.getElementById("formulario_seleccion_proyecto").submit();
+			}
+
+		</script>
+
 		<!-- success Popup html Start -->
 		<button
 			type="button"
