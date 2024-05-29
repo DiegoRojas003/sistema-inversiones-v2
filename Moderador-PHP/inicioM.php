@@ -8,7 +8,20 @@ if (!isset($_SESSION['authenticated']) || $_SESSION['authenticated'] !== true) {
     header("Location: http://localhost/sistema-inversiones-v2/inicio.php"); // Cambia 'inicio-de-sesion.php' por la ruta de tu página de inicio de sesión
     exit();
 }
+
+
+if (!isset($_SESSION['authenticated']) || $_SESSION['authenticated'] !== true) {
+    header("Location: ../inicio.php");
+    exit();
+}
+
+// Validar si se ha seleccionado un proyecto (puedes establecer una variable de sesión para el proyecto seleccionado)
+if (!isset($_SESSION['selected_project'])) {
+    header("Location: ../eleccionproyecto.php");
+    exit();
+}
 ?>
+
 <!DOCTYPE html>
 <html>
 	<head>
@@ -85,7 +98,7 @@ if (!isset($_SESSION['authenticated']) || $_SESSION['authenticated'] !== true) {
 						<div class="col-md-8">
 							<h4 class="font-20 weight-500 mb-10 text-capitalize">
 								Bienvenido de nuevo
-								<div class="weight-600 font-30 text-blue">Micher Alexander Gonzalez Monroy</div>
+								<div class="weight-600 font-30 text-blue"><?php echo $nombre . ' ' . $apellido; ?></div>
 							</h4>
 							<p class="font-18 max-width-600">
 								¡Bienvenido! Estamos encantados de tenerte aquí. 

@@ -11,6 +11,7 @@ if (!isset($_SESSION['authenticated']) || $_SESSION['authenticated'] !== true) {
 ?>
 <?php
 include("conexionn.php");
+
 // header('Location: ubicacion.php');
 if (isset($_POST['register_pais'])) {
     if (isset($_POST['id_pais']) && isset($_POST['pais'])) {
@@ -198,7 +199,6 @@ if (isset($_POST['register_usuarios'])) {
             isset($_POST['contrasena']) &&
             isset($_POST['contrasena2']) &&
             isset($_POST['fecha']) &&
-            isset($_POST['proyecto']) &&
             isset($_POST['ciudad']) &&
             isset($_POST['rol'])
         ) {
@@ -210,7 +210,6 @@ if (isset($_POST['register_usuarios'])) {
             $contrasena = trim($_POST['contrasena']);
             $contrasena2 = trim($_POST['contrasena2']);
             $fecha = $_POST['fecha'];
-            $proyecto = trim($_POST['proyecto']);
             $ciudad = trim($_POST['ciudad']);
             $rol = trim($_POST['rol']);
 
@@ -239,10 +238,10 @@ if (isset($_POST['register_usuarios'])) {
                         echo "<script>window.location.replace('usuarios.php');</script>";
                     } else {
                         // Insertar el nuevo registro
-                        $consulta = "INSERT INTO usuario2(ID_Usuario, Nombre, Apellido, Telefono, Correo, Contraseña, Fecha, Proyecto, FK_ID_Municipio, FK_ID_Rol)
-                        VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+                        $consulta = "INSERT INTO usuario2(ID_Usuario, Nombre, Apellido, Telefono, Correo, Contraseña, Fecha, FK_ID_Municipio, FK_ID_Rol)
+                        VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?)";
                         $stmt = mysqli_prepare($conex, $consulta);
-                        mysqli_stmt_bind_param($stmt, "ssssssssss", $cedula, $nombre, $apellido, $telefono, $correo, $contrasena, $fecha, $proyecto, $ciudad, $rol);
+                        mysqli_stmt_bind_param($stmt, "sssssssss", $cedula, $nombre, $apellido, $telefono, $correo, $contrasena, $fecha, $ciudad, $rol);
                         $resultado = mysqli_stmt_execute($stmt);
 
                         if ($resultado) {
