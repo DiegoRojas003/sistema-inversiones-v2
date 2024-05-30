@@ -1,7 +1,6 @@
-let num1 = 53000000;
-let num2 = 30000000;
+
 var options = {
-	series: [num1, num2],
+	series: [13000000, 23000000],
 	chart: {
 	width: 380,
 	type: 'pie',
