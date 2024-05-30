@@ -239,13 +239,13 @@ $conn->close();
 								<tbody>
 								<tr>
 									<th scope="col">Valor de los aportes de capital</th>
-									<th scope="col">$ 2.500.000</th>
+									<th id="valor-capital" scope="col">2500000</th>
 								</tr>
 								</tbody>
 								<tbody>
 								<tr>
 									<th scope="col">Valor de los aportes de industria</th>
-									<th scope="col">$ 500.000</th>
+									<th id="valor-industria" scope="col">4500000</th>
 								</tr>
 								</tbody>
 								<tbody>

@@ -1,6 +1,9 @@
 
+let valorCapital =parseFloat(document.getElementById('valor-capital').innerText);
+let valorIndustria =parseFloat(document.getElementById('valor-industria').innerText);
 var options = {
 	series: [13000000, 23000000],
+	series: [valorCapital,valorIndustria],
 	chart: {
 	width: 380,
 	type: 'pie',
@@ -18,7 +21,6 @@ var options = {
 	}
   }]
   };
-
   var chart = new ApexCharts(document.querySelector("#chart8Valor"), options);
   chart.render();
 
