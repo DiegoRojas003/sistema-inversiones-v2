@@ -5,11 +5,57 @@ session_start();
 // Verificar si el usuario está autenticado
 if (!isset($_SESSION['authenticated']) || $_SESSION['authenticated'] !== true) {
     // Si el usuario no está autenticado, redirigirlo a la página de inicio de sesión
-    header("Location: http://localhost/sistema-inversiones-v2/inicio.php"); // Cambia 'inicio-de-sesion.php' por la ruta de tu página de inicio de sesión
+    header("Location: http://localhost/sistema-inversiones-v2/index.php");
     exit();
 }
-?>
 
+// Conexión a la base de datos
+$servername = "localhost";
+$username = "root";
+$password = "";
+$dbname = "sistemainversiones";
+
+$conn = new mysqli($servername, $username, $password, $dbname);
+
+// Verificar conexión
+if ($conn->connect_error) {
+    die("Conexión fallida: " . $conn->connect_error);
+}
+
+// Consulta para obtener usuarios excluyendo aquellos con rol 1
+$sql_usuarios = "SELECT ID_Usuario, Nombre, Apellido FROM usuario2 WHERE FK_ID_Rol != 1";
+$result_usuarios = $conn->query($sql_usuarios);
+
+// Verificar si la solicitud es AJAX para obtener los proyectos del usuario seleccionado
+if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['usuario_id'])) {
+    $usuario_id = $_POST['usuario_id'];
+
+    // Consulta para obtener proyectos relacionados con el usuario seleccionado
+    $sql_proyectos = "SELECT p.ID_Proyecto, p.Nombre 
+                      FROM proyecto p 
+                      INNER JOIN proyecto_usuario pu ON p.ID_Proyecto = pu.FK_ID_Proyecto 
+                      WHERE pu.FK_ID_Usuario = ?";
+    $stmt = $conn->prepare($sql_proyectos);
+    $stmt->bind_param("i", $usuario_id);
+    $stmt->execute();
+    $result_proyectos = $stmt->get_result();
+
+    // Generar opciones de proyecto
+    $options = '<option value="" selected>Seleccione un proyecto</option>';
+    while ($row = $result_proyectos->fetch_assoc()) {
+        $options .= '<option value="' . $row['ID_Proyecto'] . '">' . $row['Nombre'] . '</option>';
+    }
+
+    echo $options;
+
+    // Cerrar conexión y salir para detener la ejecución del resto del script
+    $conn->close();
+    exit;
+}
+
+// Cerrar conexión después de obtener los usuarios
+$conn->close();
+?>
 <!DOCTYPE html>
 <html>
 	<head>
@@ -57,38 +103,57 @@ if (!isset($_SESSION['authenticated']) || $_SESSION['authenticated'] !== true) {
 		<div class="main-container">
 			<div class="pd-ltr-20 xs-pd-20-10">
 				<div class="min-height-200px">
-					<div class="page-header">
-						<div class="row">
-							<div class="col-md-6">
-								<div class="form-group">
-									<label>Usuario:</label>
-									<select
-										class="custom-select2 form-control"
-										multiple="multiple"
-										style="width: 100%"
-									>
-									<!--Ingresa aqui las opciones de usuario -->	
-									</select>
-								</div>
-							</div>
-							<div class="col-md-6">
-								<div class="form-group">
-									<label>Proyecto</label>
-									<select
-										class="custom-select2 form-control"
-										multiple="multiple"
-										style="width: 100%"
-									>
-										<!--Ingresa aqui las opciones de Proyectos que tenga el usuario -->
-									</select>
-								</div>
-							</div>
-							
-						</div>
-						<div class="contenido-boton">
-							<input class="btn btn-primary" type="submit" value="Consultar" />
-						</div>
-					</div>
+				<div class="page-header">
+                    <div class="row">
+						<div class="col-md-6">
+                            <div class="form-group row">
+                                <label class="col-sm-12 col-md-2 col-form-label">Usuarios</label>
+                                <div class="col-sm-12 col-md-10">
+                                    <select name="usuario" id="usuario" class="custom-select col-12" onchange="mostrarProyecto()">
+                                        <option value="" selected>Seleccione</option>
+                                        <?php while ($row = $result_usuarios->fetch_assoc()): ?>
+                                            <option value="<?php echo $row['ID_Usuario']; ?>">
+                                                Cédula: <?php echo $row['ID_Usuario']; ?> - <?php echo $row['Nombre'] . ' ' . $row['Apellido']; ?>
+                                            </option>
+                                        <?php endwhile; ?>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group row">
+                                <label class="col-sm-12 col-md-2 col-form-label">Proyecto</label>
+                                <div class="col-sm-12 col-md-10">
+                                    <select name="proyecto" id="proyecto" class="custom-select col-12">
+                                        <option value="" selected>Seleccione un usuario</option>
+                                        <!-- Opciones de proyecto generadas dinámicamente -->
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="contenido-boton">
+                        <input class="btn btn-primary" type="submit" value="Consultar" />
+                    </div>
+                </div>
+
+                <script>
+                    function mostrarProyecto() {
+                        var usuarioId = $('#usuario').val();
+                        if (usuarioId) {
+                            $.ajax({
+                                url: '', // Dejar vacío para enviar la solicitud al mismo archivo
+                                type: 'POST',
+                                data: {usuario_id: usuarioId},
+                                success: function(response) {
+                                    $('#proyecto').html(response);
+                                }
+                            });
+                        } else {
+                            $('#proyecto').html('<option value="">Seleccione un usuario</option>');
+                        }
+                    }
+                </script>
 					<div class="row pb-10">
 						<div class="col-xl-3 col-lg-3 col-md-6 mb-20">
 							<div class="card-box height-100-p widget-style3">
@@ -180,7 +245,7 @@ if (!isset($_SESSION['authenticated']) || $_SESSION['authenticated'] !== true) {
 								<tbody>
 								<tr>
 									<th scope="col">Valor de los aportes de industria</th>
-									<th scope="col">$ 2.500.000</th>
+									<th scope="col">$ 500.000</th>
 								</tr>
 								</tbody>
 								<tbody>
