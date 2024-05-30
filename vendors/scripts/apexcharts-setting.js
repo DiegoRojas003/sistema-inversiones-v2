@@ -1,8 +1,9 @@
-
+document.addEventListener('DOMContentLoaded', function() {
 let valorCapital =parseFloat(document.getElementById('valor-capital').innerText);
 let valorIndustria =parseFloat(document.getElementById('valor-industria').innerText);
+console.log(valorCapital);
+console.log(valorIndustria);  
 var options = {
-	series: [13000000, 23000000],
 	series: [valorCapital,valorIndustria],
 	chart: {
 	width: 380,
@@ -20,7 +21,7 @@ var options = {
 	  }
 	}
   }]
-  };
+};
   var chart = new ApexCharts(document.querySelector("#chart8Valor"), options);
   chart.render();
 
@@ -129,3 +130,4 @@ var options9 = {
 };
 var chart = new ApexCharts(document.querySelector("#chart9"), options9);
 chart.render();
+});
