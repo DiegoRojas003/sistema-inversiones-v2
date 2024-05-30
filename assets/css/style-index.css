@@ -966,6 +966,13 @@ section {
 /*--------------------------------------------------------------
 # Team
 --------------------------------------------------------------*/
+#img-alter{
+  width: 100%;
+}
+.img-fluids{
+  width: 300px;
+  
+}
 .team {
   background: url("../img/team-bg.jpg") center center no-repeat;
   background-size: cover;

@@ -178,7 +178,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['consultar'])) {
 			href="../src/plugins/datatables/css/responsive.bootstrap4.min.css"
 		/>
 		<link rel="stylesheet" type="text/css" href="../vendors/styles/style.css" />
-		<link rel="stylesheet" href="styles/style.css">
+		<link rel="stylesheet" href="src\styles\style.css">
 	</head>
 	<body>
 		
