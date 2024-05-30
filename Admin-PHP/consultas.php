@@ -1,14 +1,14 @@
+
 <?php
+
 // Iniciar la sesión
 session_start();
-
 // Verificar si el usuario está autenticado
 if (!isset($_SESSION['authenticated']) || $_SESSION['authenticated'] !== true) {
     // Si el usuario no está autenticado, redirigirlo a la página de inicio de sesión
     header("Location: http://localhost/sistema-inversiones-v2/index.php");
     exit();
 }
-
 // Conexión a la base de datos
 $servername = "localhost";
 $username = "root";
@@ -16,16 +16,21 @@ $password = "";
 $dbname = "sistemainversiones";
 
 $conn = new mysqli($servername, $username, $password, $dbname);
-
 // Verificar conexión
 if ($conn->connect_error) {
     die("Conexión fallida: " . $conn->connect_error);
 }
-
+// Definir las variables para evitar advertencias de "Undefined variable"
+$num_inversiones_realizadas = 0;
+$diferencia_dias = 0;
+$num_inversionistas = 0;
+$tasa_ajustada = 0;
+$total_aportes = 0;
+$valor_aportes_capital = 0;
+$valor_aportes_industria = 0;
 // Consulta para obtener usuarios excluyendo aquellos con rol 1
 $sql_usuarios = "SELECT ID_Usuario, Nombre, Apellido FROM usuario2 WHERE FK_ID_Rol != 1";
 $result_usuarios = $conn->query($sql_usuarios);
-
 // Verificar si la solicitud es AJAX para obtener los proyectos del usuario seleccionado
 if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['usuario_id'])) {
     $usuario_id = $_POST['usuario_id'];
@@ -52,10 +57,88 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['usuario_id'])) {
     $conn->close();
     exit;
 }
+$valor_total_aportes=0;
 
-// Cerrar conexión después de obtener los usuarios
-$conn->close();
+// Verificar si se envió el formulario de consulta
+if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['consultar'])) {
+	
+    // Obtener el usuario y proyecto seleccionados
+    $usuario_id = $_POST['usuario'];
+    $proyecto_id = $_POST['proyecto'];
+
+    // Consulta para contar el número de inversiones realizadas
+    $sql_num_inversiones = "SELECT COUNT(*) AS num_inversiones FROM inversion2 WHERE FK_ID_Usuario = ?";
+    $stmt = $conn->prepare($sql_num_inversiones);
+    $stmt->bind_param("i", $usuario_id);
+    $stmt->execute();
+    $result_num_inversiones = $stmt->get_result();
+    $row_num_inversiones = $result_num_inversiones->fetch_assoc();
+    $num_inversiones_realizadas = $row_num_inversiones['num_inversiones'];
+
+    $sql_fecha_inicio_proyecto = "SELECT Fecha FROM proyecto WHERE ID_Proyecto = ?";
+	$stmt = $conn->prepare($sql_fecha_inicio_proyecto);
+	$stmt->bind_param("i", $proyecto_id);
+	$stmt->execute();
+	$result_fecha_inicio_proyecto = $stmt->get_result();
+
+	// Verificar si hay resultados antes de intentar acceder a la fila
+	if ($result_fecha_inicio_proyecto && $result_fecha_inicio_proyecto->num_rows > 0) {
+		$row_fecha_inicio_proyecto = $result_fecha_inicio_proyecto->fetch_assoc();
+		$fecha_inicio_proyecto = $row_fecha_inicio_proyecto['Fecha'];
+	} else {
+		// Si no hay resultados, asignar la fecha de inicio del proyecto como nula o algún valor predeterminado
+		$fecha_inicio_proyecto = null; // o asigna algún valor predeterminado
+	}
+
+    // Calcular la diferencia de días entre la fecha actual y la fecha de inicio del proyecto
+    $fecha_actual = date('Y-m-d');
+    if ($fecha_inicio_proyecto) {
+        $diferencia_dias = (strtotime($fecha_actual) - strtotime($fecha_inicio_proyecto)) / (60 * 60 * 24);
+    }
+
+    // Si el usuario no tiene proyectos, la diferencia de días es cero
+    if (!$proyecto_id) {
+        $diferencia_dias = 0;
+    }
+
+    // Consulta para contar el número de inversionistas en el proyecto
+    $sql_num_inversionistas = "SELECT COUNT(*) AS num_inversionistas FROM proyecto_usuario WHERE FK_ID_Proyecto = ?";
+    $stmt = $conn->prepare($sql_num_inversionistas);
+    $stmt->bind_param("i", $proyecto_id);
+    $stmt->execute();
+    $result_num_inversionistas = $stmt->get_result();
+    $row_num_inversionistas = $result_num_inversionistas->fetch_assoc();
+    $num_inversionistas = $row_num_inversionistas['num_inversionistas'];
+
+    // Calcular la tasa ajustada con dos decimales
+    $tasa_ajustada = number_format(round(pow(1 + 0.4576, 1/365) - 1, 4) * 100, 2);
+	
+	include("conexionn.php");
+	$usuario_id = 1003519051;
+	
+	$usuario_id = $_POST['usuario'];
+
+	$consultoI = "SELECT ID_Inversion, Nombre, Monto, Monto_Ajustado, proyecto, 
+		Tipo, Fecha, Descripcion, CertificadoInversion, FK_ID_Usuario, FK_ID_Tipo  
+		FROM inversion2
+		WHERE FK_ID_Tipo = 1 AND FK_ID_Usuario = $usuario_id "; 
+	$resultadoI = mysqli_query($conex, $consultoI);
+
+	$consultoII = "SELECT ID_Inversion, Nombre, Monto, Monto_Ajustado, proyecto, 
+		Tipo, Fecha, Descripcion, CertificadoInversion, FK_ID_Usuario, FK_ID_Tipo  
+		FROM inversion2
+		WHERE FK_ID_Tipo = 2 AND FK_ID_Usuario = $usuario_id "; 
+	$resultadoII = mysqli_query($conex, $consultoII);
+
+	$consultoIII = "SELECT ID_Inversion, Nombre, Monto, Monto_Ajustado, proyecto, 
+		Tipo, Fecha, Descripcion, CertificadoInversion, FK_ID_Usuario, FK_ID_Tipo  
+		FROM inversion2
+		WHERE FK_ID_Tipo = 3 AND FK_ID_Usuario = $usuario_id "; 
+	$resultadoIII = mysqli_query($conex, $consultoIII);
+}
+
 ?>
+
 <!DOCTYPE html>
 <html>
 	<head>
@@ -99,42 +182,46 @@ $conn->close();
 		<link rel="stylesheet" href="styles/style.css">
 	</head>
 	<body>
+		
 	<?php include('template.php'); ?>
 		<div class="main-container">
 			<div class="pd-ltr-20 xs-pd-20-10">
 				<div class="min-height-200px">
 				<div class="page-header">
-                    <div class="row">
-						<div class="col-md-6">
-                            <div class="form-group row">
-                                <label class="col-sm-12 col-md-2 col-form-label">Usuarios</label>
-                                <div class="col-sm-12 col-md-10">
-                                    <select name="usuario" id="usuario" class="custom-select col-12" onchange="mostrarProyecto()">
-                                        <option value="" selected>Seleccione</option>
-                                        <?php while ($row = $result_usuarios->fetch_assoc()): ?>
-                                            <option value="<?php echo $row['ID_Usuario']; ?>">
-                                                Cédula: <?php echo $row['ID_Usuario']; ?> - <?php echo $row['Nombre'] . ' ' . $row['Apellido']; ?>
-                                            </option>
-                                        <?php endwhile; ?>
-                                    </select>
+					<form method="post" action="<?php echo $_SERVER['PHP_SELF']; ?>">
+                    	<div class="row">
+                            <div class="col-md-6">
+                                <div class="form-group row">
+                                    <label class="col-sm-12 col-md-2 col-form-label">Usuarios</label>
+                                    <div class="col-sm-12 col-md-10">
+                                        <select name="usuario" id="usuario" class="custom-select col-12" onchange="mostrarProyecto()">
+                                            <option value="" selected>Seleccione</option>
+                                            <?php while ($row = $result_usuarios->fetch_assoc()): ?>
+                                                <option value="<?php echo $row['ID_Usuario']; ?>">
+                                                    Cédula: <?php echo $row['ID_Usuario']; ?> - <?php echo $row['Nombre'] . ' ' . $row['Apellido']; ?>
+                                                </option>
+                                            <?php endwhile; ?>
+                                        </select>
+                                    </div>
                                 </div>
                             </div>
-                        </div>
-                        <div class="col-md-6">
-                            <div class="form-group row">
-                                <label class="col-sm-12 col-md-2 col-form-label">Proyecto</label>
-                                <div class="col-sm-12 col-md-10">
-                                    <select name="proyecto" id="proyecto" class="custom-select col-12">
-                                        <option value="" selected>Seleccione un usuario</option>
-                                        <!-- Opciones de proyecto generadas dinámicamente -->
-                                    </select>
+                            <div class="col-md-6">
+                                <div class="form-group row">
+                                    <label class="col-sm-12 col-md-2 col-form-label">Proyecto</label>
+                                    <div class="col-sm-12 col-md-10">
+                                        <select name="proyecto" id="proyecto" class="custom-select col-12">
+                                            <option value="" selected>Seleccione un usuario</option>
+                                            <!-- Opciones de proyecto generadas dinámicamente -->
+                                        </select>
+                                    </div>
                                 </div>
                             </div>
-                        </div>
-                    </div>
-                    <div class="contenido-boton">
-                        <input class="btn btn-primary" type="submit" value="Consultar" />
-                    </div>
+                            <div class="contenido-boton">
+                                <input class="btn btn-primary" type="submit" value="Consultar" name="consultar" />
+
+                            </div>
+                    	</div>
+					</form>
                 </div>
 
                 <script>
@@ -142,7 +229,7 @@ $conn->close();
                         var usuarioId = $('#usuario').val();
                         if (usuarioId) {
                             $.ajax({
-                                url: '', // Dejar vacío para enviar la solicitud al mismo archivo
+                                url: '',
                                 type: 'POST',
                                 data: {usuario_id: usuarioId},
                                 success: function(response) {
@@ -154,124 +241,108 @@ $conn->close();
                         }
                     }
                 </script>
-					<div class="row pb-10">
-						<div class="col-xl-3 col-lg-3 col-md-6 mb-20">
-							<div class="card-box height-100-p widget-style3">
-								<div class="d-flex flex-wrap">
-									<div class="widget-data">
-										<div class="weight-700 font-24 text-dark">10</div>
-										<div class="font-14 text-secondary weight-500">
-											Inversiones Realizadas
-										</div>
-									</div>
-									<div class="widget-icon">
-										<div class="icon" data-color="#00eccf">
-											<i class="icon-copy dw dw-calendar1"></i>
-										</div>
-									</div>
-								</div>
-							</div>
-						</div>
-						<div class="col-xl-3 col-lg-3 col-md-6 mb-20">
-							<div class="card-box height-100-p widget-style3">
-								<div class="d-flex flex-wrap">
-									<div class="widget-data">
-										<div class="weight-700 font-24 text-dark">200 días</div>
-										<div class="font-14 text-secondary weight-500">
-											Vida del proyecto
-										</div>
-									</div>
-									<div class="widget-icon">
-										<div class="icon" data-color="#ff5b5b">
-											<span class="icon-copy ti-heart"></span>
-										</div>
-									</div>
-								</div>
-							</div>
-						</div>
-						<div class="col-xl-3 col-lg-3 col-md-6 mb-20">
-							<div class="card-box height-100-p widget-style3">
-								<div class="d-flex flex-wrap">
-									<div class="widget-data">
-										<div class="weight-700 font-24 text-dark">400+</div>
-										<div class="font-14 text-secondary weight-500">
-											Inversionistas
-										</div>
-									</div>
-									<div class="widget-icon">
-										<div class="icon">
-											<i
-												class="icon-copy bi bi-globe"
-												aria-hidden="true"
-											></i>
-										</div>
-									</div>
-								</div>
-							</div>
-						</div>
-						<div class="col-xl-3 col-lg-3 col-md-6 mb-20">
-							<div class="card-box height-100-p widget-style3">
-								<div class="d-flex flex-wrap">
-									<div class="widget-data">
-										<div class="weight-700 font-24 text-dark">3,5</div>
-										<div class="font-14 text-secondary weight-500">Tasa ajustada</div>
-									</div>
-									<div class="widget-icon">
-										<div class="icon" data-color="#09cc06">
-											<i class="icon-copy fa fa-money" aria-hidden="true"></i>
-										</div>
-									</div>
-								</div>
-							</div>
-						</div>
-					</div>
+                <div class="row pb-10">
+                    <div class="col-xl-3 col-lg-3 col-md-6 mb-20">
+                        <div class="card-box height-100-p widget-style3">
+                            <div class="d-flex flex-wrap">
+                                <div class="widget-data">
+                                    <div class="weight-700 font-24 text-dark"><?php echo $num_inversiones_realizadas; ?></div>
+                                    <div class="font-14 text-secondary weight-500">Inversiones Realizadas</div>
+                                </div>
+                                <div class="widget-icon">
+                                    <div class="icon" data-color="#00eccf">
+                                        <i class="icon-copy dw dw-calendar1"></i>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-xl-3 col-lg-3 col-md-6 mb-20">
+                        <div class="card-box height-100-p widget-style3">
+                            <div class="d-flex flex-wrap">
+                                <div class="widget-data">
+                                    <div class="weight-700 font-24 text-dark"><?php echo $diferencia_dias; ?> días</div>
+                                    <div class="font-14 text-secondary weight-500">Vida del proyecto</div>
+                                </div>
+                                <div class="widget-icon">
+                                    <div class="icon" data-color="#ff5b5b">
+                                        <span class="icon-copy ti-heart"></span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-xl-3 col-lg-3 col-md-6 mb-20">
+                        <div class="card-box height-100-p widget-style3">
+                            <div class="d-flex flex-wrap">
+                                <div class="widget-data">
+                                    <div class="weight-700 font-24 text-dark"><?php echo $num_inversionistas; ?></div>
+                                    <div class="font-14 text-secondary weight-500">Inversionistas</div>
+                                </div>
+                                <div class="widget-icon">
+                                    <div class="icon">
+                                        <i class="icon-copy bi bi-globe" aria-hidden="true"></i>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-xl-3 col-lg-3 col-md-6 mb-20">
+                        <div class="card-box height-100-p widget-style3">
+                            <div class="d-flex flex-wrap">
+                                <div class="widget-data">
+                                    <div class="weight-700 font-24 text-dark"><?php echo $tasa_ajustada; ?>%</div>
+                                    <div class="font-14 text-secondary weight-500">Tasa ajustada</div>
+                                </div>
+                                <div class="widget-icon">
+                                    <div class="icon" data-color="#09cc06">
+                                        <i class="icon-copy fa fa-money" aria-hidden="true"></i>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
 
-					<div class="row clearfix">
-						<div class="col-lg-6 col-md-12 col-sm-12 mb-30">
-							<div class="pd-20 card-box">
-								<h5 class="h4 text-blue mb-20">Resumen Inversiones</h5>
-								<div
-							class="card-box  pd-20 mb-20 "
-							style="width: 500px; height: 250px;"
-						>
-							
-							<table class="table" >
+                <div class="row clearfix">
+                    <div class="col-lg-6 col-md-12 col-sm-12 mb-30">
+                        <div class="pd-20 card-box">
+                            <h5 class="h4 text-blue mb-20">Resumen Inversiones</h5>
+                            <div class="card-box pd-20 mb-20" style="width: 500px; height: 250px;">
+							<table class="table">
 								<tbody>
-								<tr>
-									<th scope="col">Valor de los aportes de capital</th>
-									<th id="valor-capital" scope="col">2500000</th>
-								</tr>
+									<tr>
+										<th scope="col">Valor de los aportes de capital</th>
+										<th id="valor-capital" scope="col"><?php echo $valor_aportes_capital; ?></th>
+									</tr>
 								</tbody>
 								<tbody>
-								<tr>
-									<th scope="col">Valor de los aportes de industria</th>
-									<th id="valor-industria" scope="col">4500000</th>
-								</tr>
+									<tr>
+										<th scope="col">Valor de los aportes de industria</th>
+										<th id="valor-industria" scope="col"><?php echo $valor_aportes_industria; ?></th>
+									</tr>
 								</tbody>
 								<tbody>
 									<tr>
 										<th scope="col">Total Aportes:</th>
-										<th scope="col">$ 5.000.000</th>
+										<th id="suma-capital-industria" scope="col"><?php echo $total_aportes; ?></th>
 									</tr>
-									</tbody>
+								</tbody>
 							</table>
-							  
-						  
-						</div>
-							</div>
-						</div>
-						<div class="col-lg-6 col-md-12 col-sm-12 mb-30">
-							<div class="pd-20 card-box" style="height: 360px;">
-								<h5 class="h4 text-blue mb-20">Gráfico tipo de aporte</h5>
-								
-									<div class="pd-20 card-box height-100-p" style="height: 255px">
-										
-										<div id="chart8Valor" style="max-width: 500px;"></div>
-									</div>
-								
-							</div>
-						</div>
-					</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-6 col-md-12 col-sm-12 mb-30">
+                        <div class="pd-20 card-box" style="height: 360px;">
+                            <h5 class="h4 text-blue mb-20">Gráfico tipo de aporte</h5>
+                            <div class="pd-20 card-box height-100-p" style="height: 255px">
+                                <div id="chart8Valor" style="max-width: 500px;"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+           
+            
 					<div col-md-4 mb-20>
 						
 						
@@ -279,162 +350,155 @@ $conn->close();
 						
 					</div>
 					<div class="pd-20 card-box mb-30">
-						<h4 class="text-blue h4">Aportes en dinero</h4>
-						<table class="table table-striped">
-							<thead>
-							<tr>
-								<th scope="col">Fecha del Aporte</th>
-								<th scope="col">Valor del Aporte</th>
-								<th scope="col">Valor del Aporte ajustado</th>
-								<th scope="col">Tiempo transcurrido desde el día del aporte</th>
-							</tr>
-							</thead>
-							<tbody>
-								<tr>
-									<th scope="row">10/03/2024</th>
-									<th scope="row">2500000</th>
-									<th scope="row">$ 30000000</th>
-									<th scope="row">158 días</th>
-								</tr>
-								<tr>
-									<th scope="row">10/03/2024</th>
-									<th scope="row">2500000</th>
-									<th scope="row">$ 30000000</th>
-									<th scope="row">158 días</th>
-								</tr>
-								<tr>
-									<th scope="row">10/03/2024</th>
-									<th scope="row">2500000</th>
-									<th scope="row">$ 30000000</th>
-									<th scope="row">158 días</th>
-								</tr>
-								<tr>
-									<th scope="row">10/03/2024</th>
-									<th scope="row">2500000</th>
-									<th scope="row">$ 30000000</th>
-									<th scope="row">158 días</th>
-								</tr>
-								<tr>
-									<th scope="row">10/03/2024</th>
-									<th scope="row">2500000</th>
-									<th scope="row">$ 30000000</th>
-									<th scope="row">158 días</th>
-								</tr><tr style="background-color: blue; color: white;">
-									<th scope="row">Total</th>
-									<th scope="row"></th>
-									<th scope="row">$ 12.000.000</th>
-									<th scope="row"></th>
-								</tr>
-							</tbody>
-						</table>
-							  
+						<div class="card-box pb-10">
+							<div class="h5 pd-20 mb-0">Aporte en Dinero</div>
+							<table class="data-table table nowrap">
+								<thead>
+									<tr>
+										<th>Fecha</th>
+										<th>Monto</th>
+										<th>Valor del Aporte ajustado</th>
+										<th>Tiempo transcurrido desde el día del aporte</th>
+										<th>Total aporte en dinero (ajustado)</th>
+									</tr>
+								</thead>
+								<tbody>
+									<?php
+									$fecha_actual1 = date("Y-m-d");
+									$valor_aportes_dinero = 0;
+									while ($fila = mysqli_fetch_assoc($resultadoI)) {
+										echo "<tr>";
+										echo "<td>" . $fila['Fecha'] . "</td>";
+										// Calcular la diferencia en días correctamente
+										$diferencia_dias1 = (strtotime($fecha_actual1) - strtotime($fila['Fecha'])) / (60 * 60 * 24);
+										// Calcular el valor futuro
+										$valor_futuro = $fila['Monto'] * pow((1 + 0.4576), $diferencia_dias1 / 365);
+										// Formatear y mostrar los valores
+										echo "<td>" . number_format($fila['Monto'], 0, ',', '.') . "</td>";
+										echo "<td>" . number_format($valor_futuro, 0, ',', '.') . "</td>";
+										echo "<td>" . round($diferencia_dias1) . " días</td>";
+										// Sumar el valor futuro a los aportes de industria
+										$valor_aportes_dinero += $valor_futuro;
+										echo '<td>' . number_format($valor_aportes_dinero, 0, ',', '.') . '</td>';
+										echo "</tr>";
+									}
+									?>
+									<thead>
+									<tr>
+										<th>Total aporte en dinero (ajustado)<?php echo '<td>' . number_format($valor_aportes_dinero, 0, ',', '.') . '</td>'; ?></th>
+									</tr>
+									</thead>
+									
+								</tbody>
+							</table>
+						</div>
 					</div>
 					<div class="pd-20 card-box mb-30">
-						<h4 class="text-blue h4">Aportes en especie</h4>
-						<table class="table table-striped" >
-							<thead >
-							<tr >
-								<th scope="col" style="font-size:10px ;" >Fecha del Aporte</th>
-								<th scope="col" style="font-size:10px ;">Aporte de genero y especie</th>
-								<th scope="col" style="font-size:10px ;">Aportes de usufructo</th>
-								<th scope="col" style="font-size:10px ;">Aportes de crédito</th>
-								<th scope="col" style="font-size:10px ;">Aportes en sesión de contratos</th>
-								<th scope="col"style="font-size:10px ;">Aportes de establecimientos de comercio</th>
-								<th scope="col"style="font-size:10px ;">Aportes de derecho sobre propiedad industrial</th>
-								<th scope="col"style="font-size:10px ;">Aporte de partes de interés, cuotas o acciones</th>
-								<th scope="col"style="font-size:10px ;">Total aporte en especie</th>
-								<th scope="col"style="font-size:10px ;">Total de aporte en especie ajustado</th>
-								<th scope="col"style="font-size:10px ;">Tiempo transcurrido desde el día del aporte</th>
-							</tr>
-							</thead>
-							<tbody>
-								<tr>
-									<th scope="row"style="font-size:10px ;">10/03/2024</th>
-									<th scope="row"style="font-size:10px ;">$2500000</th>
-									<th scope="row"style="font-size:10px ;"></th>
-									<th scope="row"style="font-size:10px ;"></th>
-									<th scope="row"style="font-size:10px ;"></th>
-									<th scope="row"style="font-size:10px ;"></th>
-									<th scope="row"style="font-size:10px ;"></th>
-									<th scope="row"style="font-size:10px ;"></th>
-									<th scope="row"style="font-size:10px ;"></th>
-									<th scope="row"style="font-size:10px ;">2500000</th>
-									<th scope="row"style="font-size:10px ;">4 días</th>
-									
-								</tr>
-								<tr>
-									<th scope="row"style="font-size:10px ;">10/03/2024</th>
-									<th scope="row"style="font-size:10px ;"></th>
-									<th scope="row"style="font-size:10px ;">$ 30000000</th>
-									<th scope="row"style="font-size:10px ;"></th>
-									<th scope="row"style="font-size:10px ;"></th>
-									<th scope="row"style="font-size:10px ;"></th>
-									<th scope="row"style="font-size:10px ;"></th>
-									<th scope="row"style="font-size:10px ;"></th>
-									<th scope="row"style="font-size:10px ;"></th>
-									<th scope="row"style="font-size:10px ;">2500000</th>
-									<th scope="row"style="font-size:10px ;">4 días</th>
-								</tr>
-								<tr>
-									<th scope="row"style="font-size:10px ;">10/03/2024</th>
-									<th scope="row"style="font-size:10px ;"></th>
-									<th scope="row"style="font-size:10px ;"></th>
-									<th scope="row"style="font-size:10px ;">2500000</th>
-									<th scope="row"style="font-size:10px ;"></th>
-									<th scope="row"style="font-size:10px ;"></th>
-									<th scope="row"style="font-size:10px ;"></th>
-									<th scope="row"style="font-size:10px ;"></th>
-									<th scope="row"style="font-size:10px ;"></th>
-									<th scope="row"style="font-size:10px ;">2500000</th>
-									<th scope="row"style="font-size:10px ;">4 días</th>
-								</tr>
-								<tr>
-									<th scope="row"style="font-size:10px ;">10/03/2024</th>
-									<th scope="row"style="font-size:10px ;"></th>
-									<th scope="row"style="font-size:10px ;"></th>
-									<th scope="row"style="font-size:10px ;"></th>
-									<th scope="row"style="font-size:10px ;">2500000</th>
-									<th scope="row"style="font-size:10px ;"></th>
-									<th scope="row"style="font-size:10px ;"></th>
-									<th scope="row"style="font-size:10px ;"></th>
-									<th scope="row"style="font-size:10px ;"></th>
-									<th scope="row"style="font-size:10px ;">2500000</th>
-									<th scope="row"style="font-size:10px ;">4 días</th>
-								</tr>
-								<tr>
-									<th scope="row"style="font-size:10px ;">10/03/2024</th>
-									<th scope="row"style="font-size:10px ;"></th>
-									<th scope="row"style="font-size:10px ;"></th>
-									<th scope="row"style="font-size:10px ;"></th>
-									<th scope="row"style="font-size:10px ;"></th>
-									<th scope="row"style="font-size:10px ;"></th>
-									<th scope="row"style="font-size:10px ;"></th>
-									<th scope="row"style="font-size:10px ;"></th>
-									<th scope="row"style="font-size:10px ;">2500000</th>
-									<th scope="row"style="font-size:10px ;">2500000</th>
-									<th scope="row"style="font-size:10px ;">4 días</th>
-								</tr>
-								<tr style="background-color: blue; color: white;">
-									<th scope="row"style="font-size:15px ;">Total:</th>
-									<th scope="row"style="font-size:10px ;"></th>
-									<th scope="row"style="font-size:10px ;"></th>
-									<th scope="row"style="font-size:10px ;"></th>
-									<th scope="row"style="font-size:10px ;"></th>
-									<th scope="row"style="font-size:10px ;"></th>
-									<th scope="row"style="font-size:10px ;"></th>
-									<th scope="row"style="font-size:10px ;"></th>
-									<th scope="row"style="font-size:10px ;"></th>
-									<th scope="row"style="font-size:15px ;">$2500000</th>
-									<th scope="row"style="font-size:10px;"></th>
-								</tr>
-							</tbody>
-						</table>
-							  
+						<div class="card-box pb-10">
+							<div class="h5 pd-20 mb-0">Aportes en especie</div>
+							<table class="data-table table nowrap">
+								<thead>
+									<tr>
+										<th>Fecha</th>
+										<th>Monto</th>
+										<th>Valor del Aporte ajustado</th>
+										<th>Tiempo transcurrido desde el día del aporte</th>
+									</tr>
+								</thead>
+								<tbody>
+								<?php
+									$fecha_actual2 = date("Y-m-d");
+									$valor_aportes_especie = 0;
+									while ($fila = mysqli_fetch_assoc($resultadoII)) {
+										echo "<tr>";
+										echo "<td>" . $fila['Fecha'] . "</td>";
+										// Calcular la diferencia en días correctamente
+										$diferencia_dias2 = (strtotime($fecha_actual2) - strtotime($fila['Fecha'])) / (60 * 60 * 24);
+										// Calcular el valor futuro
+										$valor_futuro = $fila['Monto'] * pow((1 + 0.4576), $diferencia_dias2 / 365);
+										// Formatear y mostrar los valores
+										echo "<td>" . number_format($fila['Monto'], 0, ',', '.') . "</td>";
+										echo "<td>" . number_format($valor_futuro, 0, ',', '.') . "</td>";
+										echo "<td>" . round($diferencia_dias2) . " días</td>";
+										// Sumar el valor futuro a los aportes de industria
+										$valor_aportes_especie += $valor_futuro;
+										
+										echo "</tr>";
+									}
+									?>
+									<thead>
+									<tr>
+										<th>Total aporte en dinero (ajustado)<?php echo '<td>' . number_format($valor_aportes_especie, 0, ',', '.') . '</td>'; ?></th>
+									</tr>
+									</thead>
+								</tbody>
+							</table>
+						</div>
 					</div>
-				</div>
-				
+					<div class="pd-20 card-box mb-30">
+						<div class="card-box pb-10">
+							<div class="h5 pd-20 mb-0">Aportes en industria</div>
+							<table class="data-table table nowrap">
+								<thead>
+									<tr>
+										<th>Fecha</th>
+										<th>Monto</th>
+										<th>Valor del Aporte ajustado</th>
+										<th>Tiempo transcurrido desde el día del aporte</th>
+									</tr>
+								</thead>
+								<tbody>
+									<?php
+										$fecha_actual3 = date("Y-m-d");
+										$valor_aportes_industria = 0;
+										while ($fila = mysqli_fetch_assoc($resultadoIII)) {
+											echo "<tr>";
+											echo "<td>" . $fila['Fecha'] . "</td>";
+											// Calcular la diferencia en días correctamente
+											$diferencia_dias3 = (strtotime($fecha_actual3) - strtotime($fila['Fecha'])) / (60 * 60 * 24);
+											// Calcular el valor futuro
+											$valor_futuro = $fila['Monto'] * pow((1 + 0.4576), $diferencia_dias3 / 365);
+											// Formatear y mostrar los valores
+											echo "<td>" . number_format($fila['Monto'], 0, ',', '.') . "</td>";
+											echo "<td>" . number_format($valor_futuro, 0, ',', '.') . "</td>";
+											echo "<td>" . round($diferencia_dias3) . " días</td>";
+											// Sumar el valor futuro a los aportes de industria
+											$valor_aportes_industria += $valor_futuro;
+											echo "</tr>";
+										}
+									?>
+									<thead>
+									<tr>
+										<th>Total aporte en dinero (ajustado)<?php echo '<td>' . number_format($valor_aportes_industria, 0, ',', '.') . '</td>'; ?></th>
+									</tr>
+									</thead>
+								</tbody>
+							</table>
+						</div>
+					</div>
 			</div>
 		</div>
+		<script>
+			<?php
+			// Calcular valor de los aportes de capital sumando aportes en dinero y especie
+			$valor_aportes_capital = $valor_aportes_dinero + $valor_aportes_especie;
+
+			// Calcular el total de aportes sumando aportes de capital e industria
+			$total_aportes = $valor_aportes_capital + $valor_aportes_industria;
+			?>
+			document.addEventListener("DOMContentLoaded", function() {
+				// Valores desde PHP
+				var valorAportesIndustria = <?php echo $valor_aportes_industria; ?>;
+				var valorAportesCapital = <?php echo $valor_aportes_capital; ?>;
+				var totalAportes = <?php echo $total_aportes; ?>;
+
+				/// Formateando los valores como moneda colombiana sin decimales (COP)
+			document.getElementById('valor-capital').innerText = valorAportesCapital.toLocaleString( {  minimumFractionDigits: 0 });
+			document.getElementById('valor-industria').innerText = valorAportesIndustria.toLocaleString( {  minimumFractionDigits: 0 });
+			document.getElementById('suma-capital-industria').innerText = totalAportes.toLocaleString( {  minimumFractionDigits: 0 });
+			});
+			
+		</script>
 		
 		
 		<script src="../vendors/scripts/core.js"></script>
