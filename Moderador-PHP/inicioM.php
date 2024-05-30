@@ -5,21 +5,11 @@ session_start();
 // Verificar si el usuario está autenticado
 if (!isset($_SESSION['authenticated']) || $_SESSION['authenticated'] !== true) {
     // Si el usuario no está autenticado, redirigirlo a la página de inicio de sesión
-    header("Location: http://localhost/sistema-inversiones-v2/inicio.php"); // Cambia 'inicio-de-sesion.php' por la ruta de tu página de inicio de sesión
+    header("Location: http://localhost/sistema-inversiones-v2/index.php"); // Cambia 'inicio-de-sesion.php' por la ruta de tu página de inicio de sesión
     exit();
 }
 
 
-if (!isset($_SESSION['authenticated']) || $_SESSION['authenticated'] !== true) {
-    header("Location: ../inicio.php");
-    exit();
-}
-
-// Validar si se ha seleccionado un proyecto (puedes establecer una variable de sesión para el proyecto seleccionado)
-if (!isset($_SESSION['selected_project'])) {
-    header("Location: ../eleccionproyecto.php");
-    exit();
-}
 ?>
 
 <!DOCTYPE html>

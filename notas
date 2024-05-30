@@ -1,0 +1,56 @@
+<?php
+
+// Iniciar la sesión
+session_start();
+
+// Verificar si el usuario está autenticado
+if (!isset($_SESSION['authenticated']) || $_SESSION['authenticated'] !== true) {
+    // Si el usuario no está autenticado, redirigirlo a la página de inicio de sesión
+    header("Location: http://localhost/sistema-inversiones-v2/index.php");
+    exit();
+}
+
+include("conexionn.php");
+
+// Obtener el ID del usuario desde la sesión
+$id_usuario = $_SESSION['cedula'];
+
+// Consulta para obtener los proyectos vinculados al usuario
+$consulta_proyecto = "SELECT p.ID_Proyecto, p.Nombre 
+                      FROM proyecto p
+                      JOIN proyecto_usuario pu ON p.ID_Proyecto = pu.FK_ID_Proyecto
+                      WHERE pu.FK_ID_Usuario = '$id_usuario'";
+$resultado_proyecto = mysqli_query($conex, $consulta_proyecto);
+
+// Crear un array para almacenar los datos
+$datos_proyecto = array();
+while ($fila_proyecto = mysqli_fetch_assoc($resultado_proyecto)) {
+    $datos_proyecto[] = $fila_proyecto;
+}
+
+if ($_SERVER["REQUEST_METHOD"] == "POST") {
+    // Obtener la ID del proyecto seleccionado
+    $proyectoSeleccionado = $_POST["proyecto"];
+    
+    // Verifica que se haya seleccionado un proyecto
+    if (empty($proyectoSeleccionado)) {
+        echo "<script>alert('Por favor, seleccione un proyecto.');</script>";
+    } else {
+        // Guarda la ID del proyecto en una variable de sesión
+        $_SESSION["proyecto_seleccionado"] = $proyectoSeleccionado;
+        
+        // Redirige al usuario según su rol
+        switch ($_SESSION['rol']) {
+            case 2:
+                header("Location: http://localhost/sistema-inversiones-v2/Moderador-PHP/inicioM.php");
+                exit();
+            case 3:
+                header("Location: http://localhost/sistema-inversiones-v2/Inversionista-PHP/inicioI.php");
+                exit();
+            default:
+                header("Location: http://localhost/sistema-inversiones-v2/index.html");
+                exit();
+        }
+    }
+}
+?>

@@ -5,7 +5,7 @@ session_start();
 // Verificar si el usuario está autenticado
 if (!isset($_SESSION['authenticated']) || $_SESSION['authenticated'] !== true) {
     // Si el usuario no está autenticado, redirigirlo a la página de inicio de sesión
-    header("Location: http://localhost/sistema-inversiones-v2/inicio.php"); // Cambia 'inicio-de-sesion.php' por la ruta de tu página de inicio de sesión
+    header("Location: http://localhost/sistema-inversiones-v2/index.php"); // Cambia 'inicio-de-sesion.php' por la ruta de tu página de inicio de sesión
     exit();
 }
 ?>
@@ -342,7 +342,7 @@ if (!isset($_SESSION['authenticated']) || $_SESSION['authenticated'] !== true) {
 									<select name="rol" id="rol" class="custom-select col-12" onchange="mostrarProyecto()">
 										<option selected="">Seleccione</option>
 										<?php foreach ($datos_rol as $rol): ?>
-											<?php if ($rol['ID_Rol'] != 1): // Excluir rol con ID 1 ?>
+											<?php if ($rol['ID_Rol']): // Excluir rol con ID 1 ?>
 												<option value="<?php echo $rol['ID_Rol']; ?>">
 													<?php echo $rol['Nombre']; ?>
 												</option>

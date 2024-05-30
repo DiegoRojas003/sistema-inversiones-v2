@@ -61,33 +61,39 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $_SESSION['nombre'] = $nombre;
         $_SESSION['apellido'] = $apellido;
     
-        // Redireccionar según el rol
-        switch ($rol) {
-            case 1:
+        // Verificar proyectos del usuario
+        $proyectos = obtener_proyectos($conn, $id_usuario);
+
+        if (count($proyectos) == 0) {
+          switch ($rol) {
+              case 1:
                 header("Location: Admin-PHP/inicio.php");
                 exit();
-            case 2:
-            case 3:
-                // Verificar proyectos del usuario
-                $proyectos = obtener_proyectos($conn, $id_usuario);
-                if (count($proyectos) == 1) {
-                    $redirect_page = ($rol == 2) ? "Moderador-PHP/inicioM.php" : "Inversionista-PHP/inicioI.php";
-                    header("Location: $redirect_page");
-                    exit();
-                } else {
-                    // Si tiene más de un proyecto, dirigir a la página de selección de proyecto
-                    header("Location: eleccionproyecto.php");
-                    exit();
-                }
-            default:
-                // Rol no válido
-                echo "Rol no válido";
+              default:
+                // Si el usuario no tiene proyectos
+                echo "<script>alert('El usuario no tiene proyectos asignados. Por favor, comuníquese con el administrador.');</script>";
+                echo "<script>window.location.replace('http://localhost/sistema-inversiones-v2/cerrar-sesion.php');</script>";
                 exit();
+            }
+        } elseif (count($proyectos) == 1) {
+            // Si el usuario tiene solo un proyecto, redirigir según el rol
+            switch ($rol) {
+                case 2:
+                    echo "<script>window.location.replace('Moderador-PHP/inicioM.php');</script>"; 
+                    exit();
+                case 3:
+                  echo "<script>window.location.replace('Inversionista-PHP/inicioI.php');</script>"; 
+                    exit();
+            }
+        } else {
+            // Si tiene más de un proyecto, dirigir a la página de selección de proyecto
+            echo "<script>window.location.replace('eleccionproyecto.php');</script>";
+            exit();
         }
     } else {
         // No se encontraron coincidencias para el usuario y la contraseña
         echo "<script>alert('Credenciales Incorrectas');</script>";
-        echo "<script>window.location.replace('inicio.php');</script>";
+        echo "<script>window.location.replace('index.php');</script>";
     }
 
     // Cerrar conexión
@@ -115,11 +121,14 @@ function obtener_proyectos($conn, $id_usuario) {
     return $proyectos;
 }
 ?>
+
+
+
 <!DOCTYPE html>
 <html lang="es">
 
 <head>
-<script>
+    <script>
         function validarFormulario() {
             var cedula = document.getElementById("cedula").value;
             var contrasena = document.getElementById("contrasena").value;
