@@ -18,7 +18,7 @@ $apellido = isset($_SESSION['apellido']) ? $_SESSION['apellido'] : '';
     <div class="header">
         <div class="header-left">
             <div class="menu-icon bi bi-list"></div>
-
+                
             <div class="header-search">
                 <h2>Administrador</h1>
             </div>
@@ -143,9 +143,9 @@ $apellido = isset($_SESSION['apellido']) ? $_SESSION['apellido'] : '';
 
     <div class="left-side-bar">
         <div class="brand-logo">
-            <a href="index.html">
+            <a href="inicio.php">
                 <img src="" alt="" class="dark-logo" />
-
+                <h3>Sipmainputvalue</h3>
             </a>
             <div class="close-sidebar" data-toggle="left-sidebar-close">
                 <i class="ion-close-round"></i>
