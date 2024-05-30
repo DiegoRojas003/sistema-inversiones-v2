@@ -114,7 +114,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['consultar'])) {
     $tasa_ajustada = number_format(round(pow(1 + 0.4576, 1/365) - 1, 4) * 100, 2);
 	
 	include("conexionn.php");
-	$usuario_id = 1003519051;
 	
 	$usuario_id = $_POST['usuario'];
 
