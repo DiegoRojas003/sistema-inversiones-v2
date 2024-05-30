@@ -242,7 +242,8 @@ function obtener_proyectos($conn, $id_usuario) {
                             </div>
                             <div class="col-5">
                                 <div class="input-group mb-0">
-                                    <a class="btn btn-outline-primary btn-lg btn-block" onclick="$('#login-modal').modal('hide')">Salir</a>
+                                <a class="btn btn-outline-primary btn-lg btn-block" onclick="$('#login-modal').modal('hide')">Salir</a>
+
                                 </div>
                             </div>
                         </div>
@@ -474,10 +475,10 @@ function obtener_proyectos($conn, $id_usuario) {
 
           <div class="col-lg-4 col-md-6">
             <div class="member" data-aos="zoom-in">
-              <div class="pic"><img src="assets/img/team/team-1.jpg" class="img-fluid" alt=""></div>
+              <div class="pic"><img src="assets\img\team\team-1.jpg" class="img-fluids" alt=""></div>
               <div class="member-info">
-                <h4>Walter White</h4>
-                <span>Chief Executive Officer</span>
+                <h4>Micher Alexander Gonzalez Monroy</h4>
+                <span>Docente</span>
                 <div class="social">
                   <a href=""><i class="bi bi-twitter"></i></a>
                   <a href=""><i class="bi bi-facebook"></i></a>
@@ -490,10 +491,10 @@ function obtener_proyectos($conn, $id_usuario) {
 
           <div class="col-lg-4 col-md-6">
             <div class="member" data-aos="zoom-in" data-aos-delay="100">
-              <div class="pic"><img src="assets/img/team/team-2.jpg" class="img-fluid" alt=""></div>
+              <div class="pic"><img src="assets\img\team\team-1.jpg" class="img-fluids" alt="" ></div>
               <div class="member-info">
-                <h4>Sarah Jhonson</h4>
-                <span>Product Manager</span>
+                <h4>Campo Eli Castillo Eraso</h4>
+                <span>Docente</span>
                 <div class="social">
                   <a href=""><i class="bi bi-twitter"></i></a>
                   <a href=""><i class="bi bi-facebook"></i></a>
@@ -506,9 +507,39 @@ function obtener_proyectos($conn, $id_usuario) {
 
           <div class="col-lg-4 col-md-6">
             <div class="member" data-aos="zoom-in" data-aos-delay="200">
-              <div class="pic"><img src="assets/img/team/team-3.jpg" class="img-fluid" alt=""></div>
+              <div class="pic"><img src="assets\img\team\Diana Karina Lopez Carreño.jpg" class="img-fluids" alt=""></div>
               <div class="member-info">
-                <h4>William Anderson</h4>
+                <h4>Diana Karina Lopez Carreño</h4>
+                <span>Docente</span>
+                <div class="social">
+                  <a href=""><i class="bi bi-twitter"></i></a>
+                  <a href=""><i class="bi bi-facebook"></i></a>
+                  <a href=""><i class="bi bi-instagram"></i></a>
+                  <a href=""><i class="bi bi-linkedin"></i></a>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="col-lg-4 col-md-6">
+            <div class="member" data-aos="zoom-in" data-aos-delay="200">
+              <div class="pic"><img src="assets\img\team\Jonatan Riveros.jpg" class="img-fluids" alt=""></div>
+              <div class="member-info">
+                <h4>Jonatan Mateo Riveros Mendez</h4>
+                <span>Desarrollador</span>
+                <div class="social">
+                  <a href=""><i class="bi bi-twitter"></i></a>
+                  <a href=""><i class="bi bi-facebook"></i></a>
+                  <a href=""><i class="bi bi-instagram"></i></a>
+                  <a href=""><i class="bi bi-linkedin"></i></a>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="col-lg-4 col-md-6">
+            <div class="member" data-aos="zoom-in" data-aos-delay="200">
+              <div class="pic"><img src="assets\img\team\Kevin Alexander Pena Conejo.jpg" class="img-fluids" alt=""></div>
+              <div class="member-info">
+                <h4>Kevin Alexander Pena Conejo</h4>
                 <span>CTO</span>
                 <div class="social">
                   <a href=""><i class="bi bi-twitter"></i></a>
@@ -521,10 +552,10 @@ function obtener_proyectos($conn, $id_usuario) {
           </div>
           <div class="col-lg-4 col-md-6">
             <div class="member" data-aos="zoom-in" data-aos-delay="200">
-              <div class="pic"><img src="assets/img/team/team-3.jpg" class="img-fluid" alt=""></div>
+              <div class="pic"><img src="assets\img\team\Diego Alejandro Penagos Rojas.jpg" class="img-fluids" alt=""></div>
               <div class="member-info">
-                <h4>William Anderson</h4>
-                <span>CTO</span>
+                <h4>Diego Alejandro Penagos Rojas</h4>
+                <span>Desarrollador</span>
                 <div class="social">
                   <a href=""><i class="bi bi-twitter"></i></a>
                   <a href=""><i class="bi bi-facebook"></i></a>
@@ -536,10 +567,25 @@ function obtener_proyectos($conn, $id_usuario) {
           </div>
           <div class="col-lg-4 col-md-6">
             <div class="member" data-aos="zoom-in" data-aos-delay="200">
-              <div class="pic"><img src="assets/img/team/team-3.jpg" class="img-fluid" alt=""></div>
+              <div class="pic"><img src="assets\img\team\team-2.jpg" class="img-fluids" alt=""></div>
               <div class="member-info">
-                <h4>William Anderson</h4>
-                <span>CTO</span>
+                <h4>Paula Andrea Cantor Caballero</h4>
+                <span></span>
+                <div class="social">
+                  <a href=""><i class="bi bi-twitter"></i></a>
+                  <a href=""><i class="bi bi-facebook"></i></a>
+                  <a href=""><i class="bi bi-instagram"></i></a>
+                  <a href=""><i class="bi bi-linkedin"></i></a>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="col-lg-4 col-md-6">
+            <div class="member" data-aos="zoom-in" data-aos-delay="200">
+              <div class="pic"><img src="assets\img\team\team-3.jpg" class="img-fluids" alt=""></div>
+              <div class="member-info">
+                <h4>Cristhian Raul Mora Angulo</h4>
+                <span></span>
                 <div class="social">
                   <a href=""><i class="bi bi-twitter"></i></a>
                   <a href=""><i class="bi bi-facebook"></i></a>

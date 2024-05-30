@@ -96,7 +96,7 @@ $conn->close();
 			href="../src/plugins/datatables/css/responsive.bootstrap4.min.css"
 		/>
 		<link rel="stylesheet" type="text/css" href="../vendors/styles/style.css" />
-		<link rel="stylesheet" href="styles/style.css">
+		<link rel="stylesheet" href="src\styles\style.css">
 	</head>
 	<body>
 	<?php include('template.php'); ?>
@@ -324,6 +324,108 @@ $conn->close();
 									<th scope="row"></th>
 									<th scope="row">$ 12.000.000</th>
 									<th scope="row"></th>
+								</tr>
+							</tbody>
+						</table>
+							  
+					</div>
+					<div class="pd-20 card-box mb-30">
+						<h4 class="text-blue h4">Aportes en especie</h4>
+						<table class="table table-striped" >
+							<thead >
+							<tr >
+								<th scope="col" style="font-size:10px ;" >Fecha del Aporte</th>
+								<th scope="col" style="font-size:10px ;">Aporte de genero y especie</th>
+								<th scope="col" style="font-size:10px ;">Aportes de usufructo</th>
+								<th scope="col" style="font-size:10px ;">Aportes de crédito</th>
+								<th scope="col" style="font-size:10px ;">Aportes en sesión de contratos</th>
+								<th scope="col"style="font-size:10px ;">Aportes de establecimientos de comercio</th>
+								<th scope="col"style="font-size:10px ;">Aportes de derecho sobre propiedad industrial</th>
+								<th scope="col"style="font-size:10px ;">Aporte de partes de interés, cuotas o acciones</th>
+								<th scope="col"style="font-size:10px ;">Total aporte en especie</th>
+								<th scope="col"style="font-size:10px ;">Total de aporte en especie ajustado</th>
+								<th scope="col"style="font-size:10px ;">Tiempo transcurrido desde el día del aporte</th>
+							</tr>
+							</thead>
+							<tbody>
+								<tr>
+									<th scope="row"style="font-size:10px ;">10/03/2024</th>
+									<th scope="row"style="font-size:10px ;">$2500000</th>
+									<th scope="row"style="font-size:10px ;"></th>
+									<th scope="row"style="font-size:10px ;"></th>
+									<th scope="row"style="font-size:10px ;"></th>
+									<th scope="row"style="font-size:10px ;"></th>
+									<th scope="row"style="font-size:10px ;"></th>
+									<th scope="row"style="font-size:10px ;"></th>
+									<th scope="row"style="font-size:10px ;"></th>
+									<th scope="row"style="font-size:10px ;">2500000</th>
+									<th scope="row"style="font-size:10px ;">4 días</th>
+									
+								</tr>
+								<tr>
+									<th scope="row"style="font-size:10px ;">10/03/2024</th>
+									<th scope="row"style="font-size:10px ;"></th>
+									<th scope="row"style="font-size:10px ;">$ 30000000</th>
+									<th scope="row"style="font-size:10px ;"></th>
+									<th scope="row"style="font-size:10px ;"></th>
+									<th scope="row"style="font-size:10px ;"></th>
+									<th scope="row"style="font-size:10px ;"></th>
+									<th scope="row"style="font-size:10px ;"></th>
+									<th scope="row"style="font-size:10px ;"></th>
+									<th scope="row"style="font-size:10px ;">2500000</th>
+									<th scope="row"style="font-size:10px ;">4 días</th>
+								</tr>
+								<tr>
+									<th scope="row"style="font-size:10px ;">10/03/2024</th>
+									<th scope="row"style="font-size:10px ;"></th>
+									<th scope="row"style="font-size:10px ;"></th>
+									<th scope="row"style="font-size:10px ;">2500000</th>
+									<th scope="row"style="font-size:10px ;"></th>
+									<th scope="row"style="font-size:10px ;"></th>
+									<th scope="row"style="font-size:10px ;"></th>
+									<th scope="row"style="font-size:10px ;"></th>
+									<th scope="row"style="font-size:10px ;"></th>
+									<th scope="row"style="font-size:10px ;">2500000</th>
+									<th scope="row"style="font-size:10px ;">4 días</th>
+								</tr>
+								<tr>
+									<th scope="row"style="font-size:10px ;">10/03/2024</th>
+									<th scope="row"style="font-size:10px ;"></th>
+									<th scope="row"style="font-size:10px ;"></th>
+									<th scope="row"style="font-size:10px ;"></th>
+									<th scope="row"style="font-size:10px ;">2500000</th>
+									<th scope="row"style="font-size:10px ;"></th>
+									<th scope="row"style="font-size:10px ;"></th>
+									<th scope="row"style="font-size:10px ;"></th>
+									<th scope="row"style="font-size:10px ;"></th>
+									<th scope="row"style="font-size:10px ;">2500000</th>
+									<th scope="row"style="font-size:10px ;">4 días</th>
+								</tr>
+								<tr>
+									<th scope="row"style="font-size:10px ;">10/03/2024</th>
+									<th scope="row"style="font-size:10px ;"></th>
+									<th scope="row"style="font-size:10px ;"></th>
+									<th scope="row"style="font-size:10px ;"></th>
+									<th scope="row"style="font-size:10px ;"></th>
+									<th scope="row"style="font-size:10px ;"></th>
+									<th scope="row"style="font-size:10px ;"></th>
+									<th scope="row"style="font-size:10px ;"></th>
+									<th scope="row"style="font-size:10px ;">2500000</th>
+									<th scope="row"style="font-size:10px ;">2500000</th>
+									<th scope="row"style="font-size:10px ;">4 días</th>
+								</tr>
+								<tr style="background-color: blue; color: white;">
+									<th scope="row"style="font-size:15px ;">Total:</th>
+									<th scope="row"style="font-size:10px ;"></th>
+									<th scope="row"style="font-size:10px ;"></th>
+									<th scope="row"style="font-size:10px ;"></th>
+									<th scope="row"style="font-size:10px ;"></th>
+									<th scope="row"style="font-size:10px ;"></th>
+									<th scope="row"style="font-size:10px ;"></th>
+									<th scope="row"style="font-size:10px ;"></th>
+									<th scope="row"style="font-size:10px ;"></th>
+									<th scope="row"style="font-size:15px ;">$2500000</th>
+									<th scope="row"style="font-size:10px;"></th>
 								</tr>
 							</tbody>
 						</table>
