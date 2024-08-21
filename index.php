@@ -128,36 +128,36 @@ function obtener_proyectos($conn, $id_usuario) {
 <html lang="es">
 
 <head>
-    <script>
-        function validarFormulario() {
-            var cedula = document.getElementById("cedula").value;
-            var contrasena = document.getElementById("contrasena").value;
+  <script>
+    function validarFormulario() {
+      var cedula = document.getElementById("cedula").value;
+      var contrasena = document.getElementById("contrasena").value;
 
-            if (cedula.trim() == "" || contrasena.trim() == "") {
-                alert("Por favor, complete todos los campos.");
-                return false; // Evitar que el formulario se envíe si hay campos en blanco
-            }
-            return true; // Permitir el envío del formulario si todos los campos están llenos
-        }
-    </script>
-    <script>
+      if (cedula.trim() == "" || contrasena.trim() == "") {
+        alert("Por favor, complete todos los campos.");
+        return false; // Evitar que el formulario se envíe si hay campos en blanco
+      }
+      return true; // Permitir el envío del formulario si todos los campos están llenos
+    }
+  </script>
+  <script>
     // Función para recordar el estado del checkbox "Recuérdeme"
     function recordarCheckbox() {
-        var recordar = localStorage.getItem("recuerdame");
-        if (recordar === "true") {
-            document.getElementById("customCheck1").checked = true;
-        }
+      var recordar = localStorage.getItem("recuerdame");
+      if (recordar === "true") {
+        document.getElementById("customCheck1").checked = true;
+      }
     }
 
     // Función para guardar el estado del checkbox en localStorage
     function guardarCheckbox() {
-        var recordar = document.getElementById("customCheck1").checked;
-        localStorage.setItem("recuerdame", recordar);
+      var recordar = document.getElementById("customCheck1").checked;
+      localStorage.setItem("recuerdame", recordar);
     }
 
     // Llamar a la función para recordar el estado del checkbox al cargar la página
     recordarCheckbox();
-</script>
+  </script>
   <meta charset="utf-8">
   <meta content="width=device-width, initial-scale=1.0" name="viewport">
 
@@ -183,11 +183,11 @@ function obtener_proyectos($conn, $id_usuario) {
   <link href="assets/vendor/swiper/swiper-bundle.min.css" rel="stylesheet">
 
   <link rel="stylesheet" type="text/css" href="vendors/styles/core.css" />
-    <link rel="stylesheet" type="text/css" href="vendors/styles/icon-font.min.css" />
-    <link rel="stylesheet" type="text/css" href="src/plugins/jquery-steps/jquery.steps.css" />
-    <link rel="stylesheet" type="text/css" href="vendors/styles/style.css" />
-    <link rel="stylesheet" href="src/styles/style-inicio.css">
-    <link rel="stylesheet" href="src/styles/style.css">
+  <link rel="stylesheet" type="text/css" href="vendors/styles/icon-font.min.css" />
+  <link rel="stylesheet" type="text/css" href="src/plugins/jquery-steps/jquery.steps.css" />
+  <link rel="stylesheet" type="text/css" href="vendors/styles/style.css" />
+  <link rel="stylesheet" href="src/styles/style-inicio.css">
+  <link rel="stylesheet" href="src/styles/style.css">
   <link href="assets\css\style-index.css" rel="stylesheet">
 
 
@@ -196,62 +196,65 @@ function obtener_proyectos($conn, $id_usuario) {
 <body>
   <!-- Contenido del modal Login -->
   <div class="modal fade" id="login-modal" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel"
-        aria-hidden="true">
-        <div class="modal-dialog modal-dialog-centered">
-            <div class="modal-content">
-                <div class="login-box bg-white box-shadow border-radius-10">
-                    <div class="login-title">
-                        <h2 class="text-center text-primary">
-                            Iniciar Sesión
-                        </h2>
-                    </div>
-                    <form method="post" action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]); ?>" onsubmit="return validarFormulario();">
-                        <div class="input-group custom">
-                            <input type="number" class="form-control form-control-lg" placeholder="Cédula" id="cedula" name="cedula" />
-                            <div class="input-group-append custom">
-                                <span class="input-group-text"><i class="icon-copy dw dw-user1"></i></span>
-                            </div>
-                        </div>
-                        <div class="input-group custom">
-                            <input type="password" class="form-control form-control-lg" placeholder="Contraseña" id="contrasena" name="contrasena" />
-                            <div class="input-group-append custom">
-                                <span class="input-group-text"><i class="dw dw-padlock1"></i></span>
-                            </div>
-                        </div>
-                        <div class="row pb-30">
-                            <div class="col-6">
-                                <div class="custom-control custom-checkbox">
-                                    <input type="checkbox" class="custom-control-input" id="customCheck1" onchange="guardarCheckbox();" />
-                                    <label class="custom-control-label" for="customCheck1">Recuérdame</label>
-                                </div>
-                            </div>
-                            <div class="col-6">
-                                <div class="forgot-password">
-                                    <a href="forgot-password.html">¿Olvidó su contraseña?</a>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="row align-items-center">
-                            <div class="col-5">
-                                <div class="input-group mb-0">
-                                    <button class="btn btn-primary btn-lg btn-block" type="submit">Iniciar sesión</button>
-                                </div>
-                            </div>
-                            <div class="col-2">
-                                <div class="font-16 weight-600 text-center" data-color="#707373">Ó</div>
-                            </div>
-                            <div class="col-5">
-                                <div class="input-group mb-0">
-                                <a class="btn btn-outline-primary btn-lg btn-block" onclick="$('#login-modal').modal('hide')">Salir</a>
-
-                                </div>
-                            </div>
-                        </div>
-                    </form>
-                </div>
+    aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content">
+        <div class="login-box bg-white box-shadow border-radius-10">
+          <div class="login-title">
+            <h2 class="text-center text-primary">
+              Iniciar Sesión
+            </h2>
+          </div>
+          <form method="post" action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]);?>" onsubmit="return validarFormulario();">
+            <div class="input-group custom">
+              <input type="number" class="form-control form-control-lg" placeholder="Cédula" id="cedula"
+                name="cedula" />
+              <div class="input-group-append custom">
+                <span class="input-group-text"><i class="icon-copy dw dw-user1"></i></span>
+              </div>
             </div>
+            <div class="input-group custom">
+              <input type="password" class="form-control form-control-lg" placeholder="Contraseña" id="contrasena"
+                name="contrasena" />
+              <div class="input-group-append custom">
+                <span class="input-group-text"><i class="dw dw-padlock1"></i></span>
+              </div>
+            </div>
+            <div class="row pb-30">
+              <div class="col-6">
+                <div class="custom-control custom-checkbox">
+                  <input type="checkbox" class="custom-control-input" id="customCheck1" onchange="guardarCheckbox();" />
+                  <label class="custom-control-label" for="customCheck1">Recuérdame</label>
+                </div>
+              </div>
+              <div class="col-6">
+                <div class="forgot-password">
+                  <a href="forgot-password.html">¿Olvidó su contraseña?</a>
+                </div>
+              </div>
+            </div>
+            <div class="row align-items-center">
+              <div class="col-5">
+                <div class="input-group mb-0">
+                  <button class="btn btn-primary btn-lg btn-block" type="submit">Iniciar sesión</button>
+                </div>
+              </div>
+              <div class="col-2">
+                <div class="font-16 weight-600 text-center" data-color="#707373">Ó</div>
+              </div>
+              <div class="col-5">
+                <div class="input-group mb-0">
+                  <a class="btn btn-outline-primary btn-lg btn-block"
+                    onclick="$('#login-modal').modal('hide')">Salir</a>
+
+                </div>
+              </div>
+            </div>
+          </form>
         </div>
+      </div>
     </div>
+  </div>
   <!-- ======= Header ======= -->
   <header id="header" class="fixed-top d-flex align-items-center">
     <div class="container d-flex align-items-center">
@@ -491,7 +494,7 @@ function obtener_proyectos($conn, $id_usuario) {
 
           <div class="col-lg-4 col-md-6">
             <div class="member" data-aos="zoom-in" data-aos-delay="100">
-              <div class="pic"><img src="assets\img\team\team-1.jpg" class="img-fluids" alt="" ></div>
+              <div class="pic"><img src="assets\img\team\team-1.jpg" class="img-fluids" alt=""></div>
               <div class="member-info">
                 <h4>Campo Eli Castillo Eraso</h4>
                 <span>Docente</span>
@@ -507,7 +510,8 @@ function obtener_proyectos($conn, $id_usuario) {
 
           <div class="col-lg-4 col-md-6">
             <div class="member" data-aos="zoom-in" data-aos-delay="200">
-              <div class="pic"><img src="assets\img\team\Diana Karina Lopez Carreño.jpg" class="img-fluids" alt=""></div>
+              <div class="pic"><img src="assets\img\team\Diana Karina Lopez Carreño.jpg" class="img-fluids" alt="">
+              </div>
               <div class="member-info">
                 <h4>Diana Karina Lopez Carreño</h4>
                 <span>Docente</span>
@@ -537,7 +541,8 @@ function obtener_proyectos($conn, $id_usuario) {
           </div>
           <div class="col-lg-4 col-md-6">
             <div class="member" data-aos="zoom-in" data-aos-delay="200">
-              <div class="pic"><img src="assets\img\team\Kevin Alexander Pena Conejo.jpg" class="img-fluids" alt=""></div>
+              <div class="pic"><img src="assets\img\team\Kevin Alexander Pena Conejo.jpg" class="img-fluids" alt="">
+              </div>
               <div class="member-info">
                 <h4>Kevin Alexander Pena Conejo</h4>
                 <span>CTO</span>
@@ -552,7 +557,8 @@ function obtener_proyectos($conn, $id_usuario) {
           </div>
           <div class="col-lg-4 col-md-6">
             <div class="member" data-aos="zoom-in" data-aos-delay="200">
-              <div class="pic"><img src="assets\img\team\Diego Alejandro Penagos Rojas.jpg" class="img-fluids" alt=""></div>
+              <div class="pic"><img src="assets\img\team\Diego Alejandro Penagos Rojas.jpg" class="img-fluids" alt="">
+              </div>
               <div class="member-info">
                 <h4>Diego Alejandro Penagos Rojas</h4>
                 <span>Desarrollador</span>
@@ -567,7 +573,7 @@ function obtener_proyectos($conn, $id_usuario) {
           </div>
           <div class="col-lg-4 col-md-6">
             <div class="member" data-aos="zoom-in" data-aos-delay="200">
-              <div class="pic"><img src="assets\img\team\team-2.jpg" class="img-fluids" alt=""></div>
+              <div class="pic"><img src="assets\img\team\Paula Cantor Caballero.jpg" class="img-fluids" alt=""></div>
               <div class="member-info">
                 <h4>Paula Andrea Cantor Caballero</h4>
                 <span></span>
@@ -582,7 +588,7 @@ function obtener_proyectos($conn, $id_usuario) {
           </div>
           <div class="col-lg-4 col-md-6">
             <div class="member" data-aos="zoom-in" data-aos-delay="200">
-              <div class="pic"><img src="assets\img\team\team-3.jpg" class="img-fluids" alt=""></div>
+              <div class="pic"><img src="assets\img\team\Cristhian Raul.jpg" class="img-fluids" alt=""></div>
               <div class="member-info">
                 <h4>Cristhian Raul Mora Angulo</h4>
                 <span></span>
@@ -614,81 +620,95 @@ function obtener_proyectos($conn, $id_usuario) {
         <ul class="faq-list">
 
           <li>
-            <div data-bs-toggle="collapse" class="collapsed question" href="#faq1">Non consectetur a erat nam at lectus
-              urna duis? <i class="bi bi-chevron-down icon-show"></i><i class="bi bi-chevron-up icon-close"></i></div>
+            <div data-bs-toggle="collapse" class="collapsed question" href="#faq1">¿Qué es la tasa libre de riesgo? <i
+                class="bi bi-chevron-down icon-show"></i><i class="bi bi-chevron-up icon-close"></i></div>
             <div id="faq1" class="collapse" data-bs-parent=".faq-list">
               <p>
-                Feugiat pretium nibh ipsum consequat. Tempus iaculis urna id volutpat lacus laoreet non curabitur
-                gravida. Venenatis lectus magna fringilla urna porttitor rhoncus dolor purus non.
+                La tasa libre de riesgo es el rendimiento esperado de una inversión que se considera sin riesgo de
+                pérdida, lo que generalmente se representa con los bonos del Tesoro de Estados Unidos.
+                <br><em>Fuente: Brealey, R.A., Myers, S.C., & Allen, F. (2019). Principles of Corporate Finance (13th
+                  ed.). McGraw-Hill Education.
+                  </br></em>
               </p>
             </div>
           </li>
 
-          <li>
-            <div data-bs-toggle="collapse" href="#faq2" class="collapsed question">Feugiat scelerisque varius morbi enim
-              nunc faucibus a pellentesque? <i class="bi bi-chevron-down icon-show"></i><i
-                class="bi bi-chevron-up icon-close"></i></div>
-            <div id="faq2" class="collapse" data-bs-parent=".faq-list">
-              <p>
-                Dolor sit amet consectetur adipiscing elit pellentesque habitant morbi. Id interdum velit laoreet id
-                donec ultrices. Fringilla phasellus faucibus scelerisque eleifend donec pretium. Est pellentesque elit
-                ullamcorper dignissim. Mauris ultrices eros in cursus turpis massa tincidunt dui.
-              </p>
-            </div>
-          </li>
+
 
           <li>
-            <div data-bs-toggle="collapse" href="#faq3" class="collapsed question">Dolor sit amet consectetur adipiscing
-              elit pellentesque habitant morbi? <i class="bi bi-chevron-down icon-show"></i><i
-                class="bi bi-chevron-up icon-close"></i></div>
+            <div data-bs-toggle="collapse" href="#faq3" class="collapsed question">¿Qué es la prima de mercado? <i
+                class="bi bi-chevron-down icon-show"></i><i class="bi bi-chevron-up icon-close"></i></div>
             <div id="faq3" class="collapse" data-bs-parent=".faq-list">
               <p>
-                Eleifend mi in nulla posuere sollicitudin aliquam ultrices sagittis orci. Faucibus pulvinar elementum
-                integer enim. Sem nulla pharetra diam sit amet nisl suscipit. Rutrum tellus pellentesque eu tincidunt.
-                Lectus urna duis convallis convallis tellus. Urna molestie at elementum eu facilisis sed odio morbi quis
+                La prima de mercado es la diferencia entre el rendimiento esperado del mercado de acciones y la tasa
+                libre de riesgo. Refleja el retorno adicional que los inversionistas requieren por asumir el riesgo
+                adicional asociado con las acciones en comparación con los activos sin riesgo. Se usa en el modelo CAPM
+                para estimar el rendimiento esperado de una acción.
+                <br><em>Fuente: Sharpe, W.F. (1964). "Capital Asset Prices: A Theory of Market Equilibrium under
+                  Conditions of Risk". Journal of Finance, 19(3), 425-442.</br></em>
               </p>
             </div>
           </li>
 
           <li>
-            <div data-bs-toggle="collapse" href="#faq4" class="collapsed question">Ac odio tempor orci dapibus. Aliquam
-              eleifend mi in nulla? <i class="bi bi-chevron-down icon-show"></i><i
-                class="bi bi-chevron-up icon-close"></i></div>
-            <div id="faq4" class="collapse" data-bs-parent=".faq-list">
-              <p>
-                Dolor sit amet consectetur adipiscing elit pellentesque habitant morbi. Id interdum velit laoreet id
-                donec ultrices. Fringilla phasellus faucibus scelerisque eleifend donec pretium. Est pellentesque elit
-                ullamcorper dignissim. Mauris ultrices eros in cursus turpis massa tincidunt dui.
-              </p>
-            </div>
-          </li>
-
-          <li>
-            <div data-bs-toggle="collapse" href="#faq5" class="collapsed question">Tempus quam pellentesque nec nam
-              aliquam sem et tortor consequat? <i class="bi bi-chevron-down icon-show"></i><i
-                class="bi bi-chevron-up icon-close"></i></div>
+            <div data-bs-toggle="collapse" href="#faq5" class="collapsed question">¿Qué es la beta apalancada? <i
+                class="bi bi-chevron-down icon-show"></i><i class="bi bi-chevron-up icon-close"></i></div>
             <div id="faq5" class="collapse" data-bs-parent=".faq-list">
               <p>
-                Molestie a iaculis at erat pellentesque adipiscing commodo. Dignissim suspendisse in est ante in. Nunc
-                vel risus commodo viverra maecenas accumsan. Sit amet nisl suscipit adipiscing bibendum est. Purus
-                gravida quis blandit turpis cursus in
+                La beta apalancada mide el riesgo de una acción teniendo en cuenta la estructura de capital de la
+                empresa, es decir, su mezcla de deuda y capital propio. Refleja cómo los cambios en el mercado afectan
+                el rendimiento de la acción, considerando el efecto del apalancamiento financiero.
+                Apalancar la beta es reconocer a través del riesgo que la empresa esta endeudada y, por lo tanto, tiene
+                mayor riesgo.
               </p>
             </div>
           </li>
 
           <li>
-            <div data-bs-toggle="collapse" href="#faq6" class="collapsed question">Tortor vitae purus faucibus ornare.
-              Varius vel pharetra vel turpis nunc eget lorem dolor? <i class="bi bi-chevron-down icon-show"></i><i
-                class="bi bi-chevron-up icon-close"></i></div>
+            <div data-bs-toggle="collapse" href="#faq6" class="collapsed question">¿Qué es la tasa de impuestos?<i
+                class="bi bi-chevron-down icon-show"></i><i class="bi bi-chevron-up icon-close"></i></div>
             <div id="faq6" class="collapse" data-bs-parent=".faq-list">
               <p>
-                Laoreet sit amet cursus sit amet dictum sit amet justo. Mauris vitae ultricies leo integer malesuada
-                nunc vel. Tincidunt eget nullam non nisi est sit amet. Turpis nunc eget lorem dolor sed. Ut venenatis
-                tellus in metus vulputate eu scelerisque. Pellentesque diam volutpat commodo sed egestas egestas
-                fringilla phasellus faucibus. Nibh tellus molestie nunc non blandit massa enim nec.
+                La tasa de impuestos es el porcentaje de ingresos o ganancias que una empresa o individuo debe pagar al
+                gobierno (Impuesto de renta). En el contexto financiero, es importante porque los intereses de la deuda
+                suelen ser deducibles de impuestos, lo que afecta el cálculo del costo de la deuda y, por ende, el WACC.
+                <br><em>Fuente: Graham, J.R. (2000). "How Big Are the Tax Benefits of Debt?". Journal of Finance, 55(5),
+                  1901-1941. </em></br>
               </p>
             </div>
           </li>
+
+
+          <li>
+            <div data-bs-toggle="collapse" href="#faq2" class="collapsed question">¿Qué es la estructura de capital?<i
+                class="bi bi-chevron-down icon-show"></i><i class="bi bi-chevron-up icon-close"></i></div>
+            <div id="faq2" class="collapse" data-bs-parent=".faq-list">
+              <p>
+                La estructura de capital es la proporción de deuda y capital propio que una empresa utiliza para
+                financiar sus activos y operaciones. Esta mezcla impacta el costo de capital, el riesgo financiero y la
+                rentabilidad general de la empresa.
+                <br><em>Fuente: Myers, S.C. (1984). "The Capital Structure Puzzle". Journal of Finance, 39(3),
+                  575-592.</em></br>
+              </p>
+            </div>
+          </li>
+
+          <li>
+            <div data-bs-toggle="collapse" href="#faq7" class="collapsed question">¿Qué es el WACC (Costo Promedio
+              Ponderado de Capital)?<i class="bi bi-chevron-down icon-show"></i><i
+                class="bi bi-chevron-up icon-close"></i></div>
+            <div id="faq7" class="collapse" data-bs-parent=".faq-list">
+              <p>
+                El WACC es el costo promedio ponderado del capital que calcula el costo de todas las fuentes de
+                financiación utilizadas por una empresa, ponderadas según su proporción en la estructura de capital de
+                la empresa. Incluye el costo de la deuda y el costo del capital propio, y se utiliza para valorar
+                proyectos y empresas.
+                <br><em>Fuente: Brealey, R.A., Myers, S.C., & Allen, F. (2019). Principles of Corporate Finance (13th
+                  ed.). McGraw-Hill Education.</em></br>
+              </p>
+            </div>
+          </li>
+
 
         </ul>
 
@@ -835,11 +855,11 @@ function obtener_proyectos($conn, $id_usuario) {
   <script src="assets/vendor/php-email-form/validate.js"></script>
 
   <script src="vendors/scripts/core.js"></script>
-    <script src="vendors/scripts/script.min.js"></script>
-    <script src="vendors/scripts/process.js"></script>
-    <script src="vendors/scripts/layout-settings.js"></script>
-    <script src="src/plugins/jquery-steps/jquery.steps.js"></script>
-    <script src="vendors/scripts/steps-setting.js"></script>
+  <script src="vendors/scripts/script.min.js"></script>
+  <script src="vendors/scripts/process.js"></script>
+  <script src="vendors/scripts/layout-settings.js"></script>
+  <script src="src/plugins/jquery-steps/jquery.steps.js"></script>
+  <script src="vendors/scripts/steps-setting.js"></script>
   <!-- Template Main JS File -->
   <script src="assets/js/main.js"></script>
 

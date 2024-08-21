@@ -1,14 +1,15 @@
-
 <?php
 
 // Iniciar la sesión
 session_start();
+
 // Verificar si el usuario está autenticado
 if (!isset($_SESSION['authenticated']) || $_SESSION['authenticated'] !== true) {
     // Si el usuario no está autenticado, redirigirlo a la página de inicio de sesión
     header("Location: http://localhost/sistema-inversiones-v2/index.php");
     exit();
 }
+
 // Conexión a la base de datos
 $servername = "localhost";
 $username = "root";
@@ -16,10 +17,12 @@ $password = "";
 $dbname = "sistemainversiones";
 
 $conn = new mysqli($servername, $username, $password, $dbname);
+
 // Verificar conexión
 if ($conn->connect_error) {
     die("Conexión fallida: " . $conn->connect_error);
 }
+
 // Definir las variables para evitar advertencias de "Undefined variable"
 $num_inversiones_realizadas = 0;
 $diferencia_dias = 0;
@@ -28,9 +31,11 @@ $tasa_ajustada = 0;
 $total_aportes = 0;
 $valor_aportes_capital = 0;
 $valor_aportes_industria = 0;
+
 // Consulta para obtener usuarios excluyendo aquellos con rol 1
 $sql_usuarios = "SELECT ID_Usuario, Nombre, Apellido FROM usuario2 WHERE FK_ID_Rol != 1";
 $result_usuarios = $conn->query($sql_usuarios);
+
 // Verificar si la solicitud es AJAX para obtener los proyectos del usuario seleccionado
 if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['usuario_id'])) {
     $usuario_id = $_POST['usuario_id'];
@@ -57,11 +62,22 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['usuario_id'])) {
     $conn->close();
     exit;
 }
-$valor_total_aportes=0;
+
+// Obtener el valor de la tasa con el ID más alto
+$sql_tasa_max = "SELECT Tasa FROM tasa ORDER BY Id DESC LIMIT 1";
+$result_tasa_max = $conn->query($sql_tasa_max);
+
+if ($result_tasa_max && $result_tasa_max->num_rows > 0) {
+    $row_tasa_max = $result_tasa_max->fetch_assoc();
+    $tasa_ajustada = $row_tasa_max['Tasa'];
+} else {
+    // Si no se encuentra ninguna tasa, asignar un valor predeterminado
+    $tasa_ajustada = 0;
+}
 
 // Verificar si se envió el formulario de consulta
 if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['consultar'])) {
-	
+    
     // Obtener el usuario y proyecto seleccionados
     $usuario_id = $_POST['usuario'];
     $proyecto_id = $_POST['proyecto'];
@@ -76,19 +92,19 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['consultar'])) {
     $num_inversiones_realizadas = $row_num_inversiones['num_inversiones'];
 
     $sql_fecha_inicio_proyecto = "SELECT Fecha FROM proyecto WHERE ID_Proyecto = ?";
-	$stmt = $conn->prepare($sql_fecha_inicio_proyecto);
-	$stmt->bind_param("i", $proyecto_id);
-	$stmt->execute();
-	$result_fecha_inicio_proyecto = $stmt->get_result();
+    $stmt = $conn->prepare($sql_fecha_inicio_proyecto);
+    $stmt->bind_param("i", $proyecto_id);
+    $stmt->execute();
+    $result_fecha_inicio_proyecto = $stmt->get_result();
 
-	// Verificar si hay resultados antes de intentar acceder a la fila
-	if ($result_fecha_inicio_proyecto && $result_fecha_inicio_proyecto->num_rows > 0) {
-		$row_fecha_inicio_proyecto = $result_fecha_inicio_proyecto->fetch_assoc();
-		$fecha_inicio_proyecto = $row_fecha_inicio_proyecto['Fecha'];
-	} else {
-		// Si no hay resultados, asignar la fecha de inicio del proyecto como nula o algún valor predeterminado
-		$fecha_inicio_proyecto = null; // o asigna algún valor predeterminado
-	}
+    // Verificar si hay resultados antes de intentar acceder a la fila
+    if ($result_fecha_inicio_proyecto && $result_fecha_inicio_proyecto->num_rows > 0) {
+        $row_fecha_inicio_proyecto = $result_fecha_inicio_proyecto->fetch_assoc();
+        $fecha_inicio_proyecto = $row_fecha_inicio_proyecto['Fecha'];
+    } else {
+        // Si no hay resultados, asignar la fecha de inicio del proyecto como nula o algún valor predeterminado
+        $fecha_inicio_proyecto = null; // o asigna algún valor predeterminado
+    }
 
     // Calcular la diferencia de días entre la fecha actual y la fecha de inicio del proyecto
     $fecha_actual = date('Y-m-d');
@@ -109,34 +125,45 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['consultar'])) {
     $result_num_inversionistas = $stmt->get_result();
     $row_num_inversionistas = $result_num_inversionistas->fetch_assoc();
     $num_inversionistas = $row_num_inversionistas['num_inversionistas'];
+    
+    include("conexionn.php");
+    
+    // Verifica que la conexión $conex esté definida en 'conexionn.php'
+    if (!isset($conex)) {
+        die("La conexión no está definida en 'conexionn.php'.");
+    }
 
-    // Calcular la tasa ajustada con dos decimales
-    $tasa_ajustada = number_format(round(pow(1 + 0.4576, 1/365) - 1, 4) * 100, 2);
-	
-	include("conexionn.php");
-	
-	$usuario_id = $_POST['usuario'];
+    // Corrección de las consultas
+    $consultoI = "SELECT ID_Inversion, Nombre, Monto, Monto_Ajustado, proyecto, 
+        Tipo, Fecha, Descripcion, CertificadoInversion, FK_ID_Usuario, FK_ID_Tipo  
+        FROM inversion2
+        WHERE FK_ID_Tipo = 1 AND FK_ID_Usuario = ?"; 
+    $stmtI = mysqli_prepare($conex, $consultoI);
+    mysqli_stmt_bind_param($stmtI, "i", $usuario_id);
+    mysqli_stmt_execute($stmtI);
+    $resultadoI = mysqli_stmt_get_result($stmtI);
 
-	$consultoI = "SELECT ID_Inversion, Nombre, Monto, Monto_Ajustado, proyecto, 
-		Tipo, Fecha, Descripcion, CertificadoInversion, FK_ID_Usuario, FK_ID_Tipo  
-		FROM inversion2
-		WHERE FK_ID_Tipo = 1 AND FK_ID_Usuario = $usuario_id "; 
-	$resultadoI = mysqli_query($conex, $consultoI);
+    $consultoII = "SELECT ID_Inversion, Nombre, Monto, Monto_Ajustado, proyecto, 
+        Tipo, Fecha, Descripcion, CertificadoInversion, FK_ID_Usuario, FK_ID_Tipo  
+        FROM inversion2
+        WHERE FK_ID_Tipo = 2 AND FK_ID_Usuario = ?"; 
+    $stmtII = mysqli_prepare($conex, $consultoII);
+    mysqli_stmt_bind_param($stmtII, "i", $usuario_id);
+    mysqli_stmt_execute($stmtII);
+    $resultadoII = mysqli_stmt_get_result($stmtII);
 
-	$consultoII = "SELECT ID_Inversion, Nombre, Monto, Monto_Ajustado, proyecto, 
-		Tipo, Fecha, Descripcion, CertificadoInversion, FK_ID_Usuario, FK_ID_Tipo  
-		FROM inversion2
-		WHERE FK_ID_Tipo = 2 AND FK_ID_Usuario = $usuario_id "; 
-	$resultadoII = mysqli_query($conex, $consultoII);
-
-	$consultoIII = "SELECT ID_Inversion, Nombre, Monto, Monto_Ajustado, proyecto, 
-		Tipo, Fecha, Descripcion, CertificadoInversion, FK_ID_Usuario, FK_ID_Tipo  
-		FROM inversion2
-		WHERE FK_ID_Tipo = 3 AND FK_ID_Usuario = $usuario_id "; 
-	$resultadoIII = mysqli_query($conex, $consultoIII);
+    $consultoIII = "SELECT ID_Inversion, Nombre, Monto, Monto_Ajustado, proyecto, 
+        Tipo, Fecha, Descripcion, CertificadoInversion, FK_ID_Usuario, FK_ID_Tipo  
+        FROM inversion2
+        WHERE FK_ID_Tipo = 3 AND FK_ID_Usuario = ?"; 
+    $stmtIII = mysqli_prepare($conex, $consultoIII);
+    mysqli_stmt_bind_param($stmtIII, "i", $usuario_id);
+    mysqli_stmt_execute($stmtIII);
+    $resultadoIII = mysqli_stmt_get_result($stmtIII);
 }
 
 ?>
+
 
 <!DOCTYPE html>
 <html>
@@ -371,7 +398,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['consultar'])) {
 										// Calcular la diferencia en días correctamente
 										$diferencia_dias1 = (strtotime($fecha_actual1) - strtotime($fila['Fecha'])) / (60 * 60 * 24);
 										// Calcular el valor futuro
-										$valor_futuro = $fila['Monto'] * pow((1 + 0.4576), $diferencia_dias1 / 365);
+										$valor_futuro = $fila['Monto'] * pow((1 + ($tasa_ajustada/100)), $diferencia_dias1 / 365);
 										// Formatear y mostrar los valores
 										echo "<td>" . number_format($fila['Monto'], 0, ',', '.') . "</td>";
 										echo "<td>" . number_format($valor_futuro, 0, ',', '.') . "</td>";
@@ -414,7 +441,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['consultar'])) {
 										// Calcular la diferencia en días correctamente
 										$diferencia_dias2 = (strtotime($fecha_actual2) - strtotime($fila['Fecha'])) / (60 * 60 * 24);
 										// Calcular el valor futuro
-										$valor_futuro = $fila['Monto'] * pow((1 + 0.4576), $diferencia_dias2 / 365);
+										$valor_futuro = $fila['Monto'] * pow((1 + ($tasa_ajustada/100)), $diferencia_dias2 / 365);
 										// Formatear y mostrar los valores
 										echo "<td>" . number_format($fila['Monto'], 0, ',', '.') . "</td>";
 										echo "<td>" . number_format($valor_futuro, 0, ',', '.') . "</td>";
@@ -456,7 +483,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['consultar'])) {
 											// Calcular la diferencia en días correctamente
 											$diferencia_dias3 = (strtotime($fecha_actual3) - strtotime($fila['Fecha'])) / (60 * 60 * 24);
 											// Calcular el valor futuro
-											$valor_futuro = $fila['Monto'] * pow((1 + 0.4576), $diferencia_dias3 / 365);
+											$valor_futuro = $fila['Monto'] * pow((1 + ($tasa_ajustada/100)), $diferencia_dias3 / 365);
 											// Formatear y mostrar los valores
 											echo "<td>" . number_format($fila['Monto'], 0, ',', '.') . "</td>";
 											echo "<td>" . number_format($valor_futuro, 0, ',', '.') . "</td>";

@@ -1,8 +1,7 @@
 document.addEventListener('DOMContentLoaded', function() {
 let valorCapital =parseFloat(document.getElementById('valor-capital').innerText);
 let valorIndustria =parseFloat(document.getElementById('valor-industria').innerText);
-console.log(valorCapital);
-console.log(valorIndustria);  
+ 
 var options = {
 	series: [valorCapital,valorIndustria],
 	chart: {

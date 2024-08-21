@@ -156,7 +156,7 @@ $apellido = isset($_SESSION['apellido']) ? $_SESSION['apellido'] : '';
                             <span class="micon bi bi-gear"></span></span><span class="mtext">Parámetros</span>
                         </a>
                         <ul class="submenu">
-                            <li><a href="proyectos.php">Proyectos</a></li>
+                            <li><a href="empresas.php">Empresas</a></li>
                             <li><a href="ubicacion.php">Ubicación</a></li>
                             <li><a href="usuarios.php">Usuarios</a></li>
                             <li><a href="tiposInveriones.php">Tipos de Inversiones</a></li>
@@ -167,7 +167,7 @@ $apellido = isset($_SESSION['apellido']) ? $_SESSION['apellido'] : '';
 
 
                     <li>
-                        <a href="../mantenimiento.html" class="dropdown-toggle no-arrow">
+                        <a href="simulacion.php" class="dropdown-toggle no-arrow">
                             <span class="micon bi bi-pie-chart-fill"></span><span class="mtext">Simulación</span>
                         </a>
                     </li>

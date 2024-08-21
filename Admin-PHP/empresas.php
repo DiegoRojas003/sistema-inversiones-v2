@@ -16,7 +16,7 @@ if (!isset($_SESSION['authenticated']) || $_SESSION['authenticated'] !== true) {
 <head>
 	<!-- Basic Page Info -->
 	<meta charset="utf-8" />
-	<title>Parámetros-Proyectos</title>
+	<title>Parámetros-Empresas</title>
 
 	<!-- Site favicon -->
 
@@ -74,7 +74,7 @@ if (!isset($_SESSION['authenticated']) || $_SESSION['authenticated'] !== true) {
 	<div class="main-container">
 		<div class="xs-pd-20-10 pd-ltr-20">
 			<div id="contenedor-proyectos" class="card-box pb-10">
-				<div class="h5 pd-20 mb-0">Proyectos</div>
+				<div class="h5 pd-20 mb-0">Empresas</div>
 				<table class="data-table table nowrap">
 					<thead>
 						<tr>
@@ -115,7 +115,7 @@ if (!isset($_SESSION['authenticated']) || $_SESSION['authenticated'] !== true) {
 			<div class="pd-20 card-box mb-30">
 				<div class="clearfix">
 					<div class="pull-left">
-						<p class="mb-30">Seleccione el proyecto y los usuarios que desea vincular a dicho proyecto:</p>
+						<p class="mb-30">Seleccione la empresa y los usuarios que desea vincular a dicho empresa:</p>
 					</div>
 				</div>
 				<form action="registrar.php" method="POST">
@@ -124,7 +124,7 @@ if (!isset($_SESSION['authenticated']) || $_SESSION['authenticated'] !== true) {
 					<div class="row">
 						<div class="col-md-6">
 							<div class="form-group">
-								<label>Proyecto:</label>
+								<label>Empresa:</label>
 								<select class="custom-select2 form-control" name="proyecto" style="width: 100%; height: 38px">
 									<option selected=""></option>
 									<?php foreach ($datos_proyecto as $proyecto):?>
@@ -160,7 +160,7 @@ if (!isset($_SESSION['authenticated']) || $_SESSION['authenticated'] !== true) {
 			</div>
 
 			<div class="title pb-20 pt-20">
-				<h2 class="h3 mb-0">Creación de Proyectos</h2>
+				<h2 class="h3 mb-0">Creación de Empresas</h2>
 			</div>
 
 			<div class="pd-20 card-box mb-30">
@@ -190,7 +190,7 @@ if (!isset($_SESSION['authenticated']) || $_SESSION['authenticated'] !== true) {
 						<label class="col-sm-12 col-md-2 col-form-label">Descripcion</label>
 						<div class="col-sm-12 col-md-10">
 							<textarea name='descripcion_p'
-								placeholder="Ingresa una breve Descripcion del proyecto a crear..." class="form-control"
+								placeholder="Ingresa una breve Descripcion de la empresa a crear..." class="form-control"
 								id="exampleFormControlTextarea1" rows="3"></textarea>
 						</div>
 					</div>
