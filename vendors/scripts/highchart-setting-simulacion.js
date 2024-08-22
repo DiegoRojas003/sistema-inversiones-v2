@@ -99,8 +99,4 @@ Highcharts.chart('chart6', {
     }]
 });
 
-
-
-
-
 });

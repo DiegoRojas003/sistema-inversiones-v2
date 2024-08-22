@@ -213,8 +213,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['consultar'])) {
 		<div class="main-container">
 			<div class="pd-ltr-20 xs-pd-20-10">
 				<div class="min-height-200px">
-				
-
                 <script>
                     function mostrarProyecto() {
                         var usuarioId = $('#usuario').val();

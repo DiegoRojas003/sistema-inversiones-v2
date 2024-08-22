@@ -407,6 +407,3 @@ if (isset($_POST['register_proyecto_usuario'])) {
     }
     
 }
-
-
-

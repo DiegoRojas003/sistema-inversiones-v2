@@ -13,6 +13,7 @@ if (!isset($_SESSION['authenticated']) || $_SESSION['authenticated'] !== true) {
 <!DOCTYPE html>
 <html>
 
+
 <head>
 	<!-- Basic Page Info -->
 	<meta charset="utf-8" />
@@ -40,7 +41,8 @@ if (!isset($_SESSION['authenticated']) || $_SESSION['authenticated'] !== true) {
 
 <body>
 	<?php include('template.php'); ?>
-	
+	<?php include('../modal.html'); ?>
+
 	<?php
 		include("conexionn.php");
 
@@ -67,10 +69,12 @@ if (!isset($_SESSION['authenticated']) || $_SESSION['authenticated'] !== true) {
 		$resultadopr = mysqli_query($conex, $consultopr);
 		
 	?>
-	
+
+
 
 
 	
+
 	<div class="main-container">
 		<div class="xs-pd-20-10 pd-ltr-20">
 			<div id="contenedor-proyectos" class="card-box pb-10">
@@ -154,13 +158,14 @@ if (!isset($_SESSION['authenticated']) || $_SESSION['authenticated'] !== true) {
 					
 					<!-- Botón para guardar -->
 					<div class="contenido-boton">
-						<input class="btn btn-primary" type="submit" name="register_proyecto_usuario" value="Guardar">
+						<input data-toggle="modal" data-target="#Medium-modal" class="btn btn-primary" type="submit" name="register_proyecto_usuario" value="Guardar">
 					</div>
 				</form>
 			</div>
 
 			<div class="title pb-20 pt-20">
-				<h2 class="h3 mb-0">Creación de Empresas</h2>
+				
+				<h2 data-toggle="modal" data-target="#Medium-modal" class="h3 mb-0">Creación de Empresas</h2>
 			</div>
 
 			<div class="pd-20 card-box mb-30">
@@ -211,7 +216,9 @@ if (!isset($_SESSION['authenticated']) || $_SESSION['authenticated'] !== true) {
 	</div>
 	<!-- welcome modal start -->
 
-
+	<script>
+            $('#login-modal').modal('show');
+        </script>
 	<!-- welcome modal end -->
 	<!-- js -->
 
@@ -225,6 +232,12 @@ if (!isset($_SESSION['authenticated']) || $_SESSION['authenticated'] !== true) {
 	<script src="../src/plugins/datatables/js/dataTables.responsive.min.js"></script>
 	<script src="../src/plugins/datatables/js/responsive.bootstrap4.min.js"></script>
 	<script src="../vendors/scripts/dashboard3.js"></script>
+
+	<script src="vendors/scripts/core.js"></script>
+		<script src="vendors/scripts/script.min.js"></script>
+		<script src="vendors/scripts/process.js"></script>
+		<script src="vendors/scripts/layout-settings.js"></script>
+
 	<!-- Google Tag Manager (noscript) -->
 	<noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-NXZMQSS" height="0" width="0"
 			style="display: none; visibility: hidden"></iframe></noscript>
