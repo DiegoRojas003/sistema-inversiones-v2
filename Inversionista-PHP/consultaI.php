@@ -209,46 +209,11 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['consultar'])) {
 	</head>
 	<body>
 		
-	<?php include('templateM.php'); ?>
+	<?php include('templateI.php'); ?>
 		<div class="main-container">
 			<div class="pd-ltr-20 xs-pd-20-10">
 				<div class="min-height-200px">
-				<div class="page-header">
-					<form method="post" action="<?php echo $_SERVER['PHP_SELF']; ?>">
-                    	<div class="row">
-                            <div class="col-md-6">
-                                <div class="form-group row">
-                                    <label class="col-sm-12 col-md-2 col-form-label">Usuarios</label>
-                                    <div class="col-sm-12 col-md-10">
-                                        <select name="usuario" id="usuario" class="custom-select col-12" onchange="mostrarProyecto()">
-                                            <option value="" selected>Seleccione</option>
-                                            <?php while ($row = $result_usuarios->fetch_assoc()): ?>
-                                                <option value="<?php echo $row['ID_Usuario']; ?>">
-                                                    Cédula: <?php echo $row['ID_Usuario']; ?> - <?php echo $row['Nombre'] . ' ' . $row['Apellido']; ?>
-                                                </option>
-                                            <?php endwhile; ?>
-                                        </select>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-md-6">
-                                <div class="form-group row">
-                                    <label class="col-sm-12 col-md-2 col-form-label">Proyecto</label>
-                                    <div class="col-sm-12 col-md-10">
-                                        <select name="proyecto" id="proyecto" class="custom-select col-12">
-                                            <option value="" selected>Seleccione un usuario</option>
-                                            <!-- Opciones de proyecto generadas dinámicamente -->
-                                        </select>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="contenido-boton">
-                                <input class="btn btn-primary" type="submit" value="Consultar" name="consultar" />
-
-                            </div>
-                    	</div>
-					</form>
-                </div>
+				
 
                 <script>
                     function mostrarProyecto() {

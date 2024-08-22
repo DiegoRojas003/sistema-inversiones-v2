@@ -33,7 +33,6 @@ $apellido = isset($_SESSION['apellido']) ? $_SESSION['apellido'] : '';
                         <span class="user-name"><?php echo $nombre . ' ' . $apellido; ?></span>
                     </a>
                     <div class="dropdown-menu dropdown-menu-right dropdown-menu-icon-list">
-                        <a class="dropdown-item" href="profile.html"><i class="dw dw-settings2"></i> Setting</a>
                         <a class="dropdown-item" href="http://localhost/sistema-inversiones-v2/cerrar-sesion.php"><i class="dw dw-logout"></i> Cerrar Sesión</a>
                     </div>
                 </div>
