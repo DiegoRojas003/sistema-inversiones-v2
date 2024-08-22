@@ -162,6 +162,12 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['consultar'])) {
     $resultadoIII = mysqli_stmt_get_result($stmtIII);
 }
 
+// Recuperar la información del proyecto seleccionado
+$proyectoID = isset($_SESSION['proyecto_seleccionado']) ? $_SESSION['proyecto_seleccionado'] : null;
+
+// Asumiendo que también guardaste el nombre del proyecto en la sesión
+$proyectoNombre = isset($_SESSION['nombre_proyecto']) ? $_SESSION['nombre_proyecto'] : null;
+
 ?>
 
 
