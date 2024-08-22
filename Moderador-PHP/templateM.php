@@ -246,7 +246,6 @@ $apellido = isset($_SESSION['apellido']) ? $_SESSION['apellido'] : '';
                         ><span class="mtext">Creación</span>
                     </a>
                     <ul class="submenu">
-                        <li><a href="proyectosM.php">Proyectos</a></li>
                         <li><a href="inversionesM.php">Inversiones</a></li>
                         <li><a href="usuariosM.php">Inversionistas</a></li>
                     </ul>

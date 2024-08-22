@@ -27,18 +27,28 @@ while ($fila_proyecto = mysqli_fetch_assoc($resultado_proyecto)) {
     $datos_proyecto[] = $fila_proyecto;
 }
 
+
+
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
-    // Obtener la ID del proyecto seleccionado
     $proyectoSeleccionado = $_POST["proyecto"];
     
-    // Verifica que se haya seleccionado un proyecto
     if (empty($proyectoSeleccionado)) {
         echo "<script>alert('Por favor, seleccione un proyecto.');</script>";
     } else {
-        // Guarda la ID del proyecto en una variable de sesión
+        // Guardar la ID y el nombre del proyecto en la sesión
         $_SESSION["proyecto_seleccionado"] = $proyectoSeleccionado;
         
-        // Redirige al usuario según su rol
+        // Recuperar el nombre del proyecto basado en la ID seleccionada
+        $nombreProyecto = '';
+        foreach ($datos_proyecto as $proyecto) {
+            if ($proyecto['ID_Proyecto'] == $proyectoSeleccionado) {
+                $nombreProyecto = $proyecto['Nombre'];
+                break;
+            }
+        }
+        $_SESSION["nombre_proyecto"] = $nombreProyecto;
+
+        // Redirigir al usuario según su rol
         switch ($_SESSION['rol']) {
             case 2:
                 header("Location: http://localhost/sistema-inversiones-v2/Moderador-PHP/inicioM.php");
@@ -52,6 +62,10 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         }
     }
 }
+
+
+
+
 ?>
 <!DOCTYPE html>
 <html>

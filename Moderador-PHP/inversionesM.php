@@ -8,7 +8,14 @@ if (!isset($_SESSION['authenticated']) || $_SESSION['authenticated'] !== true) {
     header("Location: http://localhost/sistema-inversiones-v2/index.php"); // Cambia 'inicio-de-sesion.php' por la ruta de tu página de inicio de sesión
     exit();
 }
+
+
+
+
+
+
 ?>
+
 <!DOCTYPE html>
 <html>
 	<head>
@@ -71,11 +78,12 @@ if (!isset($_SESSION['authenticated']) || $_SESSION['authenticated'] !== true) {
 	</head>
 	<body>
 		<?php
+		
 
 		include("conexionn.php");
 
 		// Consulta para obtener los datos de la tabla usuarios
-		$consulta_usuarios = "SELECT ID_Usuario, Nombre, Apellido, Telefono, Correo, Contraseña, Fecha, Proyecto, FK_ID_Municipio, FK_ID_Rol FROM usuario2";
+		$consulta_usuarios = "SELECT ID_Usuario, Nombre, Apellido, Telefono, Correo, Contraseña, Fecha, FK_ID_Municipio, FK_ID_Rol FROM usuario2";
 		$resultado_usuarios = mysqli_query($conex, $consulta_usuarios);
 
 		// Crear un array para almacenar los datos
@@ -107,6 +115,30 @@ if (!isset($_SESSION['authenticated']) || $_SESSION['authenticated'] !== true) {
 		$consultoIN = "SELECT ID_Inversion, Nombre, Monto, Monto_Ajustado, proyecto, 
 		Tipo, Fecha, Descripcion, CertificadoInversion, FK_ID_Usuario, FK_ID_Tipo  FROM inversion2";
 		$resultadoIN = mysqli_query($conex, $consultoIN);
+
+
+		// Obtener el nombre del proyecto seleccionado desde la sesión
+		$nombre_proyecto_seleccionado = $_SESSION["nombre_proyecto"];
+
+		// Filtrar las inversiones que corresponden al proyecto seleccionado
+		$consulta_inversiones = "SELECT ID_Inversion, Nombre, Monto, Monto_Ajustado, Proyecto, Tipo, Fecha, Descripcion, CertificadoInversion 
+								FROM inversion2
+								WHERE Proyecto = '$nombre_proyecto_seleccionado'";
+
+		$resultado_inversiones = mysqli_query($conex, $consulta_inversiones);
+
+
+		// Obtener el ID del proyecto seleccionado desde la sesión
+		$id_proyecto_seleccionado = $_SESSION["proyecto_seleccionado"];
+
+		// Filtrar los usuarios que están vinculados al proyecto seleccionado
+		$consulta_usuarios = "SELECT u.ID_Usuario, u.Nombre, u.Apellido 
+							FROM usuario2 u
+							JOIN proyecto_usuario pu ON u.ID_Usuario = pu.FK_ID_Usuario
+							WHERE pu.FK_ID_Proyecto = '$id_proyecto_seleccionado'
+							AND u.FK_ID_Rol != 1";  // Condición para excluir usuarios con FK_ID_Rol = 1
+
+		$resultado_usuarios = mysqli_query($conex, $consulta_usuarios);
 
 		?>
 
@@ -150,7 +182,6 @@ if (!isset($_SESSION['authenticated']) || $_SESSION['authenticated'] !== true) {
 					<table class="data-table table nowrap">
 						<thead>
 							<tr>
-								<th>Identificador de Inversion</th>
 								<th class="table-plus">Nombre</th>
 								<th>Monto</th>
 								<th>proyecto</th>
@@ -162,26 +193,23 @@ if (!isset($_SESSION['authenticated']) || $_SESSION['authenticated'] !== true) {
 							</tr>
 						</thead>
 						<tbody>
-							<?php
-							while ($fila = mysqli_fetch_assoc($resultadoIN)) {
-								echo "<tr>";
-								echo "<td>" . $fila['ID_Inversion'] . "</td>";
-								echo "<td>" . $fila['Nombre'] . "</td>";
-								echo "<td>" . $fila['Monto'] . "</td>";
-								echo "<td>" . $fila['proyecto'] . "</td>";
-								echo "<td>" . $fila['Tipo'] . "</td>";
-								echo "<td>" . $fila['Fecha'] . "</td>";
-								echo "<td>" . $fila['Descripcion'] . "</td>";
-								echo "<td>" . $fila['CertificadoInversion'] . "</td>";
-								echo '<td>';
-								echo '<div class="table-actions">';
-								echo '<a href="#" data-color="#265ed7"><i class="icon-copy dw dw-edit2"></i></a>';
-								echo '<a href="#" data-color="#e95959"><i class="icon-copy dw dw-delete-3"></i></a>';
-								echo '</div>';
-								echo '</td>';
-								echo '</tr>';
-							}
-							?>
+							<?php while ($fila = mysqli_fetch_assoc($resultado_inversiones)): ?>
+								<tr>
+									<td><?php echo $fila['Nombre']; ?></td>
+									<td><?php echo $fila['Monto']; ?></td>
+									<td><?php echo $fila['Proyecto']; ?></td>
+									<td><?php echo $fila['Tipo']; ?></td>
+									<td><?php echo $fila['Fecha']; ?></td>
+									<td><?php echo $fila['Descripcion']; ?></td>
+									<td><a href="descargar_i.php?id=<?php echo $fila['ID_Inversion']; ?>"><?php echo $fila['CertificadoInversion']; ?></a></td>
+									<td>
+										<div class="table-actions">
+											<a href="#" data-color="#265ed7"><i class="icon-copy dw dw-edit2"></i></a>
+											<a href="#" data-color="#e95959"><i class="icon-copy dw dw-delete-3"></i></a>
+										</div>
+									</td>
+								</tr>
+							<?php endwhile; ?>
 						</tbody>
 					</table>
 
@@ -193,29 +221,23 @@ if (!isset($_SESSION['authenticated']) || $_SESSION['authenticated'] !== true) {
 
 				<div class="pd-20 card-box mb-30">
 					<div class="clearfix"></div>
-					<form action="registrar.php" method="post">
-						<div class="form-group row">
-							<label class="col-sm-12 col-md-2 col-form-label">Identificador</label>
-							<div class="col-sm-12 col-md-10">
-								<input name="id_inversion" class="form-control" type="text" placeholder="01, 02, 03, 04, 05.....">
-							</div>
-						</div>
+					<form action="registrarM.php" method="post">
 
-						<div class="form-group row">
+					<div class="form-group row">
 						<label class="col-sm-12 col-md-2 col-form-label">Usuario</label>
 						<div class="col-sm-12 col-md-10">
-							<select name="usuario" class="custom-select col-12">
-								<option selected="">Seleccione</option>
-								<?php foreach ($datos_usuarios as $usuario): ?>
-									<option value="<?php echo $usuario['Nombre'] . ' ' . $usuario['Apellido']; ?>" data-cedula="<?php echo $usuario['ID_Usuario']; ?>">
-										Cédula: <?php echo  $usuario['ID_Usuario']; ?> - <?php echo $usuario['Nombre'] . ' ' . $usuario['Apellido']; ?>
-									</option>
-								<?php endforeach; ?>
-							</select>
-							<!-- Campo oculto inicializado con un valor predeterminado o vacío -->
-							<input type="hidden" name="id_usuario" value="<?php echo isset($datos_usuarios[0]['ID_Usuario']) ? $datos_usuarios[0]['ID_Usuario'] : ''; ?>">
+						<select name="usuario" class="custom-select col-12">
+    <option selected="">Seleccione</option>
+    <?php while ($usuario = mysqli_fetch_assoc($resultado_usuarios)): ?>
+        <option value="<?php echo $usuario['Nombre'] . ' ' . $usuario['Apellido']; ?>" data-cedula="<?php echo $usuario['ID_Usuario']; ?>">
+            Cédula: <?php echo  $usuario['ID_Usuario']; ?> - <?php echo $usuario['Nombre'] . ' ' . $usuario['Apellido']; ?>
+        </option>
+    <?php endwhile; ?>
+</select>
+<input type="hidden" name="id_usuario" value="<?php echo isset($datos_usuarios[0]['ID_Usuario']) ? $datos_usuarios[0]['ID_Usuario'] : ''; ?>">
 						</div>
 					</div>
+
 
 						<div class="form-group row">
 							<label class="col-sm-12 col-md-2 col-form-label">Monto en Dinero</label>
@@ -267,14 +289,15 @@ if (!isset($_SESSION['authenticated']) || $_SESSION['authenticated'] !== true) {
 						</div>
 						
 						<div class="form-group row">
-							<label class="col-sm-12 col-md-2 col-form-label">Documento/Recibo</label>
-							<div  class="col-sm-12 col-md-10">
+							<label class="col-sm-12 col-md-2 col-form-label">Documento</label>
+							<div class="col-sm-12 col-md-10">
 								<input name="documento_inversion"
-								type="file"
-								class="form-control-file form-control height-auto"
-								/>
+									type="file"
+									class="form-control-file form-control height-auto"
+									accept=".doc, .docx, .pdf" />
 							</div>
 						</div>
+
 						
 						<div class="contenido-boton">
 							<input name="registar_inversion" class="btn btn-primary" type="submit" value="Guardar" />

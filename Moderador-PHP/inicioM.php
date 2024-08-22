@@ -1,14 +1,21 @@
 <?php
-// Iniciar la sesión
 session_start();
 
 // Verificar si el usuario está autenticado
 if (!isset($_SESSION['authenticated']) || $_SESSION['authenticated'] !== true) {
-    // Si el usuario no está autenticado, redirigirlo a la página de inicio de sesión
-    header("Location: http://localhost/sistema-inversiones-v2/index.php"); // Cambia 'inicio-de-sesion.php' por la ruta de tu página de inicio de sesión
+    header("Location: http://localhost/sistema-inversiones-v2/index.php");
     exit();
 }
 
+// Recuperar la información del proyecto seleccionado
+$proyectoID = isset($_SESSION['proyecto_seleccionado']) ? $_SESSION['proyecto_seleccionado'] : null;
+
+// Asumiendo que también guardaste el nombre del proyecto en la sesión
+$proyectoNombre = isset($_SESSION['nombre_proyecto']) ? $_SESSION['nombre_proyecto'] : null;
+
+// Recuperar el nombre y apellido del usuario (asegúrate de que estén guardados en la sesión)
+$nombre = isset($_SESSION['nombre']) ? $_SESSION['nombre'] : '';
+$apellido = isset($_SESSION['apellido']) ? $_SESSION['apellido'] : '';
 
 ?>
 
@@ -86,24 +93,21 @@ if (!isset($_SESSION['authenticated']) || $_SESSION['authenticated'] !== true) {
 							<img src="../vendors/images/banner-img.png" alt="" />
 						</div>
 						<div class="col-md-8">
-							<h4 class="font-20 weight-500 mb-10 text-capitalize">
-								Bienvenido de nuevo
-								<div class="weight-600 font-30 text-blue"><?php echo $nombre . ' ' . $apellido; ?></div>
-							</h4>
-							<p class="font-18 max-width-600">
-								¡Bienvenido! Estamos encantados de tenerte aquí. 
-								Queremos que sepas que estamos completamente disponibles
-								 y comprometidos a atender tus necesidades financieras. 
-								 En nuestro rol, tenemos la capacidad y disposición para 
-								 gestionar y supervisar todos los aportes monetarios, 
-								 así como cualquier contribución especial que desees 
-								 hacer. Además, estamos aquí para facilitar cualquier 
-								 tipo de registro que necesites realizar, ya sea para 
-								 seguir de cerca tus inversiones, realizar seguimientos 
-								 detallados de los fondos o simplemente mantener un registro
-								organizado de tus transacciones financieras.
-							</p>
-						</div>
+                            <h4 class="font-20 weight-500 mb-10 text-capitalize">
+                                ¡Bienvenido a la empresa: <?php echo htmlspecialchars($proyectoNombre); ?>!
+                                <div class="weight-600 font-30 text-blue"><?php echo htmlspecialchars($nombre . ' ' . $apellido); ?></div>
+                            </h4>
+                            <p class="font-18 max-width-600">
+                                ¡Bienvenido! Estamos encantados de tenerte aquí. Queremos que sepas que 
+								estamos completamente disponibles y comprometidos a atender tus necesidades 
+								financieras. En nuestro rol, tenemos la capacidad y disposición para gestionar 
+								y supervisar todos los aportes monetarios, así como cualquier contribución 
+								especial que desees hacer. Además, estamos aquí para facilitar cualquier 
+								tipo de registro que necesites realizar, ya sea para seguir de cerca 
+								tus inversiones, realizar seguimientos detallados de los fondos o 
+								simplemente mantener un registro organizado de tus transacciones financieras.
+                            </p>
+                        </div>
 					</div>
 				</div>
 				<div class="row">

@@ -8,10 +8,74 @@ if (!isset($_SESSION['authenticated']) || $_SESSION['authenticated'] !== true) {
     header("Location: http://localhost/sistema-inversiones-v2/index.php"); // Cambia 'inicio-de-sesion.php' por la ruta de tu página de inicio de sesión
     exit();
 }
+
+// Recuperar la información del proyecto seleccionado
+$proyectoID = isset($_SESSION['proyecto_seleccionado']) ? $_SESSION['proyecto_seleccionado'] : null;
+
+// Asumiendo que también guardaste el nombre del proyecto en la sesión
+$proyectoNombre = isset($_SESSION['nombre_proyecto']) ? $_SESSION['nombre_proyecto'] : null;
+
+
+include("conexionn.php");
+
+if (isset($_POST['register_usuarios'])) {
+    $cedula = $_POST['cedula'];
+    $nombre = $_POST['nombre'];
+    $apellido = $_POST['apellido'];
+    $telefono = $_POST['telefono'];
+    $correo = $_POST['correo'];
+    $contrasena = $_POST['contrasena'];
+    $fecha = $_POST['fecha'];
+    $rol = 3;  // Rol predeterminado como Inversionista
+    $ciudad = $_POST['ciudad'];
+    
+    $insertar = "INSERT INTO usuario2 (ID_Usuario, Nombre, Apellido, Telefono, Correo, Contraseña, Fecha, FK_ID_Municipio, FK_ID_Rol)
+                 VALUES ('$cedula', '$nombre', '$apellido', '$telefono', '$correo', '$contrasena', '$fecha', '$ciudad', '$rol')";
+    
+    $resultado = mysqli_query($conex, $insertar);
+
+    // Si la inserción en la tabla usuario2 fue exitosa, insertar en proyecto_usuario
+    if ($resultado) {
+        $proyectoID = $_SESSION['proyecto_seleccionado'];
+        $insertar_proyecto_usuario = "INSERT INTO proyecto_usuario (FK_ID_Usuario, FK_ID_Proyecto) VALUES ('$cedula', '$proyectoID')";
+        mysqli_query($conex, $insertar_proyecto_usuario);
+        echo "Usuario registrado con éxito y asociado al proyecto.";
+    } else {
+        echo "Error al registrar usuario.";
+    }
+}
+
+
+
+$proyectoID = $_SESSION['proyecto_seleccionado'];
+$consultou = "
+    SELECT u.ID_Usuario, u.Nombre, u.Apellido, u.Telefono, u.Correo, u.Contraseña, u.Fecha, u.FK_ID_Municipio, u.FK_ID_Rol
+    FROM usuario2 u
+    JOIN proyecto_usuario pu ON u.ID_Usuario = pu.FK_ID_Usuario
+    WHERE pu.FK_ID_Proyecto = '$proyectoID'";
+$resultadou = mysqli_query($conex, $consultou);
+
+
 ?>
+
 <!DOCTYPE html>
 <html>
 	<head>
+		<script>
+			function mostrarProyecto() {
+				var rol = document.getElementById("rol").value;
+				var proyectoField = document.getElementById("proyectoField");
+				var proyectoInput = document.getElementById("proyecto");
+
+				// Si el rol seleccionado es Administrador (valor 1), ocultar el campo de proyecto y establecer su valor en "todos"
+				if (rol == 1) {
+					proyectoField.style.display = "none";
+					proyectoInput.value = "Todos"; // Establecer el valor en "todos"
+				} else {
+					proyectoField.style.display = "block";
+				}
+			}
+		</script>
 		<!-- Basic Page Info -->
 		<meta charset="utf-8" />
 		<title>Parámetros-Usuarios</title>
@@ -108,8 +172,6 @@ if (!isset($_SESSION['authenticated']) || $_SESSION['authenticated'] !== true) {
 	}
 
 
-	$consultou = "SELECT ID_Usuario , Nombre, Apellido, Telefono, Correo, Contraseña, Fecha, Proyecto, FK_ID_Municipio, FK_ID_Rol  FROM usuario2";
-		$resultadou = mysqli_query($conex, $consultou);
 
 	$consultop = "SELECT ID_Proyecto , Nombre, Fecha, Descripcion, Certificado  FROM proyecto";
 		$resultadop = mysqli_query($conex, $consultop);
@@ -126,7 +188,7 @@ if (!isset($_SESSION['authenticated']) || $_SESSION['authenticated'] !== true) {
 		<div class="main-container">
 			<div class="xs-pd-20-10 pd-ltr-20">
 				<div class="title pb-20">
-					<h2 class="h3 mb-0">Inversionistas y Moderadores</h2>
+					<h2 class="h3 mb-0">Inversionistas De la Empresa <?php echo htmlspecialchars($proyectoNombre); ?>:</h2>
 				</div>
 				<div class="pd-20 card-box mb-30">
 					<div class="h5 pd-20 mb-0">Usuarios</div>
@@ -140,7 +202,6 @@ if (!isset($_SESSION['authenticated']) || $_SESSION['authenticated'] !== true) {
 								<th>Correo</th>
 								<th>Contraseña</th>
 								<th>Fecha</th>
-								<th>Proyecto</th>
 								<th>Municipio</th>
 								<th>Rol</th>
 								<th class="datatable-nosort">Acciones</th>
@@ -157,9 +218,28 @@ if (!isset($_SESSION['authenticated']) || $_SESSION['authenticated'] !== true) {
 								echo "<td>" . $fila['Correo'] . "</td>";
 								echo "<td>" . $fila['Contraseña'] . "</td>";
 								echo "<td>" . $fila['Fecha'] . "</td>";
-								echo "<td>" . $fila['Proyecto'] . "</td>";
-								echo "<td>" . $fila['FK_ID_Municipio'] . "</td>";
-								echo "<td>" . $fila['FK_ID_Rol'] . "</td>";
+								
+
+								// Buscar el nombre del municipio
+								$municipio_nombre = "";
+								foreach ($datos_Municipio as $municipio) {
+									if ($municipio['ID_Municipio'] == $fila['FK_ID_Municipio']) {
+										$municipio_nombre = $municipio['Nombre'];
+										break;
+									}
+								}
+								echo "<td>" . $municipio_nombre . "</td>";
+
+								// Buscar el nombre del rol
+								$rol_nombre = "";
+								foreach ($datos_rol as $rol) {
+									if ($rol['ID_Rol'] == $fila['FK_ID_Rol']) {
+										$rol_nombre = $rol['Nombre'];
+										break;
+									}
+								}
+								echo "<td>" . $rol_nombre . "</td>";
+
 								echo '<td>';
 								echo '<div class="table-actions">';
 								echo '<a href="#" data-color="#265ed7"><i class="icon-copy dw dw-edit2"></i></a>';
@@ -172,101 +252,13 @@ if (!isset($_SESSION['authenticated']) || $_SESSION['authenticated'] !== true) {
 						</tbody>
 					</table>
 				</div>
-
-				<div class="title pb-20">
-					<h2 class="h3 mb-0">Resgistros de Proyectos, Municipios y Roles</h2>
-				</div>
-
-				<div class="pd-20 card-box mb-30">
-					<div class="h5 pd-20 mb-0">Proyectos</div>
-					<table class="data-table table nowrap">
-						<thead>
-							<tr>
-								<th>Identificador</th>
-								<th class="table-plus">Nombre</th>
-								<th>Fecha</th>
-								<th>Descripción</th>
-							</tr>
-						</thead>	
-						<tbody>
-							<?php
-							while ($fila = mysqli_fetch_assoc($resultadop)) {
-								echo "<tr>";
-								echo "<td>" . $fila['ID_Proyecto'] . "</td>";
-								echo "<td>" . $fila['Nombre'] . "</td>";
-								echo "<td>" . $fila['Fecha'] . "</td>";
-								echo "<td>" . $fila['Descripcion'] . "</td>";
-							}
-							?>
-						</tbody>
-					</table>
-
-				</div>
-				<div class="pd-20 card-box mb-30">
-					<div class="h5 pd-20 mb-0">Municipios</div>
-					<table class="data-table table nowrap">
-						<thead>
-							<tr>
-								<th>Identificador</th>
-								<th class="table-plus">Nombre</th>
-							</tr>
-						</thead>
-						<tbody>
-							<?php
-							while ($fila = mysqli_fetch_assoc($resultadoi)) {
-								echo "<tr>";
-								echo "<td>" . $fila['ID_Municipio'] . "</td>";
-								echo "<td>" . $fila['Nombre'] . "</td>";
-								echo '<td>';
-							}
-							?>
-						</tbody>
-					</table>
-				</div>
-
-				<div class="pd-20 card-box mb-30">
-					<div class="h5 pd-20 mb-0">Roles</div>
-					<table class="data-table table nowrap">
-						<thead>
-							<tr>
-								<th>Identificador</th>
-								<th class="table-plus">Nombre</th>
-								<th class="table-plus">Descripcion</th>
-								<th class="datatable-nosort">Acciones</th>
-							</tr>
-						</thead>
-						<tbody>
-							<?php
-							while ($fila = mysqli_fetch_assoc($resultador)) {
-								echo "<tr>";
-								echo "<td>" . $fila['ID_Rol'] . "</td>";
-								echo "<td>" . $fila['Nombre'] . "</td>";
-								echo "<td>" . $fila['Descripcion'] . "</td>";
-								echo '<td>';
-								echo '<div class="table-actions">';
-								echo '<a href="#" data-color="#265ed7"><i class="icon-copy dw dw-edit2"></i></a>';
-								echo '<a href="#" data-color="#e95959"><i class="icon-copy dw dw-delete-3"></i></a>';
-								echo '</div>';
-								echo '</td>';
-								echo '</tr>';
-							}
-							?>
-						</tbody>
-					</table>
-				</div>
-
-
-				
-
-					
 
 				<div class="title pb-20 pt-20">
 					<h2 class="h3 mb-0">Creación de Usuarios</h2>
 				</div>
 
-				
 					<div class="pd-20 card-box mb-30">
-						<form action="registrar.php" method="post">
+						<form action="registrarM.php" method="post">
 							<div class="form-group row">
 								<label class="col-sm-12 col-md-2 col-form-label">Cédula</label>
 								<div class="col-sm-12 col-md-10">
@@ -288,7 +280,7 @@ if (!isset($_SESSION['authenticated']) || $_SESSION['authenticated'] !== true) {
 							<div class="form-group row">
 								<label class="col-sm-12 col-md-2 col-form-label">Teléfono</label>
 								<div class="col-sm-12 col-md-10">
-									<input name= "telefono"  class="form-control" placeholder="322 2535668" type="tel">
+									<input name= "telefono"  class="form-control" type="number" placeholder="322 2535668" >
 								</div>
 							</div>
 							<div class="form-group row">
@@ -305,6 +297,12 @@ if (!isset($_SESSION['authenticated']) || $_SESSION['authenticated'] !== true) {
 									<input name= "contrasena" class="form-control" placeholder="password" type="password">
 								</div>
 							</div>
+							<div class="form-group row">
+								<label class="col-sm-12 col-md-2 col-form-label">Confirmacion de Contraseña</label>
+								<div class="col-sm-12 col-md-10">
+									<input name= "contrasena2" class="form-control" placeholder="password" type="password">
+								</div>
+							</div>
 							
 							<div class="form-group row">
 								<label class="col-sm-12 col-md-2 col-form-label">Fecha de nacimiento</label>
@@ -312,20 +310,16 @@ if (!isset($_SESSION['authenticated']) || $_SESSION['authenticated'] !== true) {
 									<input name= "fecha" class="form-control date-picker" placeholder="Select Date" type="text">
 								</div>
 							</div>
-
 							<div class="form-group row">
-								<label class="col-sm-12 col-md-2 col-form-label">Proyecto</label>
+								<label class="col-sm-12 col-md-2 col-form-label">Rol</label>
 								<div class="col-sm-12 col-md-10">
-									<select name="proyecto" class="custom-select col-12">
-										<option selected="">Seleccione</option>
-										<?php foreach ($datos_proyecto as $pais): ?>
-											<option value="<?php echo $pais['ID_Proyecto']; ?>">
-												<?php echo  $pais['Nombre']; ?>
-											</option>
-										<?php endforeach; ?>
+									<select name="rol" id="rol" class="custom-select col-12" onchange="mostrarProyecto()">
+										<!-- Rol predeterminado a Inversionista -->
+										<option value="03" selected>Inversionista</option>
 									</select>
 								</div>
 							</div>
+
 							
 							<div class="form-group row">
 								<label class="col-sm-12 col-md-2 col-form-label">Ciudad</label>
@@ -340,22 +334,11 @@ if (!isset($_SESSION['authenticated']) || $_SESSION['authenticated'] !== true) {
 									</select>
 								</div>
 							</div>
-							<div class="form-group row">
-								<label class="col-sm-12 col-md-2 col-form-label">Rol</label>
-								<div class="col-sm-12 col-md-10">
-									<select name="rol" class="custom-select col-12">
-										<option selected="">Seleccione</option>
-										<?php foreach ($datos_rol as $rol): ?>
-											<option value="<?php echo $rol['ID_Rol']; ?>">
-												<?php echo $rol['Nombre']  ; ?>
-											</option>
-										<?php endforeach; ?>
-									</select>
-								</div>
-							</div>
+							
 							<div class="contenido-boton">
 								<input class="btn btn-primary" type="submit" name="register_usuarios" value="Guardar">
 							</div>
+							
 						</form>	
 					</div>
 				
