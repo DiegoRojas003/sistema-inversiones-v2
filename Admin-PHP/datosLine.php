@@ -9,15 +9,15 @@ $proyecto_id = isset($_GET['proyecto']) ? $conex->real_escape_string($_GET['proy
 
 // Consulta SQL para obtener el número de inversiones por año
 $consulta_inversiones_anuales = "
-    SELECT 
-    YEAR(Fecha) AS Anio, 
-    FK_ID_Tipo, 
-    COUNT(*) AS TotalInversiones
-FROM inversion2
-WHERE Proyecto = 'Proyecto prueba'
-GROUP BY Anio, FK_ID_Tipo
-ORDER BY Anio;
-
+   SELECT 
+        MONTH(Fecha) AS Mes, 
+        YEAR(Fecha) AS Anio, 
+        FK_ID_Tipo, 
+        SUM(Monto) AS TotalMonto
+    FROM inversion2
+    WHERE Proyecto = 'Proyecto prueba'
+    GROUP BY Anio, Mes, FK_ID_Tipo
+    ORDER BY Anio, Mes
 ";
 
 $resultado_inversiones_anuales = mysqli_query($conex, $consulta_inversiones_anuales);
@@ -58,7 +58,7 @@ while ($fila = mysqli_fetch_assoc($resultado_inversiones_anuales)) {
     
     // Verificar si el índice está dentro del rango
     if ($indice_anio >= 0 && $indice_anio < 13) {
-        $datos_anuales[$tipo_nombre][$indice_anio] = $fila['TotalInversiones'];
+        $datos_anuales[$tipo_nombre][$indice_anio] = $fila['TotalMonto'] / 1000000; // Usar 'TotalMonto' en lugar de 'TotalInversiones'
     }
 }
 

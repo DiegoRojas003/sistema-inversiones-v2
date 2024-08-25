@@ -154,6 +154,7 @@ if ($proyecto_id) {
 }
 
 
+
 	// Cantidad de usuarios que han invertido en Capital (Tipo 1)
 	$sql_usuarios_capital = "SELECT COUNT(DISTINCT FK_ID_Usuario) AS usuariosCapital FROM inversion2 WHERE FK_ID_Tipo = 1";
 	$result_usuarios_capital = $conn->query($sql_usuarios_capital);
@@ -316,21 +317,24 @@ if ($proyecto_id) {
                 </div>
 
 				<div class="bg-white pd-20 card-box mb-30" style="min-height: 200px;">
+				<h5 class="h4 text-blue mb-20">Gráfica circular %</h5>
 					<div id="chart6"></div>
 					
 				</div>
 				<div class="bg-white pd-20 card-box mb-30" style="min-height: 200px;">
+				<h5 class="h4 text-blue mb-20">Gráfica de barras %</h5>
 					<div id="barras"></div>
-					
 				</div>
+				
 				<div class="bg-white pd-20 card-box mb-30" style="min-height: 200px;">
+				<h5 class="h4 text-blue mb-20">Inversiones realizadas expresadas en millones</h5>
 						<div id="TimeLine"></div>
 					
 					</div>
 				<div class="row clearfix">
 					<div class="col-lg-6 col-md-12 col-sm-12 mb-30">
 						<div class="pd-20 card-box" style="height: 360px;">
-							<h5 class="h4 text-blue mb-20">Valor tipo de aporte</h5>
+							<h5 class="h4 text-blue mb-20">% Aportes</h5>
 							
 								<div class="pd-20 card-box height-100-p" style="height: 255px">
 									
@@ -353,7 +357,7 @@ if ($proyecto_id) {
 					
 					<div class="col-lg-6 col-md-12 col-sm-12 mb-30">
 						<div class="pd-20 card-box" style="height: 360px; overflow: hidden;">
-							<h5 class="h4 text-blue mb-20">Aportes de la industria</h5>
+							<h5 class="h4 text-blue mb-20">Gráfica de radar % tipos de inversiones</h5>
 							
 								<div class="pd-20 card-box height-100-p" style="height: 255px, overflow: hidden">
 									
@@ -364,7 +368,7 @@ if ($proyecto_id) {
 					</div>
 					<div class="col-lg-6 col-md-12 col-sm-12 mb-30">
 						<div class="pd-20 card-box" style="height: 360px;">
-							<h5 class="h4 text-blue mb-20">Cantidad</h5>
+							<h5 class="h4 text-blue mb-20">Participación máxima vs mínima</h5>
 							
 								<div class="pd-20 card-box height-100-p" style="height: 255px">
 									
@@ -377,7 +381,7 @@ if ($proyecto_id) {
 						<div class="card text-white bg-primary card-box">
 							<div class="card-body">
 								<h5 class="card-title text-white">Participación Minima</h5>
-								<p class="card-text">
+								<p id="min" class="card-text">
 									<?php echo number_format($participacion_minima, 2, ',', '.'); ?>%
 								</p>
 							</div>
@@ -387,7 +391,7 @@ if ($proyecto_id) {
 						<div class="card text-white bg-success card-box">
 							<div class="card-body">
 								<h5 class="card-title text-white">Participación Maxima</h5>
-								<p class="card-text">
+								<p id="max" class="card-text">
 									<?php echo number_format($participacion_maxima, 2, ',', '.'); ?>%
 								</p>
 							</div>
@@ -427,39 +431,50 @@ if ($proyecto_id) {
 				<?php if ($proyecto_id): ?>
                     <div class="card-box pb-10">
                         <div class="h5 pd-20 mb-0">Resumen</div>
-                        <table class="data-table table nowrap" >
-                            <thead>
-                                <tr>
-                                    <th>Socios</th>
-                                    <th>Valor de los aportes de capital</th>
-                                    <th>Valor de los aportes de industria</th>
-                                    <th>Valor total de los aportes</th>
-                                    <th>Porcentaje participación accionaria</th>
-                                </tr>
-                            </thead>
-                            <tbody id="data-table-body">
-                                <?php foreach ($inversiones_por_usuario as $datos): ?>
-                                    <tr>
-                                        <td><?php echo $datos['Nombre']; ?></td>
-                                        <td>$ <?php echo number_format($datos['Capital'], 0, ',', '.'); ?></td>
-                                        <td>$ <?php echo number_format($datos['Industria'], 0, ',', '.'); ?></td>
-                                        <td>$ <?php echo number_format($datos['Capital'] + $datos['Industria'], 0, ',', '.'); ?></td>
-                                        <td><?php echo number_format($datos['Porcentaje'], 2, ',', '.'); ?>%</td>
-                                        
-                                    </tr>
-                                <?php endforeach; ?>
-                            </tbody>
-                            <tfoot>
-                                <tr>
-                                    <th>TOTALES</th>
-                                    <th id="valor-capital">$ <?php echo number_format($valor_aportes_capital, 0, ',', '.'); ?></th>
-                                    <th id="valor-industria">$ <?php echo number_format($valor_aportes_industria, 0, ',', '.'); ?></th>
-                                    <th id="Valor-Total">$ <?php echo number_format($total_aportes, 0, ',', '.'); ?></th>
-                                    <th>100%</th>
-                                    <th></th>
-                                </tr>
-                            </tfoot>
-                        </table>
+                        <table class="table hover multiple-select-row data-table-export nowrap">
+							<thead>
+								<tr>
+									<th>Socios</th>
+									<th>Aportes de capital</th>
+									<th>Aportes de industria</th>
+									<th>Total aportes</th>
+									<th>Porcentaje participación</th>
+								</tr>
+							</thead>
+							<tbody id="data-table-body">
+								<?php
+									$valor_aportes_capital = 0;
+									$valor_aportes_industria = 0;
+									$total_aportes = 0;
+									foreach ($inversiones_por_usuario as $datos) {
+										
+										// Mostrar datos
+										echo "<tr>";
+										echo "<td>" . $datos['Nombre'] . "</td>";
+										echo "<td style='text-align: right;'>$ " . number_format($datos['Capital'], 0, ',', '.') . "</td>";
+										echo "<td style='text-align: right;'>$ " . number_format($datos['Industria'], 0, ',', '.') . "</td>";
+										echo "<td style='text-align: right;'>$ " . number_format($datos['Capital'] + $datos['Industria'], 0, ',', '.') . "</td>";
+										echo "<td style='text-align: center;'>" . number_format($datos['Porcentaje'], 2, ',', '.') . "%</td>";
+										echo "</tr>";
+
+										
+										$valor_aportes_capital += $datos['Capital'];
+										$valor_aportes_industria += $datos['Industria'];
+										$total_aportes += $datos['Capital'] + $datos['Industria'];
+									}
+								?>
+							</tbody>
+							<tfoot>
+								<tr>
+									<th>TOTALES</th>
+									<th style='text-align: right;' id="valor-capital"><?php echo "$ " . number_format($valor_aportes_capital, 0, ',', '.'); ?></th>
+									<th style='text-align: right;' id="valor-industria"><?php echo "$ " . number_format($valor_aportes_industria, 0, ',', '.'); ?></th>
+									<th style='text-align: right;' id="Valor-Total"><?php echo "$ " . number_format($total_aportes, 0, ',', '.'); ?></th>
+									<th style='text-align: center;'>100%</th>
+								</tr>
+							</tfoot>
+						</table>
+
                     </div>
                 <?php endif; ?>
             </div>
@@ -500,7 +515,17 @@ if ($proyecto_id) {
 		
 		<script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
 		
-
+		<!-- DataTables -->
+<!-- buttons for Export datatable -->
+<script src="../src/plugins/datatables/js/dataTables.buttons.min.js"></script>
+<script src="../src/plugins/datatables/js/buttons.bootstrap4.min.js"></script>
+<script src="../src/plugins/datatables/js/buttons.print.min.js"></script>
+<script src="../src/plugins/datatables/js/buttons.html5.min.js"></script>
+<script src="../src/plugins/datatables/js/buttons.flash.min.js"></script>
+<script src="../src/plugins/datatables/js/pdfmake.min.js"></script>
+<script src="../src/plugins/datatables/js/vfs_fonts.js"></script>
+<!-- Datatable Setting js -->
+<script src="../vendors/scripts/datatable-setting.js"></script>
 		
 		<!-- Google Tag Manager (noscript) -->
 		<noscript

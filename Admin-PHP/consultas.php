@@ -1,11 +1,9 @@
 <?php
-
 // Iniciar la sesión
 session_start();
 
 // Verificar si el usuario está autenticado
 if (!isset($_SESSION['authenticated']) || $_SESSION['authenticated'] !== true) {
-    // Si el usuario no está autenticado, redirigirlo a la página de inicio de sesión
     header("Location: http://localhost/sistema-inversiones-v2/index.php");
     exit();
 }
@@ -16,14 +14,26 @@ $username = "root";
 $password = "";
 $dbname = "sistemainversiones";
 
-$conn = new mysqli($servername, $username, $password, $dbname);
-
-// Verificar conexión
-if ($conn->connect_error) {
-    die("Conexión fallida: " . $conn->connect_error);
+function conectarDB($servername, $username, $password, $dbname) {
+    $conn = new mysqli($servername, $username, $password, $dbname);
+    if ($conn->connect_error) {
+        die("Conexión fallida: " . $conn->connect_error);
+    }
+    return $conn;
 }
 
-// Definir las variables para evitar advertencias de "Undefined variable"
+function ejecutarConsulta($conn, $sql, $params = [], $types = '') {
+    $stmt = $conn->prepare($sql);
+    if ($params) {
+        $stmt->bind_param($types, ...$params);
+    }
+    $stmt->execute();
+    return $stmt->get_result();
+}
+
+$conn = conectarDB($servername, $username, $password, $dbname);
+
+// Definir variables para evitar advertencias de "Undefined variable"
 $num_inversiones_realizadas = 0;
 $diferencia_dias = 0;
 $num_inversionistas = 0;
@@ -31,138 +41,99 @@ $tasa_ajustada = 0;
 $total_aportes = 0;
 $valor_aportes_capital = 0;
 $valor_aportes_industria = 0;
+$resultadoI = $resultadoII = $resultadoIII = null;
 
-// Consulta para obtener usuarios excluyendo aquellos con rol 1
+// Consultar usuarios
 $sql_usuarios = "SELECT ID_Usuario, Nombre, Apellido FROM usuario2 WHERE FK_ID_Rol != 1";
-$result_usuarios = $conn->query($sql_usuarios);
+$result_usuarios = ejecutarConsulta($conn, $sql_usuarios);
 
-// Verificar si la solicitud es AJAX para obtener los proyectos del usuario seleccionado
+// Manejar solicitud AJAX
 if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['usuario_id'])) {
     $usuario_id = $_POST['usuario_id'];
-
-    // Consulta para obtener proyectos relacionados con el usuario seleccionado
     $sql_proyectos = "SELECT p.ID_Proyecto, p.Nombre 
                       FROM proyecto p 
                       INNER JOIN proyecto_usuario pu ON p.ID_Proyecto = pu.FK_ID_Proyecto 
                       WHERE pu.FK_ID_Usuario = ?";
-    $stmt = $conn->prepare($sql_proyectos);
-    $stmt->bind_param("i", $usuario_id);
-    $stmt->execute();
-    $result_proyectos = $stmt->get_result();
+    $result_proyectos = ejecutarConsulta($conn, $sql_proyectos, [$usuario_id], 'i');
 
-    // Generar opciones de proyecto
     $options = '<option value="" selected>Seleccione un proyecto</option>';
     while ($row = $result_proyectos->fetch_assoc()) {
         $options .= '<option value="' . $row['ID_Proyecto'] . '">' . $row['Nombre'] . '</option>';
     }
 
     echo $options;
-
-    // Cerrar conexión y salir para detener la ejecución del resto del script
     $conn->close();
     exit;
 }
 
-// Obtener el valor de la tasa con el ID más alto
+// Obtener tasa ajustada
 $sql_tasa_max = "SELECT Tasa FROM tasa ORDER BY Id DESC LIMIT 1";
-$result_tasa_max = $conn->query($sql_tasa_max);
-
+$result_tasa_max = ejecutarConsulta($conn, $sql_tasa_max);
 if ($result_tasa_max && $result_tasa_max->num_rows > 0) {
     $row_tasa_max = $result_tasa_max->fetch_assoc();
     $tasa_ajustada = $row_tasa_max['Tasa'];
 } else {
-    // Si no se encuentra ninguna tasa, asignar un valor predeterminado
     $tasa_ajustada = 0;
 }
 
-// Verificar si se envió el formulario de consulta
 if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['consultar'])) {
-    
-    // Obtener el usuario y proyecto seleccionados
     $usuario_id = $_POST['usuario'];
     $proyecto_id = $_POST['proyecto'];
 
-    // Consulta para contar el número de inversiones realizadas
+    // Consultar número de inversiones
     $sql_num_inversiones = "SELECT COUNT(*) AS num_inversiones FROM inversion2 WHERE FK_ID_Usuario = ?";
-    $stmt = $conn->prepare($sql_num_inversiones);
-    $stmt->bind_param("i", $usuario_id);
-    $stmt->execute();
-    $result_num_inversiones = $stmt->get_result();
+    $result_num_inversiones = ejecutarConsulta($conn, $sql_num_inversiones, [$usuario_id], 'i');
     $row_num_inversiones = $result_num_inversiones->fetch_assoc();
     $num_inversiones_realizadas = $row_num_inversiones['num_inversiones'];
 
+    // Obtener fecha de inicio del proyecto
     $sql_fecha_inicio_proyecto = "SELECT Fecha FROM proyecto WHERE ID_Proyecto = ?";
-    $stmt = $conn->prepare($sql_fecha_inicio_proyecto);
-    $stmt->bind_param("i", $proyecto_id);
-    $stmt->execute();
-    $result_fecha_inicio_proyecto = $stmt->get_result();
-
-    // Verificar si hay resultados antes de intentar acceder a la fila
+    $result_fecha_inicio_proyecto = ejecutarConsulta($conn, $sql_fecha_inicio_proyecto, [$proyecto_id], 'i');
     if ($result_fecha_inicio_proyecto && $result_fecha_inicio_proyecto->num_rows > 0) {
         $row_fecha_inicio_proyecto = $result_fecha_inicio_proyecto->fetch_assoc();
         $fecha_inicio_proyecto = $row_fecha_inicio_proyecto['Fecha'];
     } else {
-        // Si no hay resultados, asignar la fecha de inicio del proyecto como nula o algún valor predeterminado
-        $fecha_inicio_proyecto = null; // o asigna algún valor predeterminado
+        $fecha_inicio_proyecto = null;
     }
 
-    // Calcular la diferencia de días entre la fecha actual y la fecha de inicio del proyecto
+    // Calcular diferencia de días
     $fecha_actual = date('Y-m-d');
     if ($fecha_inicio_proyecto) {
         $diferencia_dias = (strtotime($fecha_actual) - strtotime($fecha_inicio_proyecto)) / (60 * 60 * 24);
     }
 
-    // Si el usuario no tiene proyectos, la diferencia de días es cero
     if (!$proyecto_id) {
         $diferencia_dias = 0;
     }
 
-    // Consulta para contar el número de inversionistas en el proyecto
+    // Consultar número de inversionistas
     $sql_num_inversionistas = "SELECT COUNT(*) AS num_inversionistas FROM proyecto_usuario WHERE FK_ID_Proyecto = ?";
-    $stmt = $conn->prepare($sql_num_inversionistas);
-    $stmt->bind_param("i", $proyecto_id);
-    $stmt->execute();
-    $result_num_inversionistas = $stmt->get_result();
+    $result_num_inversionistas = ejecutarConsulta($conn, $sql_num_inversionistas, [$proyecto_id], 'i');
     $row_num_inversionistas = $result_num_inversionistas->fetch_assoc();
     $num_inversionistas = $row_num_inversionistas['num_inversionistas'];
-    
+
+    // Conexión adicional
     include("conexionn.php");
-    
-    // Verifica que la conexión $conex esté definida en 'conexionn.php'
+
     if (!isset($conex)) {
         die("La conexión no está definida en 'conexionn.php'.");
     }
 
-    // Corrección de las consultas
-    $consultoI = "SELECT ID_Inversion, Nombre, Monto, Monto_Ajustado, proyecto, 
-        Tipo, Fecha, Descripcion, CertificadoInversion, FK_ID_Usuario, FK_ID_Tipo  
-        FROM inversion2
-        WHERE FK_ID_Tipo = 1 AND FK_ID_Usuario = ?"; 
-    $stmtI = mysqli_prepare($conex, $consultoI);
-    mysqli_stmt_bind_param($stmtI, "i", $usuario_id);
-    mysqli_stmt_execute($stmtI);
-    $resultadoI = mysqli_stmt_get_result($stmtI);
+    // Consultas corregidas
+    $consultoI = "SELECT ID_Inversion, Nombre, Monto, Monto_Ajustado, proyecto, Tipo, Fecha, Descripcion, CertificadoInversion, FK_ID_Usuario, FK_ID_Tipo FROM inversion2 WHERE FK_ID_Tipo = 1 AND FK_ID_Usuario = ?";
+    $resultadoI = ejecutarConsulta($conex, $consultoI, [$usuario_id], 'i');
 
-    $consultoII = "SELECT ID_Inversion, Nombre, Monto, Monto_Ajustado, proyecto, 
-        Tipo, Fecha, Descripcion, CertificadoInversion, FK_ID_Usuario, FK_ID_Tipo  
-        FROM inversion2
-        WHERE FK_ID_Tipo = 2 AND FK_ID_Usuario = ?"; 
-    $stmtII = mysqli_prepare($conex, $consultoII);
-    mysqli_stmt_bind_param($stmtII, "i", $usuario_id);
-    mysqli_stmt_execute($stmtII);
-    $resultadoII = mysqli_stmt_get_result($stmtII);
+    $consultoII = "SELECT ID_Inversion, Nombre, Monto, Monto_Ajustado, proyecto, Tipo, Fecha, Descripcion, CertificadoInversion, FK_ID_Usuario, FK_ID_Tipo FROM inversion2 WHERE FK_ID_Tipo = 2 AND FK_ID_Usuario = ?";
+    $resultadoII = ejecutarConsulta($conex, $consultoII, [$usuario_id], 'i');
 
-    $consultoIII = "SELECT ID_Inversion, Nombre, Monto, Monto_Ajustado, proyecto, 
-        Tipo, Fecha, Descripcion, CertificadoInversion, FK_ID_Usuario, FK_ID_Tipo  
-        FROM inversion2
-        WHERE FK_ID_Tipo = 3 AND FK_ID_Usuario = ?"; 
-    $stmtIII = mysqli_prepare($conex, $consultoIII);
-    mysqli_stmt_bind_param($stmtIII, "i", $usuario_id);
-    mysqli_stmt_execute($stmtIII);
-    $resultadoIII = mysqli_stmt_get_result($stmtIII);
+    $consultoIII = "SELECT ID_Inversion, Nombre, Monto, Monto_Ajustado, proyecto, Tipo, Fecha, Descripcion, CertificadoInversion, FK_ID_Usuario, FK_ID_Tipo FROM inversion2 WHERE FK_ID_Tipo = 3 AND FK_ID_Usuario = ?";
+    $resultadoIII = ejecutarConsulta($conex, $consultoIII, [$usuario_id], 'i');
 }
 
+$conn->close(); // Cerrar conexión principal
 ?>
+
+
 
 
 <!DOCTYPE html>
@@ -170,7 +141,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['consultar'])) {
 	<head>
 		<!-- Basic Page Info -->
 		<meta charset="utf-8" />
-		<title>Parametros-Usuarios</title>
+		<title>Consultas</title>
 
 		<!-- Site favicon -->
 		
@@ -205,10 +176,10 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['consultar'])) {
 			href="../src/plugins/datatables/css/responsive.bootstrap4.min.css"
 		/>
 		<link rel="stylesheet" type="text/css" href="../vendors/styles/style.css" />
-		<link rel="stylesheet" href="src\styles\style.css">
+		<link rel="stylesheet" href="../src/styles/style.css">
 	</head>
 	<body>
-		
+	
 	<?php include('template.php'); ?>
 		<div class="main-container">
 			<div class="pd-ltr-20 xs-pd-20-10">
@@ -339,19 +310,20 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['consultar'])) {
 								<tbody>
 									<tr>
 										<th scope="col">Valor de los aportes de capital</th>
-										<th id="valor-capital" scope="col"><?php echo $valor_aportes_capital; ?></th>
+										<th id="valor-capital" scope="col" style='text-align: right;'><?php echo number_format($valor_aportes_capital, 0, ',', '.'); ?></th>
+
 									</tr>
 								</tbody>
 								<tbody>
 									<tr>
 										<th scope="col">Valor de los aportes de industria</th>
-										<th id="valor-industria" scope="col"><?php echo $valor_aportes_industria; ?></th>
+										<th id="valor-industria" scope="col" style='text-align: right;'><?php echo $valor_aportes_industria; ?></th>
 									</tr>
 								</tbody>
 								<tbody>
 									<tr>
 										<th scope="col">Total Aportes:</th>
-										<th id="suma-capital-industria" scope="col"><?php echo $total_aportes; ?></th>
+										<th id="suma-capital-industria" scope="col" style='text-align: right;'><?php echo $total_aportes; ?></th>
 									</tr>
 								</tbody>
 							</table>
@@ -378,14 +350,13 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['consultar'])) {
 					<div class="pd-20 card-box mb-30">
 						<div class="card-box pb-10">
 							<div class="h5 pd-20 mb-0">Aporte en Dinero</div>
-							<table class="data-table table nowrap">
+							<table class="table hover multiple-select-row data-table-export nowrap">
 								<thead>
 									<tr>
 										<th>Fecha</th>
 										<th>Monto</th>
 										<th>Valor del Aporte ajustado</th>
 										<th>Tiempo transcurrido desde el día del aporte</th>
-										<th>Total aporte en dinero (ajustado)</th>
 									</tr>
 								</thead>
 								<tbody>
@@ -399,19 +370,19 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['consultar'])) {
 										$diferencia_dias1 = (strtotime($fecha_actual1) - strtotime($fila['Fecha'])) / (60 * 60 * 24);
 										// Calcular el valor futuro
 										$valor_futuro = $fila['Monto'] * pow((1 + ($tasa_ajustada/100)), $diferencia_dias1 / 365);
+										
 										// Formatear y mostrar los valores
-										echo "<td>" . number_format($fila['Monto'], 0, ',', '.') . "</td>";
-										echo "<td>" . number_format($valor_futuro, 0, ',', '.') . "</td>";
-										echo "<td>" . round($diferencia_dias1) . " días</td>";
+										echo "<td style='text-align: right;'>$ " . number_format($fila['Monto'], 0, ',', '.') . "</td>";
+										echo "<td style='text-align: right;'>$ " . number_format($valor_futuro, 0, ',', '.') . "</td>";
+										echo "<td style='text-align: center;'>" . round($diferencia_dias1) . " días</td>";
 										// Sumar el valor futuro a los aportes de industria
 										$valor_aportes_dinero += $valor_futuro;
-										echo '<td>' . number_format($valor_aportes_dinero, 0, ',', '.') . '</td>';
 										echo "</tr>";
 									}
 									?>
 									<thead>
 									<tr>
-										<th>Total aporte en dinero (ajustado)<?php echo '<td>' . number_format($valor_aportes_dinero, 0, ',', '.') . '</td>'; ?></th>
+										<th>Total aporte en dinero (ajustado)<?php echo '<td> $ ' . number_format($valor_aportes_dinero, 0, ',', '.') . '</td>'; ?></th>
 									</tr>
 									</thead>
 									
@@ -422,7 +393,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['consultar'])) {
 					<div class="pd-20 card-box mb-30">
 						<div class="card-box pb-10">
 							<div class="h5 pd-20 mb-0">Aportes en especie</div>
-							<table class="data-table table nowrap">
+							<table class="table hover multiple-select-row data-table-export nowrap">
 								<thead>
 									<tr>
 										<th>Fecha</th>
@@ -443,9 +414,9 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['consultar'])) {
 										// Calcular el valor futuro
 										$valor_futuro = $fila['Monto'] * pow((1 + ($tasa_ajustada/100)), $diferencia_dias2 / 365);
 										// Formatear y mostrar los valores
-										echo "<td>" . number_format($fila['Monto'], 0, ',', '.') . "</td>";
-										echo "<td>" . number_format($valor_futuro, 0, ',', '.') . "</td>";
-										echo "<td>" . round($diferencia_dias2) . " días</td>";
+										echo "<td style='text-align: right;'>$ " . number_format($fila['Monto'], 0, ',', '.') . "</td>";
+										echo "<td style='text-align: right;'>$ " . number_format($valor_futuro, 0, ',', '.') . "</td>";
+										echo "<td style='text-align: center;'>" . round($diferencia_dias2) . " días</td>";
 										// Sumar el valor futuro a los aportes de industria
 										$valor_aportes_especie += $valor_futuro;
 										
@@ -454,7 +425,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['consultar'])) {
 									?>
 									<thead>
 									<tr>
-										<th>Total aporte en dinero (ajustado)<?php echo '<td>' . number_format($valor_aportes_especie, 0, ',', '.') . '</td>'; ?></th>
+										<th>Total aporte en dinero (ajustado)<?php echo '<td>$' . number_format($valor_aportes_especie, 0, ',', '.') . '</td>'; ?></th>
 									</tr>
 									</thead>
 								</tbody>
@@ -464,7 +435,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['consultar'])) {
 					<div class="pd-20 card-box mb-30">
 						<div class="card-box pb-10">
 							<div class="h5 pd-20 mb-0">Aportes en industria</div>
-							<table class="data-table table nowrap">
+							<table class="table hover multiple-select-row data-table-export nowrap">
 								<thead>
 									<tr>
 										<th>Fecha</th>
@@ -485,17 +456,20 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['consultar'])) {
 											// Calcular el valor futuro
 											$valor_futuro = $fila['Monto'] * pow((1 + ($tasa_ajustada/100)), $diferencia_dias3 / 365);
 											// Formatear y mostrar los valores
-											echo "<td>" . number_format($fila['Monto'], 0, ',', '.') . "</td>";
-											echo "<td>" . number_format($valor_futuro, 0, ',', '.') . "</td>";
-											echo "<td>" . round($diferencia_dias3) . " días</td>";
+											echo "<td style='text-align: right;'>$ " . number_format($fila['Monto'], 0, ',', '.') . "</td>";
+											echo "<td style='text-align: right;'>$ " . number_format($valor_futuro, 0, ',', '.') . "</td>";
+											echo "<td style='text-align: center;'>" . round($diferencia_dias3) . " días</td>";
 											// Sumar el valor futuro a los aportes de industria
 											$valor_aportes_industria += $valor_futuro;
+											// Destruir la instancia anterior antes de re-inicializar
+
+
 											echo "</tr>";
 										}
 									?>
 									<thead>
 									<tr>
-										<th>Total aporte en dinero (ajustado)<?php echo '<td>' . number_format($valor_aportes_industria, 0, ',', '.') . '</td>'; ?></th>
+										<th>Total aporte en dinero (ajustado)<?php echo '<td>$' . number_format($valor_aportes_industria, 0, ',', '.') . '</td>'; ?></th>
 									</tr>
 									</thead>
 								</tbody>
@@ -519,25 +493,37 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['consultar'])) {
 				var totalAportes = <?php echo $total_aportes; ?>;
 
 				/// Formateando los valores como moneda colombiana sin decimales (COP)
-			document.getElementById('valor-capital').innerText = valorAportesCapital.toLocaleString( {  minimumFractionDigits: 0 });
-			document.getElementById('valor-industria').innerText = valorAportesIndustria.toLocaleString( {  minimumFractionDigits: 0 });
-			document.getElementById('suma-capital-industria').innerText = totalAportes.toLocaleString( {  minimumFractionDigits: 0 });
+			document.getElementById('valor-capital').innerText ="$ "+ valorAportesCapital.toLocaleString( {  minimumFractionDigits: 0 });
+			document.getElementById('valor-industria').innerText ="$ "+ valorAportesIndustria.toLocaleString( {  minimumFractionDigits: 0 });
+			document.getElementById('suma-capital-industria').innerText ="$ "+ totalAportes.toLocaleString( {  minimumFractionDigits: 0 });
 			});
 			
 		</script>
 		
 		
 		<script src="../vendors/scripts/core.js"></script>
-		<script src="../vendors/scripts/script.min.js"></script>
-		<script src="../vendors/scripts/process.js"></script>
-		<script src="../vendors/scripts/layout-settings.js"></script>
-		<script src="../src/plugins/apexcharts/apexcharts.min.js"></script>
-		<script src="../vendors/scripts/apexcharts-setting.js"></script>
-		<script src="../src/plugins/datatables/js/jquery.dataTables.min.js"></script>
-		<script src="../src/plugins/datatables/js/dataTables.bootstrap4.min.js"></script>
-		<script src="../src/plugins/datatables/js/dataTables.responsive.min.js"></script>
-		<script src="../src/plugins/datatables/js/responsive.bootstrap4.min.js"></script>
-		<script src="../vendors/scripts/dashboard3.js"></script>
+<script src="../vendors/scripts/script.min.js"></script>
+<script src="../vendors/scripts/process.js"></script>
+<script src="../vendors/scripts/layout-settings.js"></script>
+<script src="../src/plugins/apexcharts/apexcharts.min.js"></script>
+<script src="../vendors/scripts/apexcharts-setting.js"></script>
+<script src="../src/plugins/datatables/js/jquery.dataTables.min.js"></script>
+<script src="../src/plugins/datatables/js/dataTables.bootstrap4.min.js"></script>
+<script src="../src/plugins/datatables/js/dataTables.responsive.min.js"></script>
+<script src="../src/plugins/datatables/js/responsive.bootstrap4.min.js"></script>
+<script src="../vendors/scripts/dashboard3.js"></script>
+
+<!-- buttons for Export datatable -->
+<script src="../src/plugins/datatables/js/dataTables.buttons.min.js"></script>
+<script src="../src/plugins/datatables/js/buttons.bootstrap4.min.js"></script>
+<script src="../src/plugins/datatables/js/buttons.print.min.js"></script>
+<script src="../src/plugins/datatables/js/buttons.html5.min.js"></script>
+<script src="../src/plugins/datatables/js/buttons.flash.min.js"></script>
+<script src="../src/plugins/datatables/js/pdfmake.min.js"></script>
+<script src="../src/plugins/datatables/js/vfs_fonts.js"></script>
+<!-- Datatable Setting js -->
+<script src="../vendors/scripts/datatable-setting.js"></script>
+
 		<!-- Google Tag Manager (noscript) -->
 		<noscript
 			><iframe

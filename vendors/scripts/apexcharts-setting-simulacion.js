@@ -3,6 +3,11 @@ document.addEventListener('DOMContentLoaded', function () {
   let valorCapitalTexto = document.getElementById('valor-capital').innerText;
   let valorIndustriaTexto = document.getElementById('valor-industria').innerText;
 
+
+  let participacion_maxima = parseFloat(document.getElementById('max').innerText.replace('%', '').replace(',', '.'));
+  let participacion_minima = parseFloat(document.getElementById('min').innerText.replace('%', '').replace(',', '.'));
+  
+
   // Función para limpiar la cadena y convertirla en número entero
   function convertirANumero(valor) {
     return parseInt(valor.replace(/[\$,.\s]/g, ''));
@@ -19,7 +24,7 @@ document.addEventListener('DOMContentLoaded', function () {
   var inversionTipo2 = parseInt(localStorage.getItem('inversionTipo2'));
   var inversionTipo3 = parseInt(localStorage.getItem('inversionTipo3'));
   let total = inversionTipo1 + inversionTipo2 + inversionTipo3;
-  console.log(`Total: ${total}`);
+
 
   // Calcular los porcentajes
   inversionTipo1 = Math.trunc((inversionTipo1 / total) * 100);
@@ -30,8 +35,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
 
 
-  console.log(usuariosCapital, usuariosIndustria);
-  console.log(inversionTipo1, inversionTipo2, inversionTipo3);
+ 
 
   // Configuración del gráfico de pastel (Pie Chart)
   const tbody = document.querySelector('#data-table-body');
@@ -116,9 +120,7 @@ document.addEventListener('DOMContentLoaded', function () {
   chart1.render();
 
   // Configuración del gráfico de líneas (Line Chart)
-
-// Obtener el proyecto_id del formulario
-var proyectoId = document.querySelector('select[name="proyecto"]').value;
+  var proyectoId = document.querySelector('select[name="proyecto"]').value;
 
 // Función para cargar los datos desde el archivo PHP
 fetch('datosLine.php?proyecto=' + encodeURIComponent(proyectoId))
@@ -129,98 +131,83 @@ fetch('datosLine.php?proyecto=' + encodeURIComponent(proyectoId))
     return response.text(); // Obtener la respuesta como texto
   })
   .then(text => {
-    console.log('Respuesta del servidor (texto):', text);
+    
     try {
       // Intentar analizar la respuesta como JSON
       const datosAnuales = JSON.parse(text);
-      console.log('Datos parseados:', datosAnuales);
-
-      // Preparar los datos para el gráfico
-      const options = {
-        series: [
-          {
-            name: 'Dinero',
-            data: datosAnuales.dinero
-          },
-          {
-            name: 'Especie',
-            data: datosAnuales.especie
-          },
-          {
-            name: 'Industria',
-            data: datosAnuales.industria
-          }
-        ],
-        chart: {
-          height: 350,
-          type: 'line',
-          dropShadow: {
-            enabled: true,
-            color: '#000',
-            top: 18,
-            left: 7,
-            blur: 10,
-            opacity: 0.2
-          },
-          zoom: {
-            enabled: false
-          },
-          toolbar: {
-            show: false
-          }
-        },
-        colors: ['#77B6EA', '#545454', '#FF5722'], // Asegúrate de que los colores sean distintos para cada serie
-        dataLabels: {
-          enabled: true,
-        },
-        stroke: {
-          curve: 'smooth'
-        },
-        title: {
-          text: 'Cantidad de inversiones por año',
-          align: 'left'
-        },
-        grid: {
-          borderColor: '#e7e7e7',
-          row: {
-            colors: ['#f3f3f3', 'transparent'], // Toma una matriz que se repetirá en las columnas
-            opacity: 0.5
-          },
-        },
-        markers: {
-          size: 1
-        },
-        xaxis: {
-          categories: ['2018', '2019', '2020', '2021', '2022', '2023', '2024', '2025', '2026', '2027', '2028', '2029', '2030'],
-          title: {
-            text: 'Años'
-          }
-        },
-        yaxis: {
-          title: {
-            text: 'Cantidad'
-          },
-          min: 0 // Ajustar según el rango de datos
-        },
-        legend: {
-          position: 'top',
-          horizontalAlign: 'right',
-          floating: true,
-          offsetY: -25,
-          offsetX: -5
-        }
-      };
-
-      // Crear y renderizar el gráfico
-      const chart2 = new ApexCharts(document.querySelector("#TimeLine"), options);
-      chart2.render();
-    } catch (e) {
-      console.error('Error al analizar JSON:', e);
+      
+  var options = {
+    series: [{
+    name: 'Dinero',
+    type: 'column',
+    data: datosAnuales.dinero
+  }, {
+    name: 'Especie',
+    type: 'area',
+    data: datosAnuales.especie
+  }, {
+    name: 'Industria',
+    type: 'line',
+    data: datosAnuales.industria
+  }],
+    chart: {
+    height: 350,
+    type: 'line',
+    stacked: false,
+  },
+  stroke: {
+    width: [0, 2, 5],
+    curve: 'smooth'
+  },
+  plotOptions: {
+    bar: {
+      columnWidth: '50%'
     }
-  })
-  .catch(error => console.error('Error al cargar los datos:', error));
+  },
+  
+  fill: {
+    opacity: [0.85, 0.25, 1],
+    gradient: {
+      inverseColors: false,
+      shade: 'light',
+      type: "vertical",
+      opacityFrom: 0.85,
+      opacityTo: 0.55,
+      stops: [0, 100, 100, 100]
+    }
+  },
+  labels: ['2018', '2019', '2020', '2021', '2022', '2023', '2024', '2025', '2026', '2027', '2028', '2029', '2030'],
+  markers: {
+    size: 0
+  },
+  
+  yaxis: {
+    title: {
+      text: 'Valor ajustado',
+    }
+  },
+  tooltip: {
+    shared: true,
+    intersect: false,
+    y: {
+      formatter: function (y) {
+        if (typeof y !== "undefined") {
+          return y.toFixed(0) + " COP";
+        }
+        return y;
+  
+      }
+    }
+  }
+  };
 
-
+  var chart = new ApexCharts(document.querySelector("#TimeLine"), options);
+  chart.render();
+} catch (e) {
+  console.error('Error al analizar JSON:', e);
+}
+})
+.catch(error => console.error('Error al cargar los datos:', error));
 
 
   // Configuración del gráfico de área polar (Polar Area Chart)
@@ -255,7 +242,7 @@ fetch('datosLine.php?proyecto=' + encodeURIComponent(proyectoId))
 
   // Configuración del gráfico radial (Radial Bar Chart)
   var options9 = {
-    series: [usuariosCapital, usuariosIndustria],
+    series: [participacion_maxima, participacion_minima],
     chart: {
       height: 250,
       type: 'radialBar',

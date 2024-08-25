@@ -853,20 +853,15 @@ textarea.form-control{
 .docs-buttons label{margin-bottom: 0;}
 .docs-buttons .btn{margin-bottom: 5px;}
 
-.table thead th{
-	font-weight: 600;
-	font-size: 15px;
-	border-bottom: 0;
-	padding-left: 1rem;
-}
+
 .table td, .table th{
-	vertical-align: middle;
+	text-align: left;
 }
-.table td{
-	font-size: 14px;
-	font-weight: 500;
-	padding: 1rem
+
+.table th .td-money{
+	text-align: left;
 }
+
 .table-striped tbody tr:nth-of-type(odd){background: #eaeef2;}
 
 table.dataTable.stripe tbody tr.odd, table.dataTable.display tbody tr.odd{
