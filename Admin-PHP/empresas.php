@@ -79,24 +79,24 @@ if (!isset($_SESSION['authenticated']) || $_SESSION['authenticated'] !== true) {
 		<div class="xs-pd-20-10 pd-ltr-20">
 			<div id="contenedor-proyectos" class="card-box pb-10">
 				<div class="h5 pd-20 mb-0">Empresas</div>
-				<table class="data-table table nowrap">
+				<table class="table hover multiple-select-row data-table-export nowrap">
 					<thead>
 						<tr>
-							<th>Identificador</th>
-							<th class="table-plus">Nombre</th>
-							<th>Fecha</th>
-							<th>Descripción</th>
-							<th>Certificado</th>
-							<th class="datatable-nosort">Acciones</th>
+							<th style='text-align: center;'>Identificador</th>
+							<th class="table-plus" style='text-align: center;'>Nombre</th>
+							<th style='text-align: center;'>Fecha</th>
+							<th style='text-align: center;'>Descripción</th>
+							<th style='text-align: center;'>Certificado</th>
+							<th style='text-align: center;' class="datatable-nosort">Acciones</th>
 						</tr>
 					</thead>
 					<tbody>
 						<?php
 							while ($fila = mysqli_fetch_assoc($resultadopr)) {
 								echo "<tr>";
-								echo "<td>" . $fila['ID_Proyecto'] . "</td>";
-								echo "<td>" . $fila['Nombre'] . "</td>";
-								echo "<td>" . $fila['Fecha'] . "</td>";
+								echo "<td style='text-align: center;'>" . $fila['ID_Proyecto'] . "</td>";
+								echo "<td style='text-align: center;'>" . $fila['Nombre'] . "</td>";
+								echo "<td style='text-align: center;'>" . $fila['Fecha'] . "</td>";
 								echo "<td>" . $fila['Descripcion'] . "</td>";
 								echo "<td>";
 								echo '<a href="descargar_p.php?id=' . $fila['ID_Proyecto'] . '">' . $fila['Certificado'] . '</a>';
@@ -237,6 +237,17 @@ if (!isset($_SESSION['authenticated']) || $_SESSION['authenticated'] !== true) {
 		<script src="vendors/scripts/script.min.js"></script>
 		<script src="vendors/scripts/process.js"></script>
 		<script src="vendors/scripts/layout-settings.js"></script>
+
+		<!-- buttons for Export datatable -->
+<script src="../src/plugins/datatables/js/dataTables.buttons.min.js"></script>
+<script src="../src/plugins/datatables/js/buttons.bootstrap4.min.js"></script>
+<script src="../src/plugins/datatables/js/buttons.print.min.js"></script>
+<script src="../src/plugins/datatables/js/buttons.html5.min.js"></script>
+<script src="../src/plugins/datatables/js/buttons.flash.min.js"></script>
+<script src="../src/plugins/datatables/js/pdfmake.min.js"></script>
+<script src="../src/plugins/datatables/js/vfs_fonts.js"></script>
+<!-- Datatable Setting js -->
+<script src="../vendors/scripts/datatable-setting.js"></script>
 
 	<!-- Google Tag Manager (noscript) -->
 	<noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-NXZMQSS" height="0" width="0"

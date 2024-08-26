@@ -220,6 +220,7 @@ function obtener_proyectos($conn, $id_usuario) {
                 <span class="input-group-text"><i class="dw dw-padlock1"></i></span>
               </div>
             </div>
+            <!--
             <div class="row pb-30">
               <div class="col-6">
                 <div class="custom-control custom-checkbox">
@@ -233,6 +234,8 @@ function obtener_proyectos($conn, $id_usuario) {
                 </div>
               </div>
             </div>
+            -->
+
             <div class="row align-items-center">
               <div class="col-5">
                 <div class="input-group mb-0">
@@ -243,9 +246,15 @@ function obtener_proyectos($conn, $id_usuario) {
                 <div class="font-16 weight-600 text-center" data-color="#707373">Ó</div>
               </div>
               <div class="col-5">
+              
                 <div class="input-group mb-0">
-                  <a class="btn btn-outline-primary btn-lg btn-block"
-                    onclick="$('#login-modal').modal('hide')">Salir</a>
+                <button
+													type="button"
+													class="btn btn-outline-primary btn-lg btn-block"
+													data-dismiss="modal"
+												>
+													Salir
+												</button>
 
                 </div>
               </div>

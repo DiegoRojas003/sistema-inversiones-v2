@@ -269,7 +269,7 @@ fetch('datosLine.php?proyecto=' + encodeURIComponent(proyectoId))
       }
     },
     colors: ['#1ab7ea', '#0084ff'],
-    labels: ['Capital', 'Industria'],
+    labels: ['Máxima', 'Minima'],
     legend: {
       show: true,
       floating: true,

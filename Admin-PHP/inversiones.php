@@ -15,7 +15,7 @@ if (!isset($_SESSION['authenticated']) || $_SESSION['authenticated'] !== true) {
 	<head>
 		<!-- Basic Page Info -->
 		<meta charset="utf-8" />
-		<title>DeskApp - Bootstrap Admin Dashboard HTML Template</title>
+		<title>Inversiones</title>
 
 		<!-- Site favicon -->
 		<link
@@ -148,7 +148,7 @@ if (!isset($_SESSION['authenticated']) || $_SESSION['authenticated'] !== true) {
 			<div class="xs-pd-20-10 pd-ltr-20">
 				<div class="card-box pb-10">
 					<div class="h5 pd-20 mb-0">Registo de Inversiones</div>
-					<table class="data-table table nowrap">
+					<table class="table hover multiple-select-row data-table-export nowrap">
 						<thead>
 							<tr>
 								<th class="table-plus">Nombre</th>
@@ -295,15 +295,16 @@ if (!isset($_SESSION['authenticated']) || $_SESSION['authenticated'] !== true) {
 		<script src="../src/plugins/datatables/js/responsive.bootstrap4.min.js"></script>
 		<script src="../vendors/scripts/dashboard3.js"></script>
 		
-		<!-- Google Tag Manager (noscript) -->
-		<noscript
-			><iframe
-				src="https://www.googletagmanager.com/ns.html?id=GTM-NXZMQSS"
-				height="0"
-				width="0"
-				style="display: none; visibility: hidden"
-			></iframe
-		></noscript>
-		<!-- End Google Tag Manager (noscript) -->
+		<!-- DataTables -->
+		<!-- buttons for Export datatable -->
+		<script src="../src/plugins/datatables/js/dataTables.buttons.min.js"></script>
+		<script src="../src/plugins/datatables/js/buttons.bootstrap4.min.js"></script>
+		<script src="../src/plugins/datatables/js/buttons.print.min.js"></script>
+		<script src="../src/plugins/datatables/js/buttons.html5.min.js"></script>
+		<script src="../src/plugins/datatables/js/buttons.flash.min.js"></script>
+		<script src="../src/plugins/datatables/js/pdfmake.min.js"></script>
+		<script src="../src/plugins/datatables/js/vfs_fonts.js"></script>
+		<!-- Datatable Setting js -->
+		<script src="../vendors/scripts/datatable-setting.js"></script>
 	</body>
 </html>
