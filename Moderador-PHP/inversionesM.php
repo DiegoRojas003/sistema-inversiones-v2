@@ -1,17 +1,4 @@
 <?php
-// Iniciar la sesión
-session_start();
-
-// Verificar si el usuario está autenticado
-if (!isset($_SESSION['authenticated']) || $_SESSION['authenticated'] !== true) {
-    // Si el usuario no está autenticado, redirigirlo a la página de inicio de sesión
-    header("Location: http://localhost/sistema-inversiones-v2/index.php"); // Cambia 'inicio-de-sesion.php' por la ruta de tu página de inicio de sesión
-    exit();
-}
-
-
-
-
 
 
 ?>
@@ -78,9 +65,61 @@ if (!isset($_SESSION['authenticated']) || $_SESSION['authenticated'] !== true) {
 	</head>
 	<body>
 		<?php
+		// Iniciar la sesión
+		session_start();
+		include("conexionn.php");
+
+		// Verificar si el usuario está autenticado
+		if (!isset($_SESSION['authenticated']) || $_SESSION['authenticated'] !== true) {
+			// Si el usuario no está autenticado, redirigirlo a la página de inicio de sesión
+			header("Location: http://localhost/sistema-inversiones-v2/index.php"); // Cambia 'inicio-de-sesion.php' por la ruta de tu página de inicio de sesión
+			exit();
+		}
+
+
+		// Recuperar la información del proyecto seleccionado
+		$proyectoID = isset($_SESSION['proyecto_seleccionado']) ? $_SESSION['proyecto_seleccionado'] : null;
+		$proyectoNombre = isset($_SESSION['nombre_proyecto']) ? $_SESSION['nombre_proyecto'] : null;
+		$id_usuario = isset($_SESSION['cedula']) ? $_SESSION['cedula'] : null;
+
+		if (empty($proyectoID) && !empty($id_usuario)) {
+			// Buscar en la tabla proyecto_usuario el FK_ID_Proyecto según el id_usuario
+			$consulta_proyecto_usuario = "SELECT FK_ID_Proyecto 
+										FROM proyecto_usuario 
+										WHERE FK_ID_Usuario = ?";
+
+			$stmt = mysqli_prepare($conex, $consulta_proyecto_usuario);
+			mysqli_stmt_bind_param($stmt, "i", $id_usuario);
+			mysqli_stmt_execute($stmt);
+			$resultado_proyecto_usuario = mysqli_stmt_get_result($stmt);
+
+			if ($fila = mysqli_fetch_assoc($resultado_proyecto_usuario)) {
+				$proyectoID = $fila['FK_ID_Proyecto'];
+
+				// Ahora que tenemos el $proyectoID, buscar el nombre del proyecto en la tabla proyecto
+				$consulta_proyecto = "SELECT Nombre 
+									FROM proyecto 
+									WHERE ID_Proyecto = ?";
+
+				$stmt_proyecto = mysqli_prepare($conex, $consulta_proyecto);
+				mysqli_stmt_bind_param($stmt_proyecto, "i", $proyectoID);
+				mysqli_stmt_execute($stmt_proyecto);
+				$resultado_proyecto = mysqli_stmt_get_result($stmt_proyecto);
+
+				if ($fila_proyecto = mysqli_fetch_assoc($resultado_proyecto)) {
+					$proyectoNombre = $fila_proyecto['Nombre'];
+
+					// Guardar el nombre del proyecto en la sesión
+					$_SESSION['nombre_proyecto'] = $proyectoNombre;
+				}
+			}
+		}
+
+		// Guardar el ID del proyecto en la sesión
+		$_SESSION['proyecto_seleccionado'] = $proyectoID;
 		
 
-		include("conexionn.php");
+	
 
 		// Consulta para obtener los datos de la tabla usuarios
 		$consulta_usuarios = "SELECT ID_Usuario, Nombre, Apellido, Telefono, Correo, Contraseña, Fecha, FK_ID_Municipio, FK_ID_Rol FROM usuario2";
@@ -118,7 +157,8 @@ if (!isset($_SESSION['authenticated']) || $_SESSION['authenticated'] !== true) {
 
 
 		// Obtener el nombre del proyecto seleccionado desde la sesión
-		$nombre_proyecto_seleccionado = $_SESSION["nombre_proyecto"];
+		$nombre_proyecto_seleccionado = isset($_SESSION["nombre_proyecto"]) ? $_SESSION["nombre_proyecto"] : null;
+		$nombre_proyecto_seleccionado= $proyectoNombre;
 
 		// Filtrar las inversiones que corresponden al proyecto seleccionado
 		$consulta_inversiones = "SELECT ID_Inversion, Nombre, Monto, Monto_Ajustado, Proyecto, Tipo, Fecha, Descripcion, CertificadoInversion 
@@ -129,17 +169,53 @@ if (!isset($_SESSION['authenticated']) || $_SESSION['authenticated'] !== true) {
 
 
 		// Obtener el ID del proyecto seleccionado desde la sesión
-		$id_proyecto_seleccionado = $_SESSION["proyecto_seleccionado"];
+		$id_proyecto_seleccionado = isset($_SESSION["proyecto_seleccionado"]) ? $_SESSION["proyecto_seleccionado"] : null;
 
-		// Filtrar los usuarios que están vinculados al proyecto seleccionado
-		$consulta_usuarios = "SELECT u.ID_Usuario, u.Nombre, u.Apellido 
-							FROM usuario2 u
-							JOIN proyecto_usuario pu ON u.ID_Usuario = pu.FK_ID_Usuario
-							WHERE pu.FK_ID_Proyecto = '$id_proyecto_seleccionado'
-							AND u.FK_ID_Rol != 1";  // Condición para excluir usuarios con FK_ID_Rol = 1
+		// Si no se encontró ningún proyecto seleccionado, usar el ID del usuario
+		if (empty($id_proyecto_seleccionado)) {
+			// Obtener el ID_Proyecto vinculado al usuario en la tabla proyecto_usuario
+			$consulta_id_proyecto = "SELECT p.ID_Proyecto
+									FROM proyecto p
+									JOIN proyecto_usuario pu ON p.ID_Proyecto = pu.FK_ID_Proyecto
+									WHERE pu.FK_ID_Usuario = ?"; // Asumiendo que tienes un ID de usuario disponible
 
-		$resultado_usuarios = mysqli_query($conex, $consulta_usuarios);
+			// Preparar y ejecutar la consulta (utilizando prepared statements para seguridad)
+			$stmt = mysqli_prepare($conex, $consulta_id_proyecto);
+			mysqli_stmt_bind_param($stmt, "i", $id_usuario); // Reemplaza $id_usuario con la variable que contiene el ID del usuario
+			mysqli_stmt_execute($stmt);
+			$resultado_proyecto = mysqli_stmt_get_result($stmt);
 
+			if ($fila = mysqli_fetch_assoc($resultado_proyecto)) {
+				$id_proyecto = $fila['ID_Proyecto'];
+
+				// Filtrar los usuarios que están vinculados al proyecto
+				$consulta_usuarios = "SELECT u.ID_Usuario, u.Nombre, u.Apellido 
+									FROM usuario2 u
+									JOIN proyecto_usuario pu ON u.ID_Usuario = pu.FK_ID_Usuario
+									WHERE pu.FK_ID_Proyecto = ?
+									AND u.FK_ID_Rol != 1"; // Condición para excluir usuarios con FK_ID_Rol = 1
+
+				$stmt_usuarios = mysqli_prepare($conex, $consulta_usuarios);
+				mysqli_stmt_bind_param($stmt_usuarios, "i", $id_proyecto);
+				mysqli_stmt_execute($stmt_usuarios);
+				$resultado_usuarios = mysqli_stmt_get_result($stmt_usuarios);
+			} else {
+				// Manejar el caso donde no se encuentra ningún proyecto
+				$resultado_usuarios = null;
+			}
+		} else {
+			// Filtrar los usuarios que están vinculados al proyecto seleccionado
+			$consulta_usuarios = "SELECT u.ID_Usuario, u.Nombre, u.Apellido 
+								FROM usuario2 u
+								JOIN proyecto_usuario pu ON u.ID_Usuario = pu.FK_ID_Usuario
+								WHERE pu.FK_ID_Proyecto = ?
+								AND u.FK_ID_Rol != 1"; // Condición para excluir usuarios con FK_ID_Rol = 1
+
+			$stmt_usuarios = mysqli_prepare($conex, $consulta_usuarios);
+			mysqli_stmt_bind_param($stmt_usuarios, "i", $id_proyecto_seleccionado);
+			mysqli_stmt_execute($stmt_usuarios);
+			$resultado_usuarios = mysqli_stmt_get_result($stmt_usuarios);
+		}
 		?>
 
 		<script>
@@ -173,12 +249,11 @@ if (!isset($_SESSION['authenticated']) || $_SESSION['authenticated'] !== true) {
 			});
 		</script>
 		
-
 		<?php include('templateM.php'); ?>
 		<div class="main-container">
 			<div class="xs-pd-20-10 pd-ltr-20">
 				<div class="card-box pb-10">
-					<div class="h5 pd-20 mb-0">Registo de Inversiones</div>
+					<div class="h5 pd-20 mb-0">Registro de Inversiones</div>
 					<table class="data-table table nowrap">
 						<thead>
 							<tr>
@@ -227,14 +302,14 @@ if (!isset($_SESSION['authenticated']) || $_SESSION['authenticated'] !== true) {
 						<label class="col-sm-12 col-md-2 col-form-label">Usuario</label>
 						<div class="col-sm-12 col-md-10">
 						<select name="usuario" class="custom-select col-12">
-    <option selected="">Seleccione</option>
-    <?php while ($usuario = mysqli_fetch_assoc($resultado_usuarios)): ?>
-        <option value="<?php echo $usuario['Nombre'] . ' ' . $usuario['Apellido']; ?>" data-cedula="<?php echo $usuario['ID_Usuario']; ?>">
-            Cédula: <?php echo  $usuario['ID_Usuario']; ?> - <?php echo $usuario['Nombre'] . ' ' . $usuario['Apellido']; ?>
-        </option>
-    <?php endwhile; ?>
-</select>
-<input type="hidden" name="id_usuario" value="<?php echo isset($datos_usuarios[0]['ID_Usuario']) ? $datos_usuarios[0]['ID_Usuario'] : ''; ?>">
+							<option selected="">Seleccione</option>
+							<?php while ($usuario = mysqli_fetch_assoc($resultado_usuarios)): ?>
+								<option value="<?php echo $usuario['Nombre'] . ' ' . $usuario['Apellido']; ?>" data-cedula="<?php echo $usuario['ID_Usuario']; ?>">
+									Cédula: <?php echo  $usuario['ID_Usuario']; ?> - <?php echo $usuario['Nombre'] . ' ' . $usuario['Apellido']; ?>
+								</option>
+							<?php endwhile; ?>
+						</select>
+						<input type="hidden" name="id_usuario" value="<?php echo isset($datos_usuarios[0]['ID_Usuario']) ? $datos_usuarios[0]['ID_Usuario'] : ''; ?>">
 						</div>
 					</div>
 
@@ -248,14 +323,7 @@ if (!isset($_SESSION['authenticated']) || $_SESSION['authenticated'] !== true) {
 						<div class="form-group row">
 							<label class="col-sm-12 col-md-2 col-form-label">Proyecto</label>
 							<div class="col-sm-12 col-md-10">
-								<select name="proyecto" class="custom-select col-12">
-									<option selected="">Seleccione</option>
-									<?php foreach ($datos_proyecto as $proyecto): ?>
-										<option value="<?php echo $proyecto['Nombre']; ?>">
-											<?php echo $proyecto['Nombre']; ?>
-										</option>
-									<?php endforeach; ?>
-								</select>
+							<input type="text" name="proyecto" class="form-control col-12" value="<?php echo htmlspecialchars($proyectoNombre); ?>" readonly>
 							</div>
 						</div>
 

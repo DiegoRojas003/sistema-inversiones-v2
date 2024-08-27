@@ -4,16 +4,15 @@ session_start();
 
 // Verificar si el usuario está autenticado
 if (!isset($_SESSION['authenticated']) || $_SESSION['authenticated'] !== true) {
-    // Si el usuario no está autenticado, redirigirlo a la página de inicio de sesión
     header("Location: http://localhost/sistema-inversiones-v2/index.php");
     exit();
 }
 
-// Obtener el nombre y apellido del usuario de la sesión
-$nombre = isset($_SESSION['nombre']) ? $_SESSION['nombre'] : '';
-$apellido = isset($_SESSION['apellido']) ? $_SESSION['apellido'] : '';
-?>
 
+// Obtener el nombre y apellido del usuario de la sesión
+	$nombre = isset($_SESSION['nombre']) ? $_SESSION['nombre'] : '';
+	$apellido = isset($_SESSION['apellido']) ? $_SESSION['apellido'] : '';
+?>
 
 <!DOCTYPE html>
 <html>
@@ -71,39 +70,6 @@ $apellido = isset($_SESSION['apellido']) ? $_SESSION['apellido'] : '';
 		/>
 		<link rel="stylesheet" type="text/css" href="../vendors/styles/style.css" />
 
-		<!-- Global site tag (gtag.js) - Google Analytics -->
-		<script
-			async
-			src="https://www.googletagmanager.com/gtag/js?id=G-GBZ3SGGX85"
-		></script>
-		<script
-			async
-			src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-2973766580778258"
-			crossorigin="anonymous"
-		></script>
-		<script>
-			window.dataLayer = window.dataLayer || [];
-			function gtag() {
-				dataLayer.push(arguments);
-			}
-			gtag("js", new Date());
-
-			gtag("config", "G-GBZ3SGGX85");
-		</script>
-		<!-- Google Tag Manager -->
-		<script>
-			(function (w, d, s, l, i) {
-				w[l] = w[l] || [];
-				w[l].push({ "gtm.start": new Date().getTime(), event: "gtm.js" });
-				var f = d.getElementsByTagName(s)[0],
-					j = d.createElement(s),
-					dl = l != "dataLayer" ? "&l=" + l : "";
-				j.async = true;
-				j.src = "https://www.googletagmanager.com/gtm.js?id=" + i + dl;
-				f.parentNode.insertBefore(j, f);
-			})(window, document, "script", "dataLayer", "GTM-NXZMQSS");
-		</script>
-		<!-- End Google Tag Manager -->
 	</head>
 	<body>
 
@@ -194,30 +160,11 @@ $apellido = isset($_SESSION['apellido']) ? $_SESSION['apellido'] : '';
 						</div>
 					</div>
 				</div>
-				<div class="row">
-					<div class="col-xl-8 mb-30">
-						<div class="card-box height-100-p pd-20">
-							<h2 class="h4 mb-20">Activity</h2>
-							<div id="chart5"></div>
-						</div>
-					</div>
-					<div class="col-xl-4 mb-30">
-						<div class="card-box height-100-p pd-20">
-							<h2 class="h4 mb-20">Lead Target</h2>
-							<div id="chart6"></div>
-						</div>
-					</div>
-				</div>
-				<div class="card-box mb-30">
-					
-				</div>
+				
 			
 			</div>
 		</div>
-		<!-- welcome modal start -->
-				
-		<!-- welcome modal end -->
-		<!-- js -->
+		
 		
 		<script src="../vendors/scripts/core.js"></script>
 		<script src="../vendors/scripts/script.min.js"></script>

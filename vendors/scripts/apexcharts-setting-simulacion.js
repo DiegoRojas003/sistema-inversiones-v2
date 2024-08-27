@@ -18,13 +18,17 @@ document.addEventListener('DOMContentLoaded', function () {
   let valorIndustria = convertirANumero(valorIndustriaTexto);
 
   // Paso 2: Leer desde el localStorage en JavaScript
+  var cantidadUsuarios = localStorage.getItem('cantidadUsuarios');
+  
   var usuariosCapital = localStorage.getItem('usuariosCapital');
   var usuariosIndustria = localStorage.getItem('usuariosIndustria');
+
   var inversionTipo1 = parseInt(localStorage.getItem('inversionTipo1'));
   var inversionTipo2 = parseInt(localStorage.getItem('inversionTipo2'));
   var inversionTipo3 = parseInt(localStorage.getItem('inversionTipo3'));
   let total = inversionTipo1 + inversionTipo2 + inversionTipo3;
 
+  let total_ci = usuariosCapital+usuariosIndustria;
 
   // Calcular los porcentajes
   inversionTipo1 = Math.trunc((inversionTipo1 / total) * 100);
@@ -302,7 +306,7 @@ fetch('datosLine.php?proyecto=' + encodeURIComponent(proyectoId))
   var chart4 = new ApexCharts(document.querySelector("#chart9"), options9);
   chart4.render();
   var options = {
-    series: [3],
+    series: [cantidadUsuarios],
     chart: {
       height: 300,
       type: 'radialBar',

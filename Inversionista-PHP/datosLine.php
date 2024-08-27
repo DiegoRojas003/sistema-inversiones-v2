@@ -1,17 +1,55 @@
-
 <?php
-
 header('Content-Type: application/json');
 
 // Incluir el archivo de conexión
 include("conexionn.php");
 
-
-// Iniciar la sesión
 session_start();
 
-// Obtener el nombre del proyecto desde la sesión
-$nombreProyecto = isset($_SESSION['nombreProyecto']) ? $_SESSION['nombreProyecto'] : 'Nombre no disponible';
+// Verificar si el usuario está autenticado
+if (!isset($_SESSION['authenticated']) || $_SESSION['authenticated'] !== true) {
+    header("Location: http://localhost/sistema-inversiones-v2/index.php");
+    exit();
+}
+
+
+// Recuperar la información del proyecto seleccionado
+$proyectoID = isset($_SESSION['proyecto_seleccionado']) ? $_SESSION['proyecto_seleccionado'] : null;
+$proyectoNombre = isset($_SESSION['nombre_proyecto']) ? $_SESSION['nombre_proyecto'] : null;
+$id_usuario = isset($_SESSION['cedula']) ? $_SESSION['cedula'] : null;
+
+if (empty($proyectoID) && !empty($id_usuario)) {
+	// Buscar en la tabla proyecto_usuario el FK_ID_Proyecto según el id_usuario
+	$consulta_proyecto_usuario = "SELECT FK_ID_Proyecto 
+								FROM proyecto_usuario 
+								WHERE FK_ID_Usuario = ?";
+
+	$stmt = mysqli_prepare($conex, $consulta_proyecto_usuario);
+	mysqli_stmt_bind_param($stmt, "i", $id_usuario);
+	mysqli_stmt_execute($stmt);
+	$resultado_proyecto_usuario = mysqli_stmt_get_result($stmt);
+
+	if ($fila = mysqli_fetch_assoc($resultado_proyecto_usuario)) {
+		$proyectoID = $fila['FK_ID_Proyecto'];
+
+		// Ahora que tenemos el $proyectoID, buscar el nombre del proyecto en la tabla proyecto
+		$consulta_proyecto = "SELECT Nombre 
+							FROM proyecto 
+							WHERE ID_Proyecto = ?";
+
+		$stmt_proyecto = mysqli_prepare($conex, $consulta_proyecto);
+		mysqli_stmt_bind_param($stmt_proyecto, "i", $proyectoID);
+		mysqli_stmt_execute($stmt_proyecto);
+		$resultado_proyecto = mysqli_stmt_get_result($stmt_proyecto);
+
+		if ($fila_proyecto = mysqli_fetch_assoc($resultado_proyecto)) {
+			$proyectoNombre = $fila_proyecto['Nombre'];
+
+			// Guardar el nombre del proyecto en la sesión
+			$_SESSION['nombre_proyecto'] = $proyectoNombre;
+		}
+	}
+}
 
 // Consulta SQL para obtener el número de inversiones por año
 $consulta_inversiones_anuales = "
@@ -21,7 +59,7 @@ $consulta_inversiones_anuales = "
         FK_ID_Tipo, 
         SUM(Monto) AS TotalMonto
     FROM inversion2
-    WHERE Proyecto = '$nombreProyecto'
+    WHERE Proyecto = '$proyectoNombre'
     GROUP BY Anio, Mes, FK_ID_Tipo
     ORDER BY Anio, Mes
 ";

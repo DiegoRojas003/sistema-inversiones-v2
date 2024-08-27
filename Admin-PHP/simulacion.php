@@ -48,6 +48,7 @@ while ($fila_proyecto = mysqli_fetch_assoc($resultado_proyecto)) {
     $datos_proyecto[] = $fila_proyecto;
 }
 
+
 // Variables para la tabla resumen
 $socios = [];
 $valor_aportes_capital = 0;
@@ -155,44 +156,81 @@ if ($proyecto_id) {
 
 
 
-	// Cantidad de usuarios que han invertido en Capital (Tipo 1)
-	$sql_usuarios_capital = "SELECT COUNT(DISTINCT FK_ID_Usuario) AS usuariosCapital FROM inversion2 WHERE FK_ID_Tipo = 1";
-	$result_usuarios_capital = $conn->query($sql_usuarios_capital);
-	$row_usuarios_capital = $result_usuarios_capital->fetch_assoc();
-	$usuariosCapital = $row_usuarios_capital['usuariosCapital'];
+// Consulta para contar la cantidad de usuarios vinculados al proyecto seleccionado
+$sql_cantidad_usuarios = "
+    SELECT COUNT(DISTINCT pu.FK_ID_Usuario) AS cantidadUsuarios
+    FROM proyecto_usuario pu
+    WHERE pu.FK_ID_Proyecto = '$proyecto_id'
+";
 
-	// Cantidad de usuarios que han invertido en Industria (Tipo 2)
-	$sql_usuarios_industria = "SELECT COUNT(DISTINCT FK_ID_Usuario) AS usuariosIndustria FROM inversion2 WHERE FK_ID_Tipo = 2";
-	$result_usuarios_industria = $conn->query($sql_usuarios_industria);
-	$row_usuarios_industria = $result_usuarios_industria->fetch_assoc();
-	$usuariosIndustria = $row_usuarios_industria['usuariosIndustria'];
+$result_cantidad_usuarios = $conn->query($sql_cantidad_usuarios);
+$row_cantidad_usuarios = $result_cantidad_usuarios->fetch_assoc();
+$cantidadUsuarios = $row_cantidad_usuarios['cantidadUsuarios'];
 
 
-	// Valor total de inversiones de tipo 1 (Dinero)
-	$sql_tipo1 = "SELECT SUM(Monto) AS montoTipo1 FROM inversion2 WHERE FK_ID_Tipo = 1";
-	$result_tipo1 = $conn->query($sql_tipo1);
-	$row_tipo1 = $result_tipo1->fetch_assoc();
-	$montoTipo1 = $row_tipo1['montoTipo1'];
+	// Valor total de inversiones de tipo 1 (Dinero) para el proyecto seleccionado
+$sql_tipo1 = "SELECT SUM(Monto) AS montoTipo1 
+FROM inversion2 
+WHERE FK_ID_Tipo = 1 
+AND Proyecto = (
+	SELECT Nombre 
+	FROM proyecto 
+	WHERE ID_Proyecto = '$proyecto_id'
+)";
+$result_tipo1 = $conn->query($sql_tipo1);
+$row_tipo1 = $result_tipo1->fetch_assoc();
+$montoTipo1 = $row_tipo1['montoTipo1'] ? $row_tipo1['montoTipo1'] : 0;
 
-	// Valor total de inversiones de tipo 2 (Especie)
-	$sql_tipo2 = "SELECT SUM(Monto) AS montoTipo2 FROM inversion2 WHERE FK_ID_Tipo = 2";
-	$result_tipo2 = $conn->query($sql_tipo2);
-	$row_tipo2 = $result_tipo2->fetch_assoc();
-	$montoTipo2 = $row_tipo2['montoTipo2'];
+// Valor total de inversiones de tipo 2 (Especie) para el proyecto seleccionado
+$sql_tipo2 = "SELECT SUM(Monto) AS montoTipo2 
+FROM inversion2 
+WHERE FK_ID_Tipo = 2 
+AND Proyecto = (
+	SELECT Nombre 
+	FROM proyecto 
+	WHERE ID_Proyecto = '$proyecto_id'
+)";
+$result_tipo2 = $conn->query($sql_tipo2);
+$row_tipo2 = $result_tipo2->fetch_assoc();
+$montoTipo2 = $row_tipo2['montoTipo2'] ? $row_tipo2['montoTipo2'] : 0;
 
-	// Valor total de inversiones de tipo 3 (Industria)
-	$sql_tipo3 = "SELECT SUM(Monto) AS montoTipo3 FROM inversion2 WHERE FK_ID_Tipo = 3";
-	$result_tipo3 = $conn->query($sql_tipo3);
-	$row_tipo3 = $result_tipo3->fetch_assoc();
-	$montoTipo3 = $row_tipo3['montoTipo3'];
+// Valor total de inversiones de tipo 3 (Industria) para el proyecto seleccionado
+$sql_tipo3 = "SELECT SUM(Monto) AS montoTipo3 
+FROM inversion2 
+WHERE FK_ID_Tipo = 3 
+AND Proyecto = (
+	SELECT Nombre 
+	FROM proyecto 
+	WHERE ID_Proyecto = '$proyecto_id'
+)";
+$result_tipo3 = $conn->query($sql_tipo3);
+$row_tipo3 = $result_tipo3->fetch_assoc();
+$montoTipo3 = $row_tipo3['montoTipo3'] ? $row_tipo3['montoTipo3'] : 0;
+
+
+// Consulta para obtener el nombre del proyecto seleccionado
+$sql_nombre_proyecto = "
+    SELECT Nombre 
+    FROM proyecto 
+    WHERE ID_Proyecto = '$proyecto_id'
+";
+
+$result_nombre_proyecto = $conn->query($sql_nombre_proyecto);
+$row_nombre_proyecto = $result_nombre_proyecto->fetch_assoc();
+$nombreProyecto = $row_nombre_proyecto['Nombre'];
+
+
+
+// Guardar el nombre del proyecto en la sesión
+$_SESSION['nombreProyecto'] = $nombreProyecto;
 
 
 ?>
 
 <script>
     // Paso 1: Guardar en el localStorage desde PHP
-    localStorage.setItem('usuariosCapital', <?php echo $usuariosCapital; ?>);
-    localStorage.setItem('usuariosIndustria', <?php echo $usuariosIndustria; ?>);
+    localStorage.setItem('cantidadUsuarios', <?php echo $cantidadUsuarios; ?>);
+
     localStorage.setItem('inversionTipo1', <?php echo $montoTipo1; ?>);
     localStorage.setItem('inversionTipo2', <?php echo $montoTipo2; ?>);
     localStorage.setItem('inversionTipo3', <?php echo $montoTipo3; ?>);
@@ -294,7 +332,7 @@ if ($proyecto_id) {
 		<div class="main-container">
 			<div class="pd-ltr-20 xs-pd-20-10">
 				<div class="min-height-200px">
-					<div class="page-header">
+				<div class="page-header">
                     <div class="row">
                         <div class="col-md-6">
                             <div class="form-group row">
