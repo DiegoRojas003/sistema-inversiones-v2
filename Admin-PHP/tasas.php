@@ -154,31 +154,31 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 			const tdd2 = pa2 * cepeiep2 + da2 * cdddi2;
 			const tddaar2 = tdd2 + sda2;
 
-			document.getElementById('tlr2').value = (tlr2 * 100).toFixed(4) + '%';
-			document.getElementById('tlrc2').value = (tlrc2 * 100).toFixed(4) + '%';
-			document.getElementById('rp2').value = (rp2 * 100).toFixed(4) + '%';
-			document.getElementById('rsyp2').value = (rsyp2 * 100).toFixed(4) + '%';
-			document.getElementById('rlr2').value = (rlr2 * 100).toFixed(4) + '%';
-			document.getElementById('pdm2').value = (pdm2 * 100).toFixed(4) + '%';
-			document.getElementById('bd2').value = bd2.toFixed(4);
-			document.getElementById('tdi2').value = (tdi2 * 100).toFixed(4) + '%';
-			document.getElementById('da2').value = (da2 * 100).toFixed(4) + '%';
-			document.getElementById('pa2').value = (pa2 * 100).toFixed(4) + '%';
+			document.getElementById('tlr2').value = (tlr2 * 100).toFixed(2) + '%';
+			document.getElementById('tlrc2').value = (tlrc2 * 100).toFixed(2) + '%';
+			document.getElementById('rp2').value = (rp2 * 100).toFixed(2) + '%';
+			document.getElementById('rsyp2').value = (rsyp2 * 100).toFixed(2) + '%';
+			document.getElementById('rlr2').value = (rlr2 * 100).toFixed(2) + '%';
+			document.getElementById('pdm2').value = (pdm2 * 100).toFixed(2) + '%';
+			document.getElementById('bd2').value = bd2.toFixed(2);
+			document.getElementById('tdi2').value = (tdi2 * 100).toFixed(2) + '%';
+			document.getElementById('da2').value = (da2 * 100).toFixed(2) + '%';
+			document.getElementById('pa2').value = (pa2 * 100).toFixed(2) + '%';
 			document.getElementById('a2').value = a2.toFixed(0);
 			document.getElementById('d2').value = d2.toFixed(0);
 			document.getElementById('p2').value = p2.toFixed(0);
-			document.getElementById('dp2').value = dp2.toFixed(4);
-			document.getElementById('ba2').value = ba2.toFixed(4);
-			document.getElementById('cepi2').value = (cepi2 * 100).toFixed(4) + '%';
-			document.getElementById('cepiep2').value = (cepiep2 * 100).toFixed(4) + '%';
-			document.getElementById('cepeiep2').value = (cepeiep2 * 100).toFixed(4) + '%';
-			document.getElementById('cdadi2').value = (cdadi2 * 100).toFixed(4) + '%';
-			document.getElementById('cdddi2').value = (cdddi2 * 100).toFixed(4) + '%';
-			document.getElementById('tdd2').value = (tdd2 * 100).toFixed(4) + '%';
-			document.getElementById('sda2').value = (sda2 * 100).toFixed(4) + '%';
-			document.getElementById('tddaar2').value = (tddaar2 * 100).toFixed(4) + '%';
-			document.getElementById('de2').value = (de2).toFixed(4) + '%';
-			document.getElementById('ppt2').value = (ppt2 * 100).toFixed(4) + '%';
+			document.getElementById('dp2').value = dp2.toFixed(2);
+			document.getElementById('ba2').value = ba2.toFixed(2);
+			document.getElementById('cepi2').value = (cepi2 * 100).toFixed(2) + '%';
+			document.getElementById('cepiep2').value = (cepiep2 * 100).toFixed(2) + '%';
+			document.getElementById('cepeiep2').value = (cepeiep2 * 100).toFixed(2) + '%';
+			document.getElementById('cdadi2').value = (cdadi2 * 100).toFixed(2) + '%';
+			document.getElementById('cdddi2').value = (cdddi2 * 100).toFixed(2) + '%';
+			document.getElementById('tdd2').value = (tdd2 * 100).toFixed(2) + '%';
+			document.getElementById('sda2').value = (sda2 * 100).toFixed(2) + '%';
+			document.getElementById('tddaar2').value = (tddaar2 * 100).toFixed(2) + '%';
+			document.getElementById('de2').value = (de2).toFixed(2) + '%';
+			document.getElementById('ppt2').value = (ppt2 * 100).toFixed(2) + '%';
 		}
 
 		function guardarDatos() {

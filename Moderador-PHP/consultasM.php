@@ -83,16 +83,18 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['consultar'])) {
     $proyecto_id = $_POST['proyecto'];
 
     // Consulta para contar el número de inversiones realizadas
-    $sql_num_inversiones = "SELECT COUNT(*) AS num_inversiones FROM inversion2 WHERE FK_ID_Usuario = ?";
-    $stmt = $conn->prepare($sql_num_inversiones);
-    $stmt->bind_param("i", $usuario_id);
-    $stmt->execute();
-    $result_num_inversiones = $stmt->get_result();
-    $row_num_inversiones = $result_num_inversiones->fetch_assoc();
-    $num_inversiones_realizadas = $row_num_inversiones['num_inversiones'];
+$sql_num_inversiones = "SELECT COUNT(*) AS num_inversiones FROM inversion2 WHERE FK_ID_Usuario = ? AND proyecto = (SELECT Nombre FROM proyecto WHERE ID_Proyecto = ?)";
+$stmt = $conn->prepare($sql_num_inversiones);
+mysqli_stmt_bind_param($stmt, "ii", $usuario_id, $proyecto_id);
+$stmt->execute();
+$result_num_inversiones = $stmt->get_result();
+$row_num_inversiones = $result_num_inversiones->fetch_assoc();
+$num_inversiones_realizadas = $row_num_inversiones['num_inversiones'];
+
+
 
     $sql_fecha_inicio_proyecto = "SELECT Fecha FROM proyecto WHERE ID_Proyecto = ?";
-    $stmt = $conn->prepare($sql_fecha_inicio_proyecto);
+    $stmt = $conn->prepare($sql_fecha_inicio_proyecto);	
     $stmt->bind_param("i", $proyecto_id);
     $stmt->execute();
     $result_fecha_inicio_proyecto = $stmt->get_result();
@@ -137,27 +139,27 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['consultar'])) {
     $consultoI = "SELECT ID_Inversion, Nombre, Monto, Monto_Ajustado, proyecto, 
         Tipo, Fecha, Descripcion, CertificadoInversion, FK_ID_Usuario, FK_ID_Tipo  
         FROM inversion2
-        WHERE FK_ID_Tipo = 1 AND FK_ID_Usuario = ?"; 
+        WHERE FK_ID_Tipo = 1 AND FK_ID_Usuario = ? AND proyecto = (SELECT Nombre FROM proyecto WHERE ID_Proyecto = ?)";
     $stmtI = mysqli_prepare($conex, $consultoI);
-    mysqli_stmt_bind_param($stmtI, "i", $usuario_id);
+    mysqli_stmt_bind_param($stmtI, "ii", $usuario_id, $proyecto_id);
     mysqli_stmt_execute($stmtI);
     $resultadoI = mysqli_stmt_get_result($stmtI);
 
     $consultoII = "SELECT ID_Inversion, Nombre, Monto, Monto_Ajustado, proyecto, 
         Tipo, Fecha, Descripcion, CertificadoInversion, FK_ID_Usuario, FK_ID_Tipo  
         FROM inversion2
-        WHERE FK_ID_Tipo = 2 AND FK_ID_Usuario = ?"; 
+        WHERE FK_ID_Tipo = 2 AND FK_ID_Usuario = ? AND proyecto = (SELECT Nombre FROM proyecto WHERE ID_Proyecto = ?)";
     $stmtII = mysqli_prepare($conex, $consultoII);
-    mysqli_stmt_bind_param($stmtII, "i", $usuario_id);
+    mysqli_stmt_bind_param($stmtII, "ii", $usuario_id, $proyecto_id);
     mysqli_stmt_execute($stmtII);
     $resultadoII = mysqli_stmt_get_result($stmtII);
 
     $consultoIII = "SELECT ID_Inversion, Nombre, Monto, Monto_Ajustado, proyecto, 
         Tipo, Fecha, Descripcion, CertificadoInversion, FK_ID_Usuario, FK_ID_Tipo  
         FROM inversion2
-        WHERE FK_ID_Tipo = 3 AND FK_ID_Usuario = ?"; 
+        WHERE FK_ID_Tipo = 3 AND FK_ID_Usuario = ? AND proyecto = (SELECT Nombre FROM proyecto WHERE ID_Proyecto = ?)";
     $stmtIII = mysqli_prepare($conex, $consultoIII);
-    mysqli_stmt_bind_param($stmtIII, "i", $usuario_id);
+    mysqli_stmt_bind_param($stmtIII, "ii", $usuario_id, $proyecto_id);
     mysqli_stmt_execute($stmtIII);
     $resultadoIII = mysqli_stmt_get_result($stmtIII);
 }
