@@ -85,7 +85,7 @@ if (!isset($_SESSION['authenticated']) || $_SESSION['authenticated'] !== true) {
 						<div class="col-md-4">
 							<img src="../vendors/images/banner-img.png" alt="" />
 						</div>
-						<div class="col-md-8">
+						<div class="col-md-4">
 							<h4 class="font-20 weight-500 mb-10 text-capitalize">
 								Bienvenido de nuevo
 								<div class="weight-600 font-30 text-blue"><?php echo $nombre . ' ' . $apellido; ?></div>
@@ -104,62 +104,78 @@ if (!isset($_SESSION['authenticated']) || $_SESSION['authenticated'] !== true) {
 								organizado de tus transacciones financieras.
 							</p>
 						</div>
-					</div>
-				</div>
-				<div class="row">
-					<div class="col-xl-3 mb-30">
-						<div class="card-box height-100-p widget-style1">
-							<div class="d-flex flex-wrap align-items-center">
-								<div class="progress-data">
-									<div id="chart"></div>
-								</div>
-								<div class="widget-data">
-									<div class="h4 mb-0">2020</div>
-									<div class="weight-600 font-14">Contact</div>
-								</div>
-							</div>
-						</div>
-					</div>
-					<div class="col-xl-3 mb-30">
-						<div class="card-box height-100-p widget-style1">
-							<div class="d-flex flex-wrap align-items-center">
-								<div class="progress-data">
-									<div id="chart2"></div>
-								</div>
-								<div class="widget-data">
-									<div class="h4 mb-0">400</div>
-									<div class="weight-600 font-14">Deals</div>
-								</div>
-							</div>
-						</div>
-					</div>
-					<div class="col-xl-3 mb-30">
-						<div class="card-box height-100-p widget-style1">
-							<div class="d-flex flex-wrap align-items-center">
-								<div class="progress-data">
-									<div id="chart3"></div>
-								</div>
-								<div class="widget-data">
-									<div class="h4 mb-0">350</div>
-									<div class="weight-600 font-14">Campaign</div>
-								</div>
-							</div>
-						</div>
-					</div>
-					<div class="col-xl-3 mb-30">
-						<div class="card-box height-100-p widget-style1">
-							<div class="d-flex flex-wrap align-items-center">
-								<div class="progress-data">
-									<div id="chart4"></div>
-								</div>
-								<div class="widget-data">
-									<div class="h4 mb-0">$6060</div>
-									<div class="weight-600 font-14">Worth</div>
-								</div>
-							</div>
+						<div class="col-md-4" style="text-align:center;padding:1em 0;">
+							 <h3><a style="text-decoration:none;" >
+								<span style="color:gray;">Hora actual en</span>
+								<br />Colombia</a></h3> 
+								<iframe src="https://www.zeitverschiebung.net/clock-widget-iframe-v2?language=es&size=medium&timezone=America%2FBogota" 
+									width="100%" height="115" frameborder="0" seamless></iframe> </div>
+						
 						</div>
 					</div>
 				</div>
+				<div class="row pb-10">
+                    <div class="col-xl-3 col-lg-3 col-md-6 mb-20">
+                        <div class="card-box height-100-p widget-style3">
+                            <div class="d-flex flex-wrap">
+                                <div class="widget-data">
+                                    <div class="weight-700 font-24 text-dark">1</div>
+                                    <div class="font-14 text-secondary weight-500">Inversiones Realizadas</div>
+                                </div>
+                                <div class="widget-icon">
+                                    <div class="icon" data-color="#00eccf">
+                                        <i class="icon-copy dw dw-calendar1"></i>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-xl-3 col-lg-3 col-md-6 mb-20">
+                        <div class="card-box height-100-p widget-style3">
+                            <div class="d-flex flex-wrap">
+                                <div class="widget-data">
+                                    <div class="weight-700 font-24 text-dark">1 días</div>
+                                    <div class="font-14 text-secondary weight-500">Vida del proyecto</div>
+                                </div>
+                                <div class="widget-icon">
+                                    <div class="icon" data-color="#ff5b5b">
+                                        <span class="icon-copy ti-heart"></span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-xl-3 col-lg-3 col-md-6 mb-20">
+                        <div class="card-box height-100-p widget-style3">
+                            <div class="d-flex flex-wrap">
+                                <div class="widget-data">
+                                    <div class="weight-700 font-24 text-dark">1</div>
+                                    <div class="font-14 text-secondary weight-500">Inversionistas</div>
+                                </div>
+                                <div class="widget-icon">
+                                    <div class="icon">
+                                        <i class="icon-copy bi bi-globe" aria-hidden="true"></i>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-xl-3 col-lg-3 col-md-6 mb-20">
+                        <div class="card-box height-100-p widget-style3">
+                            <div class="d-flex flex-wrap">
+                                <div class="widget-data">
+                                    <div class="weight-700 font-24 text-dark">1%</div>
+                                    <div class="font-14 text-secondary weight-500">Tasa ajustada</div>
+                                </div>
+                                <div class="widget-icon">
+                                    <div class="icon" data-color="#09cc06">
+                                        <i class="icon-copy fa fa-money" aria-hidden="true"></i>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
 				
 			
 			</div>

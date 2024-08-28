@@ -250,14 +250,7 @@ $apellido = isset($_SESSION['apellido']) ? $_SESSION['apellido'] : '';
                         <li><a href="usuariosM.php">Inversionistas</a></li>
                     </ul>
                 </li>
-                
-                
-                <li>
-                    <a href="simulacionM.php" class="dropdown-toggle no-arrow">
-                        <span class="micon bi bi-pie-chart-fill"></span
-                        ><span class="mtext">Simulación</span>
-                    </a>
-                </li>
+            
                 <li>
                     <a href="../mantenimiento.html" class="dropdown-toggle no-arrow">
                         <span class="micon fa fa-balance-scale"></span

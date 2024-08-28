@@ -295,6 +295,7 @@ if ($proyecto_id) {
 			href="../src/plugins/datatables/css/responsive.bootstrap4.min.css"
 		/>
 		<link rel="stylesheet" type="text/css" href="../vendors/styles/style.css" />
+		
 
 		
 		
@@ -308,12 +309,15 @@ if ($proyecto_id) {
 
 		<div class="main-container">
 			<div class="pd-ltr-20">
-				<div class="card-box pd-20 height-100-p mb-30">
+				<div class="card-box pd-20  mb-30">
 					<div class="row align-items-center">
+						
 						<div class="col-md-4">
 							<img src="../vendors/images/banner-img.png" alt="" />
 						</div>
-						<div class="col-md-8">
+						
+						<div class="col-md-4">
+					
                             <h4 class="font-20 weight-500 mb-10 text-capitalize">
                                 ¡Bienvenido a la empresa: <?php echo htmlspecialchars($proyectoNombre); ?>!
                                 <div class="weight-600 font-30 text-blue"><?php echo htmlspecialchars($nombre . ' ' . $apellido); ?></div>
@@ -329,62 +333,16 @@ if ($proyecto_id) {
 								simplemente mantener un registro organizado de tus transacciones financieras.
                             </p>
                         </div>
-					</div>
+						<div class="col-md-4" style="text-align:center;padding:1em 0;">
+							 <h3><a style="text-decoration:none;" >
+								<span style="color:gray;">Hora actual en</span>
+								<br />Colombia</a></h3> 
+								<iframe src="https://www.zeitverschiebung.net/clock-widget-iframe-v2?language=es&size=medium&timezone=America%2FBogota" 
+									width="100%" height="115" frameborder="0" seamless></iframe> </div>
+						
+						</div>
 				</div>
-				<div class="row">
-					<div class="col-xl-3 mb-30">
-						<div class="card-box height-100-p widget-style1">
-							<div class="d-flex flex-wrap align-items-center">
-								<div class="progress-data">
-									<div id="chart"></div>
-								</div>
-								<div class="widget-data">
-									<div class="h4 mb-0">2020</div>
-									<div class="weight-600 font-14">Contact</div>
-								</div>
-							</div>
-						</div>
-					</div>
-					<div class="col-xl-3 mb-30">
-						<div class="card-box height-100-p widget-style1">
-							<div class="d-flex flex-wrap align-items-center">
-								<div class="progress-data">
-									<div id="chart2"></div>
-								</div>
-								<div class="widget-data">
-									<div class="h4 mb-0">400</div>
-									<div class="weight-600 font-14">Deals</div>
-								</div>
-							</div>
-						</div>
-					</div>
-					<div class="col-xl-3 mb-30">
-						<div class="card-box height-100-p widget-style1">
-							<div class="d-flex flex-wrap align-items-center">
-								<div class="progress-data">
-									<div id="chart3"></div>
-								</div>
-								<div class="widget-data">
-									<div class="h4 mb-0">350</div>
-									<div class="weight-600 font-14">Campaign</div>
-								</div>
-							</div>
-						</div>
-					</div>
-					<div class="col-xl-3 mb-30">
-						<div class="card-box height-100-p widget-style1">
-							<div class="d-flex flex-wrap align-items-center">
-								<div class="progress-data">
-									<div id="chart4"></div>
-								</div>
-								<div class="widget-data">
-									<div class="h4 mb-0">$6060</div>
-									<div class="weight-600 font-14">Worth</div>
-								</div>
-							</div>
-						</div>
-					</div>
-				</div>
+				
 				<div class="min-height-200px">	
 						
 				<div class="col-sm-12 col-md-10">

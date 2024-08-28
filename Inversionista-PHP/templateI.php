@@ -240,12 +240,6 @@ $apellido = isset($_SESSION['apellido']) ? $_SESSION['apellido'] : '';
                         ><span class="mtext">Inicio</span>
                     </a>
                 </li>
-                <li disabled>
-                    <a href="../mantenimiento.html" class="dropdown-toggle no-arrow" >
-                        <span class="micon bi bi-pie-chart-fill"></span
-                        ><span class="mtext">Simulación</span>
-                    </a>
-                </li>
                 <li>
                     <a href="../mantenimiento.html" class="dropdown-toggle no-arrow">
                         <span class="micon fa fa-balance-scale"></span

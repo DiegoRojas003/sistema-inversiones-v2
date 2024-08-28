@@ -853,15 +853,20 @@ textarea.form-control{
 .docs-buttons label{margin-bottom: 0;}
 .docs-buttons .btn{margin-bottom: 5px;}
 
-
+.table thead th{
+	font-weight: 600;
+	font-size: 15px;
+	border-bottom: 0;
+	padding-left: 1rem;
+}
 .table td, .table th{
-	text-align: left;
+	vertical-align: middle;
 }
-
-.table th .td-money{
-	text-align: left;
+.table td{
+	font-size: 14px;
+	font-weight: 500;
+	padding: 1rem
 }
-
 .table-striped tbody tr:nth-of-type(odd){background: #eaeef2;}
 
 table.dataTable.stripe tbody tr.odd, table.dataTable.display tbody tr.odd{
@@ -1631,7 +1636,7 @@ body.IE .register-page-wrap .container{
 	width: 100%;
 }
 .login-box{
-	max-width: 500px;
+	max-width: 400px;
 	width: 100%;
 	padding: 40px 20px;
 	margin: 5px auto;
@@ -2149,7 +2154,7 @@ body.IE .register-page-wrap .container{
 }
 
 #login-modal .modal-dialog{
-	max-width: 410px;
+	max-width: 380px;
 }
 #login-modal .login-box{
 	margin: 0;
