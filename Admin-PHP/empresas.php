@@ -98,8 +98,7 @@ if (!isset($_SESSION['authenticated']) || $_SESSION['authenticated'] !== true) {
 								echo "<td style='text-align: center;'>" . $fila['Nombre'] . "</td>";
 								echo "<td style='text-align: center;'>" . $fila['Fecha'] . "</td>";
 								echo "<td>" . $fila['Descripcion'] . "</td>";
-								echo "<td>";
-								echo '<a href="descargar_p.php?id=' . $fila['ID_Proyecto'] . '">' . $fila['Certificado'] . '</a>';
+								echo '<td><a href="../files/' . $fila['Certificado'] . '" target="_blank">' . $fila['Certificado'] . '</a></td>';
 								echo '<td>';
 								echo '<div class="table-actions">';
 								echo '<a href="#" data-color="#265ed7"><i class="icon-copy dw dw-edit2"></i></a>';
@@ -122,7 +121,7 @@ if (!isset($_SESSION['authenticated']) || $_SESSION['authenticated'] !== true) {
 						<p class="mb-30">Seleccione la empresa y los usuarios que desea vincular a dicho empresa:</p>
 					</div>
 				</div>
-				<form action="registrar.php" method="POST">
+				<form action="registrar.php" method="POST" >
 					<!-- Input hidden para el ID del proyecto -->
 					
 					<div class="row">
@@ -170,7 +169,7 @@ if (!isset($_SESSION['authenticated']) || $_SESSION['authenticated'] !== true) {
 
 			<div class="pd-20 card-box mb-30">
 				<div class="clearfix"></div>
-				<form action="registrar.php" method="post">
+				<form action="registrar.php" method="post" enctype="multipart/form-data">
 					<div class="form-group row">
 						<label class="col-sm-12 col-md-2 col-form-label">Identificador</label>
 						<div class="col-sm-12 col-md-10">
@@ -202,8 +201,8 @@ if (!isset($_SESSION['authenticated']) || $_SESSION['authenticated'] !== true) {
 					<div class="form-group row">
 						<label class="col-sm-12 col-md-2 col-form-label">Documento</label>
 						<div class="col-sm-12 col-md-10">
-							<input name="documento_proyecto" type="file"
-								class="form-control-file form-control height-auto" accept=".doc, .docx, .pdf" />
+							<input name="archivo" type="file"
+								class="form-control-file form-control height-auto"  accept=".pdf" />
 						</div>
 					</div>
 

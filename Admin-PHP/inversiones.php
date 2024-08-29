@@ -172,7 +172,7 @@ if (!isset($_SESSION['authenticated']) || $_SESSION['authenticated'] !== true) {
 								echo "<td>" . $fila['Fecha'] . "</td>";
 								echo "<td>" . $fila['Descripcion'] . "</td>";
 								echo "<td>";
-								echo '<a href="descargar_i.php?id=' . $fila['ID_Inversion'] . '">' . $fila['CertificadoInversion'] . '</a>';
+								echo '<td><a href="../files/' . $fila['CertificadoInversion'] . '" target="_blank">' . $fila['CertificadoInversion'] . '</a></td>';
 								echo '<td>';
 								echo '<div class="table-actions">';
 								echo '<a href="#" data-color="#265ed7"><i class="icon-copy dw dw-edit2"></i></a>';
@@ -193,23 +193,20 @@ if (!isset($_SESSION['authenticated']) || $_SESSION['authenticated'] !== true) {
 
 				<div class="pd-20 card-box mb-30">
 					<div class="clearfix"></div>
-					<form action="registrar.php" method="post">
+					<form action="registrarM.php" method="post" enctype="multipart/form-data">
 
 					<div class="form-group row">
 						<label class="col-sm-12 col-md-2 col-form-label">Usuario</label>
 						<div class="col-sm-12 col-md-10">
-							<select name="usuario" class="custom-select col-12">
-								<option selected="">Seleccione</option>
-								<?php foreach ($datos_usuarios as $usuario): ?>
-									<?php if ($usuario['FK_ID_Rol'] != 1): // Condición para excluir usuarios con FK_ID_Rol = 1 ?>
-										<option value="<?php echo $usuario['Nombre'] . ' ' . $usuario['Apellido']; ?>" data-cedula="<?php echo $usuario['ID_Usuario']; ?>">
-											Cédula: <?php echo  $usuario['ID_Usuario']; ?> - <?php echo $usuario['Nombre'] . ' ' . $usuario['Apellido']; ?>
-										</option>
-									<?php endif; ?>
-								<?php endforeach; ?>
-							</select>
-							<!-- Campo oculto inicializado con un valor predeterminado o vacío -->
-							<input type="hidden" name="id_usuario" value="<?php echo isset($datos_usuarios[0]['ID_Usuario']) ? $datos_usuarios[0]['ID_Usuario'] : ''; ?>">
+						<select name="usuario" class="custom-select col-12">
+							<option selected="">Seleccione</option>
+							<?php while ($usuario = mysqli_fetch_assoc($resultado_usuarios)): ?>
+								<option value="<?php echo $usuario['Nombre'] . ' ' . $usuario['Apellido']; ?>" data-cedula="<?php echo $usuario['ID_Usuario']; ?>">
+									Cédula: <?php echo  $usuario['ID_Usuario']; ?> - <?php echo $usuario['Nombre'] . ' ' . $usuario['Apellido']; ?>
+								</option>
+							<?php endwhile; ?>
+						</select>
+						<input type="hidden" name="id_usuario" value="<?php echo isset($datos_usuarios[0]['ID_Usuario']) ? $datos_usuarios[0]['ID_Usuario'] : ''; ?>">
 						</div>
 					</div>
 
@@ -266,10 +263,7 @@ if (!isset($_SESSION['authenticated']) || $_SESSION['authenticated'] !== true) {
 						<div class="form-group row">
 							<label class="col-sm-12 col-md-2 col-form-label">Documento</label>
 							<div class="col-sm-12 col-md-10">
-								<input name="documento_inversion"
-									type="file"
-									class="form-control-file form-control height-auto"
-									accept=".doc, .docx, .pdf" />
+							<input name="archivo" id="archivo" type="file" class="form-control-file form-control height-auto" accept=".pdf">
 							</div>
 						</div>
 

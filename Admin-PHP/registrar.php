@@ -125,24 +125,24 @@ if (isset($_POST['register_municipio'])) {
 }
 
 if (isset($_POST['register_proyecto'])) {
+    $carpeta_destino = "../files/";
+
     if (
         isset($_POST['id_proyecto']) &&
         isset($_POST['nombre_proyecto']) &&
         isset($_POST['fecha_proyecto']) &&
-        isset($_POST['descripcion_p']) &&
-        isset($_POST['documento_proyecto'])
+        isset($_POST['descripcion_p'])
+        
     ) {
         $id_proyecto = trim($_POST['id_proyecto']);
         $nombre_proyecto = trim($_POST['nombre_proyecto']);
         $fecha_proyecto = $_POST['fecha_proyecto'];
         $descripcion_p = trim($_POST['descripcion_p']);
-        $documento_proyecto = trim($_POST['documento_proyecto']);
 
         // Verificar si algún campo está en blanco
-        if (empty($id_proyecto) || empty($nombre_proyecto) || empty($fecha_proyecto) || empty($descripcion_p) ) {
+        if (empty($id_proyecto) || empty($nombre_proyecto) || empty($fecha_proyecto) || empty($descripcion_p)) {
             echo "<script>alert('Por favor, llena todos los campos.');</script>";
-            // Actualizar la página después de mostrar el mensaje de error
-            echo "<script>window.location.replace('proyectos.php');</script>";
+            echo "<script>window.location.replace('empresas.php');</script>";
         } else {
             // Verificar si la fecha es válida
             if (strtotime($fecha_proyecto) !== false) {
@@ -156,24 +156,39 @@ if (isset($_POST['register_proyecto'])) {
                 mysqli_stmt_execute($stmt_existencia);
                 mysqli_stmt_store_result($stmt_existencia);
 
-                // Verificar si el ID_Proyecto ya existe
                 if (mysqli_stmt_num_rows($stmt_existencia) > 0) {
                     echo "<script>alert('El Identificador de Proyecto ya está registrado en la base de datos. Ingresa un valor diferente.');</script>";
-                    // Actualizar la página después de mostrar el mensaje de error
-                    echo "<script>window.location.replace('proyectos.php');</script>";
+                    echo "<script>window.location.replace('empresas.php');</script>";
                 } else {
-                    // Insertar el nuevo registro
-                    $consulta = "INSERT INTO proyecto(ID_Proyecto, Nombre, Fecha, Descripcion, Certificado) VALUES(?, ?, ?, ?, ?)";
-                    $stmt = mysqli_prepare($conex, $consulta);
-                    mysqli_stmt_bind_param($stmt, "sssss", $id_proyecto, $nombre_proyecto, $fecha_proyecto, $descripcion_p, $documento_proyecto);
-                    $resultado = mysqli_stmt_execute($stmt);
+                    // Verificar si se subió correctamente un archivo
+                    if ($_FILES['archivo']['error'] === UPLOAD_ERR_OK) {
+                        $nombre_archivo = basename($_FILES["archivo"]["name"]);
+                        $extension = strtolower(pathinfo($nombre_archivo, PATHINFO_EXTENSION));
 
-                    if ($resultado) {
-                        echo "<script>alert('¡Tu registro se ha completado!');</script>";
-                        // Actualizar la página después de la inserción
-                        echo "<script>window.location.replace('proyectos.php');</script>";
+                        if ($extension == "pdf") {
+                            
+                            // Mover el archivo al destino y guardar la ruta
+                            if (move_uploaded_file($_FILES['archivo']['tmp_name'], $carpeta_destino . $nombre_archivo)) {
+                                // Insertar el nuevo registro
+                                $consulta = "INSERT INTO proyecto(ID_Proyecto, Nombre, Fecha, Descripcion, Certificado) VALUES(?, ?, ?, ?, ?)";
+                                $stmt = mysqli_prepare($conex, $consulta);
+                                mysqli_stmt_bind_param($stmt, "sssss", $id_proyecto, $nombre_proyecto, $fecha_proyecto, $descripcion_p, $nombre_archivo);
+                                $resultado = mysqli_stmt_execute($stmt);
+
+                                if ($resultado) {
+                                    echo "<script>alert('¡Tu registro se ha completado!');</script>";
+                                    echo "<script>window.location.replace('empresas.php');</script>";
+                                } else {
+                                    echo "<script>alert('Error al insertar en la base de datos: " . mysqli_error($conex) . "');</script>";
+                                }
+                            } else {
+                                echo "<script>alert('Error al mover el archivo. Por favor, intenta nuevamente.');</script>";
+                            }
+                        } else {
+                            echo "<script>alert('El archivo debe ser un PDF.');</script>";
+                        }
                     } else {
-                        echo "<script>alert('Error al insertar en la base de datos: " . mysqli_error($conex) . "');</script>";
+                        echo "<script>alert('No se ha subido ningún archivo o hubo un error en la subida.');</script>";
                     }
                 }
             } else {
@@ -184,6 +199,8 @@ if (isset($_POST['register_proyecto'])) {
         echo "<script>alert('Por favor, llena todos los campos.');</script>";
     }
 }
+
+
 
 if (isset($_POST['register_usuarios'])) {
     // Verificar si las contraseñas son iguales
@@ -218,7 +235,7 @@ if (isset($_POST['register_usuarios'])) {
 
             // Verificar si algún campo está en blanco
             if (empty($cedula) || empty($nombre) || empty($apellido) || empty($telefono) || empty($correo) || empty($contrasena) || empty($fecha) || empty($ciudad) || empty($rol)) {
-                echo "<script>alert('Por favor, llena todos los campos.');</script>";
+                echo "<script>alert('Por favor, llena todos los camposssssssss.');</script>";
                 // Actualizar la página después de mostrar el mensaje de error
                 echo "<script>window.location.replace('usuarios.php');</script>";
             } else {
@@ -296,6 +313,8 @@ if (isset($_POST['register_tipos'])) {
 }
 
 if (isset($_POST['registar_inversion'])) {
+    $carpeta_destino = "../files/";
+
     if (
         isset($_POST['usuario']) &&
         isset($_POST['monto']) &&
@@ -303,68 +322,79 @@ if (isset($_POST['registar_inversion'])) {
         isset($_POST['tipo']) &&
         isset($_POST['fecha_inversion']) &&
         isset($_POST['descripcion_inversion']) &&
-        isset($_POST['documento_inversion']) &&
         isset($_POST['id_usuario']) &&
         isset($_POST['id_tipo'])
     ) {
         $usuario = trim($_POST['usuario']);
         $monto = trim($_POST['monto']);
-        $montoA = isset($_POST['null']) ? trim($_POST['null']) : '';
-        $proyecto_nombre = trim($_POST['proyecto']); // Nombre del proyecto
+        $montoA = '';  // Define la variable montoA, ya que $_POST['null'] no tiene sentido
+        $proyecto_nombre = trim($_POST['proyecto']);
         $tipo = trim($_POST['tipo']);
         $fecha_inversion = $_POST['fecha_inversion'];
         $descripcion_inversion = trim($_POST['descripcion_inversion']);
-        $documento_inversion = trim($_POST['documento_inversion']);
         $id_usuario = trim($_POST['id_usuario']);
         $id_tipo = trim($_POST['id_tipo']);
 
         // Verificar si algún campo está en blanco
         if (empty($usuario) || empty($monto) || empty($proyecto_nombre) || empty($tipo) || 
             empty($fecha_inversion) || empty($descripcion_inversion) || 
-            empty($documento_inversion) || empty($id_usuario) || empty($id_tipo)) {
+            empty($id_usuario) || empty($id_tipo)) {
             echo "<script>alert('Por favor, llena todos los campos.');</script>";
-            // Actualizar la página después de mostrar el mensaje de error
-            echo "<script>window.location.replace('inversiones.php');</script>";
+            echo "<script>setTimeout(function(){ window.location.replace('inversionesM.php'); }, 500);</script>";
         } else {
-            // Verificar si la fecha es válida
-            if (strtotime($fecha_inversion) !== false) {
-                // Convertir la fecha al formato correcto para MySQL
-                $fecha_inversion = date('Y-m-d', strtotime($fecha_inversion));
+            if ($_FILES['archivo']['error'] === UPLOAD_ERR_OK) {
+                $nombre_archivo = basename($_FILES["archivo"]["name"]);
+                $extension = strtolower(pathinfo($nombre_archivo, PATHINFO_EXTENSION));
+                
+                // Verificar si la fecha es válida
+                if (strtotime($fecha_inversion) !== false) {
+                    if ($extension == "pdf") {
+                        if (move_uploaded_file($_FILES['archivo']['tmp_name'], $carpeta_destino . $nombre_archivo)) {
+                            // Convertir la fecha al formato correcto para MySQL
+                            $fecha_inversion = date('Y-m-d', strtotime($fecha_inversion));
 
-                // Obtener la ID del proyecto basado en el nombre proporcionado
-                $consulta_proyecto = "SELECT ID_Proyecto FROM proyecto WHERE Nombre = ?";
-                $stmt_proyecto = mysqli_prepare($conex, $consulta_proyecto);
-                mysqli_stmt_bind_param($stmt_proyecto, "s", $proyecto_nombre);
-                mysqli_stmt_execute($stmt_proyecto);
-                mysqli_stmt_store_result($stmt_proyecto);
+                            // Obtener la ID del proyecto basado en el nombre proporcionado
+                            $consulta_proyecto = "SELECT ID_Proyecto FROM proyecto WHERE Nombre = ?";
+                            $stmt_proyecto = mysqli_prepare($conex, $consulta_proyecto);
+                            mysqli_stmt_bind_param($stmt_proyecto, "s", $proyecto_nombre);
+                            mysqli_stmt_execute($stmt_proyecto);
+                            mysqli_stmt_store_result($stmt_proyecto);
 
-                // Si el proyecto existe, obtener su ID
-                if (mysqli_stmt_num_rows($stmt_proyecto) > 0) {
-                    mysqli_stmt_bind_result($stmt_proyecto, $id_proyecto);
-                    mysqli_stmt_fetch($stmt_proyecto);
+                            // Si el proyecto existe, obtener su ID
+                            if (mysqli_stmt_num_rows($stmt_proyecto) > 0) {
+                                mysqli_stmt_bind_result($stmt_proyecto, $id_proyecto);
+                                mysqli_stmt_fetch($stmt_proyecto);
+                            } else {
+                                echo "<script>alert('El proyecto no existe. Por favor, ingresa un proyecto válido.');</script>";
+                                exit; // Detener la ejecución si el proyecto no existe
+                            }
+
+                            // Insertar el nuevo registro en la tabla inversion2
+                            $consulta = "INSERT INTO inversion2(Nombre, Monto, Monto_Ajustado, proyecto, Tipo, Fecha, 
+                            Descripcion, CertificadoInversion, FK_ID_Usuario, FK_ID_Tipo) 
+                            VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+                            $stmt = mysqli_prepare($conex, $consulta);
+                            mysqli_stmt_bind_param($stmt, "ssssssssss", $usuario, $monto, $montoA, $proyecto_nombre, $tipo, 
+                            $fecha_inversion, $descripcion_inversion, $nombre_archivo, $id_usuario, $id_tipo);
+                            $resultado = mysqli_stmt_execute($stmt);
+
+                            if ($resultado) {
+                                echo "<script>alert('¡Tu registro se ha completado!');</script>";
+                                echo "<script>setTimeout(function(){ window.location.replace('inversionesM.php'); }, 500);</script>";
+                            } else {
+                                echo "<script>alert('Error al insertar en la base de datos: " . mysqli_error($conex) . "');</script>";
+                            }       
+                        } else {
+                            echo "<script>alert('Error al mover el archivo.');</script>";
+                        }
+                    } else {
+                        echo "<script>alert('El archivo no es un PDF.');</script>";
+                    }
                 } else {
-                    echo "<script>alert('El proyecto no existe. Por favor, ingresa un proyecto válido.');</script>";
-                    exit; // Detener la ejecución si el proyecto no existe
-                }
-
-                // Insertar el nuevo registro en la tabla inversion2
-                $consulta = "INSERT INTO inversion2(Nombre, Monto, Monto_Ajustado, proyecto, Tipo, Fecha, 
-                Descripcion, CertificadoInversion, FK_ID_Usuario, FK_ID_Tipo) 
-                VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
-                $stmt = mysqli_prepare($conex, $consulta);
-                mysqli_stmt_bind_param($stmt, "ssssssssss", $usuario, $monto, $montoA, $proyecto_nombre, $tipo, 
-                $fecha_inversion, $descripcion_inversion, $documento_inversion, $id_usuario, $id_tipo);
-                $resultado = mysqli_stmt_execute($stmt);
-
-                if ($resultado) {
-                    echo "<script>alert('¡Tu registro se ha completado!');</script>";
-                    // Actualizar la página después de la inserción
-                    echo "<script>window.location.replace('inversiones.php');</script>";
-                } else {
-                    echo "<script>alert('Error al insertar en la base de datos: " . mysqli_error($conex) . "');</script>";
+                    echo "<script>alert('La fecha no es válida. Por favor, ingresa una fecha válida.');</script>";
                 }
             } else {
-                echo "<script>alert('La fecha no es válida. Por favor, ingresa una fecha válida.');</script>";
+                echo "<script>alert('No se ha subido ningún archivo o hubo un error en la subida.');</script>";
             }
         }
     } else {

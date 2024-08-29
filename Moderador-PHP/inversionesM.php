@@ -276,7 +276,7 @@
 									<td><?php echo $fila['Tipo']; ?></td>
 									<td><?php echo $fila['Fecha']; ?></td>
 									<td><?php echo $fila['Descripcion']; ?></td>
-									<td><a href="descargar_i.php?id=<?php echo $fila['ID_Inversion']; ?>"><?php echo $fila['CertificadoInversion']; ?></a></td>
+									<td><a href="../files/<?php echo $fila['CertificadoInversion']; ?>" target="_blank"><?php echo $fila['CertificadoInversion']; ?></a></td>
 									<td>
 										<div class="table-actions">
 											<a href="#" data-color="#265ed7"><i class="icon-copy dw dw-edit2"></i></a>
@@ -296,7 +296,7 @@
 
 				<div class="pd-20 card-box mb-30">
 					<div class="clearfix"></div>
-					<form action="registrarM.php" method="post">
+					<form action="registrarM.php" method="post" enctype="multipart/form-data">
 
 					<div class="form-group row">
 						<label class="col-sm-12 col-md-2 col-form-label">Usuario</label>
@@ -359,10 +359,7 @@
 						<div class="form-group row">
 							<label class="col-sm-12 col-md-2 col-form-label">Documento</label>
 							<div class="col-sm-12 col-md-10">
-								<input name="documento_inversion"
-									type="file"
-									class="form-control-file form-control height-auto"
-									accept=".doc, .docx, .pdf" />
+							<input name="archivo" id="archivo" type="file" class="form-control-file form-control height-auto" accept=".pdf">
 							</div>
 						</div>
 
