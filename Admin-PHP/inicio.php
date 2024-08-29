@@ -12,6 +12,67 @@ if (!isset($_SESSION['authenticated']) || $_SESSION['authenticated'] !== true) {
 // Obtener el nombre y apellido del usuario de la sesión
 	$nombre = isset($_SESSION['nombre']) ? $_SESSION['nombre'] : '';
 	$apellido = isset($_SESSION['apellido']) ? $_SESSION['apellido'] : '';
+	// Conexión a la base de datos (cambia los valores según tu configuración)
+$servername = "localhost";
+$username = "root";
+$password = "";
+$dbname = "sistemainversiones";
+
+// Crear la conexión
+$conn = new mysqli($servername, $username, $password, $dbname);
+
+// Verificar la conexión
+if ($conn->connect_error) {
+    die("Conexión fallida: " . $conn->connect_error);
+}
+
+// Consulta SQL para contar el número de proyectos
+$sql = "SELECT COUNT(*) AS total_proyectos FROM proyecto";
+$result = $conn->query($sql);
+
+// Inicializar la variable con un valor predeterminado
+$total_proyectos = 0;
+
+// Verificar si hay resultados
+if ($result->num_rows > 0) {
+    // Obtener el valor de la consulta
+    $row = $result->fetch_assoc();
+    $total_proyectos = $row['total_proyectos'];
+}
+
+// Consulta SQL para obtener la fecha más nueva y más antigua
+$sql = "SELECT MIN(Fecha) AS fecha_mas_antigua, MAX(Fecha) AS fecha_mas_nueva FROM proyecto";
+$result = $conn->query($sql);
+
+// Inicializar las variables con valores predeterminados
+$fecha_mas_antigua = '';
+$fecha_mas_nueva = '';
+
+// Verificar si hay resultados
+if ($result->num_rows > 0) {
+    // Obtener los valores de la consulta
+    $row = $result->fetch_assoc();
+    $fecha_mas_antigua = $row['fecha_mas_antigua'];
+    $fecha_mas_nueva = $row['fecha_mas_nueva'];
+}
+
+// Consulta SQL para contar el número total de usuarios
+$sql = "SELECT COUNT(*) AS total_usuarios FROM usuario2";
+$result = $conn->query($sql);
+
+// Inicializar la variable con un valor predeterminado
+$total_usuarios = 0;
+
+// Verificar si hay resultados
+if ($result->num_rows > 0) {
+    // Obtener el valor de la consulta
+    $row = $result->fetch_assoc();
+    $total_usuarios = $row['total_usuarios'];
+}
+
+
+// Cerrar la conexión
+$conn->close();
 ?>
 
 <!DOCTYPE html>
@@ -119,8 +180,8 @@ if (!isset($_SESSION['authenticated']) || $_SESSION['authenticated'] !== true) {
                         <div class="card-box height-100-p widget-style3">
                             <div class="d-flex flex-wrap">
                                 <div class="widget-data">
-                                    <div class="weight-700 font-24 text-dark">1</div>
-                                    <div class="font-14 text-secondary weight-500">Inversiones Realizadas</div>
+                                    <div class="weight-700 font-24 text-dark"><?php echo $total_proyectos; ?></div>
+                                    <div class="font-14 text-secondary weight-500">Empresas</div>
                                 </div>
                                 <div class="widget-icon">
                                     <div class="icon" data-color="#00eccf">
@@ -134,8 +195,8 @@ if (!isset($_SESSION['authenticated']) || $_SESSION['authenticated'] !== true) {
                         <div class="card-box height-100-p widget-style3">
                             <div class="d-flex flex-wrap">
                                 <div class="widget-data">
-                                    <div class="weight-700 font-24 text-dark">1 días</div>
-                                    <div class="font-14 text-secondary weight-500">Vida del proyecto</div>
+                                    <div class="weight-700 font-24 text-dark"><?php echo $fecha_mas_nueva; ?></div>
+                                    <div class="font-14 text-secondary weight-500">Fecha de inicio primera empresa</div>
                                 </div>
                                 <div class="widget-icon">
                                     <div class="icon" data-color="#ff5b5b">
@@ -149,8 +210,8 @@ if (!isset($_SESSION['authenticated']) || $_SESSION['authenticated'] !== true) {
                         <div class="card-box height-100-p widget-style3">
                             <div class="d-flex flex-wrap">
                                 <div class="widget-data">
-                                    <div class="weight-700 font-24 text-dark">1</div>
-                                    <div class="font-14 text-secondary weight-500">Inversionistas</div>
+                                    <div class="weight-700 font-24 text-dark"><?php echo $fecha_mas_antigua; ?></div>
+                                    <div class="font-14 text-secondary weight-500">Fecha de inicio ultima empresa</div>
                                 </div>
                                 <div class="widget-icon">
                                     <div class="icon">
@@ -164,8 +225,8 @@ if (!isset($_SESSION['authenticated']) || $_SESSION['authenticated'] !== true) {
                         <div class="card-box height-100-p widget-style3">
                             <div class="d-flex flex-wrap">
                                 <div class="widget-data">
-                                    <div class="weight-700 font-24 text-dark">1%</div>
-                                    <div class="font-14 text-secondary weight-500">Tasa ajustada</div>
+                                    <div class="weight-700 font-24 text-dark"><?php echo $total_usuarios; ?></div>
+                                    <div class="font-14 text-secondary weight-500">Usuarios</div>
                                 </div>
                                 <div class="widget-icon">
                                     <div class="icon" data-color="#09cc06">

@@ -38,9 +38,11 @@ if ($result_tasa_max && $result_tasa_max->num_rows > 0) {
     $tasa_ajustada = 0;
 }
 
-// Consulta para obtener los datos de la tabla proyecto
-$consulta_proyecto = "SELECT ID_Proyecto, Nombre, Fecha, Descripcion, Certificado FROM proyecto";
-$resultado_proyecto = mysqli_query($conex, $consulta_proyecto);
+// Consulta para obtener los datos de la tabla proyecto donde liquidado = 0
+$consulta_proyecto = "SELECT ID_Proyecto, Nombre, Fecha, Descripcion, Certificado, liquidado 
+                      FROM proyecto 
+                      WHERE liquidado = 0";
+$resultado_proyecto = mysqli_query($conn, $consulta_proyecto);
 
 // Crear un array para almacenar los datos del proyecto
 $datos_proyecto = array();
@@ -214,16 +216,17 @@ $sql_nombre_proyecto = "
     FROM proyecto 
     WHERE ID_Proyecto = '$proyecto_id'
 ";
-
 $result_nombre_proyecto = $conn->query($sql_nombre_proyecto);
-$row_nombre_proyecto = $result_nombre_proyecto->fetch_assoc();
-$nombreProyecto = $row_nombre_proyecto['Nombre'];
 
-
-
+if ($result_nombre_proyecto && $result_nombre_proyecto->num_rows > 0) {
+    $row_nombre_proyecto = $result_nombre_proyecto->fetch_assoc();
+    $nombreProyecto = $row_nombre_proyecto['Nombre'];
+} else {
+    // Manejar el caso donde no se encontró el proyecto
+    $nombreProyecto = null;
+}
 // Guardar el nombre del proyecto en la sesión
 $_SESSION['nombreProyecto'] = $nombreProyecto;
-
 
 ?>
 
@@ -279,55 +282,10 @@ $_SESSION['nombreProyecto'] = $nombreProyecto;
 		/>
 		<link rel="stylesheet" type="text/css" href="../vendors/styles/style.css" />
 
-		<!-- Global site tag (gtag.js) - Google Analytics -->
-		<script
-			async
-			src="https://www.googletagmanager.com/gtag/js?id=G-GBZ3SGGX85"
-		></script>
-		<script
-			async
-			src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-2973766580778258"
-			crossorigin="anonymous"
-		></script>
-		<script>
-			window.dataLayer = window.dataLayer || [];
-			function gtag() {
-				dataLayer.push(arguments);
-			}
-			gtag("js", new Date());
-
-			gtag("config", "G-GBZ3SGGX85");
-		</script>
-		<!-- Google Tag Manager -->
-		<script>
-			(function (w, d, s, l, i) {
-				w[l] = w[l] || [];
-				w[l].push({ "gtm.start": new Date().getTime(), event: "gtm.js" });
-				var f = d.getElementsByTagName(s)[0],
-					j = d.createElement(s),
-					dl = l != "dataLayer" ? "&l=" + l : "";
-				j.async = true;
-				j.src = "https://www.googletagmanager.com/gtm.js?id=" + i + dl;
-				f.parentNode.insertBefore(j, f);
-			})(window, document, "script", "dataLayer", "GTM-NXZMQSS");
-		</script>
-	
-		<!-- End Google Tag Manager -->
+		
 	</head>
 	<body>
-		<?php
-		include("conexionn.php");
-
-		// Consulta para obtener los datos de la tabla municipio
-		$consulta_proyecto = "SELECT ID_Proyecto, Nombre, Fecha, Descripcion, Certificado FROM proyecto";
-		$resultado_proyecto = mysqli_query($conex, $consulta_proyecto);
-
-		// Crear un array para almacenar los datos
-		$datos_proyecto = array();
-		while ($fila_proyecto = mysqli_fetch_assoc($resultado_proyecto)) {
-			$datos_proyecto[] = $fila_proyecto;
-		}
-		?>
+	
 		<?php include('template.php'); ?>
 		<div class="main-container">
 			<div class="pd-ltr-20 xs-pd-20-10">

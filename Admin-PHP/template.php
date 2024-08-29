@@ -171,7 +171,7 @@ $apellido = isset($_SESSION['apellido']) ? $_SESSION['apellido'] : '';
                         </a>
                     </li>
                     <li>
-                        <a href="../mantenimiento.html" class="dropdown-toggle no-arrow">
+                        <a href="liquidacion.php" class="dropdown-toggle no-arrow">
                             <span class="micon fa fa-balance-scale"></span><span class="mtext">Liquidación</span>
                         </a>
                     </li>
