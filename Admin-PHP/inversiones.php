@@ -171,7 +171,6 @@ if (!isset($_SESSION['authenticated']) || $_SESSION['authenticated'] !== true) {
 								echo "<td>" . $fila['Tipo'] . "</td>";
 								echo "<td>" . $fila['Fecha'] . "</td>";
 								echo "<td>" . $fila['Descripcion'] . "</td>";
-								echo "<td>";
 								echo '<td><a href="../files/' . $fila['CertificadoInversion'] . '" target="_blank">' . $fila['CertificadoInversion'] . '</a></td>';
 								echo '<td>';
 								echo '<div class="table-actions">';
@@ -193,18 +192,20 @@ if (!isset($_SESSION['authenticated']) || $_SESSION['authenticated'] !== true) {
 
 				<div class="pd-20 card-box mb-30">
 					<div class="clearfix"></div>
-					<form action="registrarM.php" method="post" enctype="multipart/form-data">
+					<form action="registrar.php" method="post" enctype="multipart/form-data">
 
 					<div class="form-group row">
 						<label class="col-sm-12 col-md-2 col-form-label">Usuario</label>
 						<div class="col-sm-12 col-md-10">
 						<select name="usuario" class="custom-select col-12">
 							<option selected="">Seleccione</option>
-							<?php while ($usuario = mysqli_fetch_assoc($resultado_usuarios)): ?>
-								<option value="<?php echo $usuario['Nombre'] . ' ' . $usuario['Apellido']; ?>" data-cedula="<?php echo $usuario['ID_Usuario']; ?>">
-									Cédula: <?php echo  $usuario['ID_Usuario']; ?> - <?php echo $usuario['Nombre'] . ' ' . $usuario['Apellido']; ?>
-								</option>
-							<?php endwhile; ?>
+							<?php foreach ($datos_usuarios as $usuario): ?>
+										<?php if ($usuario['FK_ID_Rol'] != 1): // Condición para excluir usuarios con FK_ID_Rol = 1 ?>
+											<option value="<?php echo $usuario['Nombre'] . ' ' . $usuario['Apellido']; ?>" data-cedula="<?php echo $usuario['ID_Usuario']; ?>">
+												Cédula: <?php echo  $usuario['ID_Usuario']; ?> - <?php echo $usuario['Nombre'] . ' ' . $usuario['Apellido']; ?>
+											</option>
+										<?php endif; ?>
+									<?php endforeach; ?>
 						</select>
 						<input type="hidden" name="id_usuario" value="<?php echo isset($datos_usuarios[0]['ID_Usuario']) ? $datos_usuarios[0]['ID_Usuario'] : ''; ?>">
 						</div>

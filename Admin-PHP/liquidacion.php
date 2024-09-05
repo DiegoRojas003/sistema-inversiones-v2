@@ -241,6 +241,8 @@ if ($result_nombre_proyecto && $result_nombre_proyecto->num_rows > 0) {
 // Guardar el nombre del proyecto en la sesión
 $_SESSION['nombreProyecto'] = $nombreProyecto;
 
+
+
 ?>
 
 <script>
@@ -367,65 +369,96 @@ $_SESSION['nombreProyecto'] = $nombreProyecto;
                             <button class="btn btn-primary" id="btnLiquidar">Liquidar</button>
                         </div>
                     </div>
-                
+				</div>
+				<!-- Modal -->
+				<div id="passwordModal" class="modal">
+					<div class="modal-content">
+						<span class="close">&times;</span>
+						<h2>Verificación de Contraseña</h2>
+						<form id="passwordForm">
+							<label for="password">Contraseña:</label>
+							<input type="password" id="password" name="password" required />
+							<button type="submit" class="btn btn-primary">Confirmar</button>
+						</form>
+						<p id="error-message" style="color: red; display: none;">Contraseña incorrecta.</p>
+					</div>
+				</div>
+				<script>
+					document.getElementById('btnLiquidar').addEventListener('click', function(e) {
+						var empresaSeleccionada = document.querySelector('select[name="proyecto"]').value;
+						var actaDeLiquidacion = document.getElementById('documento_L').files.length;
 
-    <!-- Modal -->
-    <div id="passwordModal" class="modal">
-        <div class="modal-content">
-            <span class="close">&times;</span>
-            <h2>Verificación de Contraseña</h2>
-            <form id="passwordForm">
-                <label for="password">Contraseña:</label>
-                <input type="password" id="password" name="password" required />
-                <button type="submit" class="btn btn-primary">Confirmar</button>
-            </form>
-            <p id="error-message" style="color: red; display: none;">Contraseña incorrecta.</p>
-        </div>
-    </div>
+						if (!empresaSeleccionada) {
+							alert('Debe seleccionar una empresa para liquidar.');
+							e.preventDefault();
+						} else if (actaDeLiquidacion === 0) {
+							alert('Debe subir un acta de liquidación.');
+							e.preventDefault();
+						} else {
+							// Mostrar el modal para la verificación de contraseña
+							modal.style.display = "block";
+							e.preventDefault(); // Detener la acción de envío hasta que se verifique la contraseña
+						}
+					});
+				</script>
 
-    <script>
-        var modal = document.getElementById("passwordModal");
-        var btnLiquidar = document.getElementById("btnLiquidar");
-        var span = document.getElementsByClassName("close")[0];
-        var form = document.getElementById("passwordForm");
-        var errorMessage = document.getElementById("error-message");
+				<script>
+					// Obtener referencias a los elementos
+					var modal = document.getElementById("passwordModal");
+					var btnLiquidar = document.getElementById("btnLiquidar");
+					var span = document.getElementsByClassName("close")[0];
+					var form = document.getElementById("passwordForm");
+					var errorMessage = document.getElementById("error-message");
 
-        // Mostrar modal
-        btnLiquidar.onclick = function() {
-            modal.style.display = "block";
-        }
+					// Validación de campos en blanco
+					btnLiquidar.onclick = function(event) {
+						var proyecto = document.querySelector('select[name="proyecto"]').value;
+						var actaLiquidacion = document.getElementById("documento_L").value;
 
-        // Cerrar modal
-        span.onclick = function() {
-            modal.style.display = "none";
-        }
+						// Validar que los campos no estén vacíos
+						if (proyecto === "" || actaLiquidacion === "") {
+							alert("Por favor, complete todos los campos.");
+							event.preventDefault();  // Evitar que el modal se abra si hay campos vacíos
+						} else {
+							// Si todos los campos están completos, mostrar el modal
+							modal.style.display = "block";
+						}
+					}
 
-        window.onclick = function(event) {
-            if (event.target == modal) {
-                modal.style.display = "none";
-            }
-        }
+					// Cerrar el modal cuando se hace clic en la 'x'
+					span.onclick = function() {
+						modal.style.display = "none";
+					}
 
-        // Enviar formulario de contraseña
-        form.onsubmit = function(e) {
-            e.preventDefault();
-            var password = document.getElementById("password").value;
+					// Cerrar el modal si se hace clic fuera de él
+					window.onclick = function(event) {
+						if (event.target == modal) {
+							modal.style.display = "none";
+						}
+					}
 
-            var xhr = new XMLHttpRequest();
-            xhr.open("POST", "verificar_contraseña.php", true);
-            xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
-            xhr.onreadystatechange = function() {
-                if (xhr.readyState === 4 && xhr.status === 200) {
-                    if (xhr.responseText.trim() === "correcta") {
-                        document.querySelector('form').submit();
-                    } else {
-                        errorMessage.style.display = "block";
-                    }
-                }
-            };
-            xhr.send("password=" + encodeURIComponent(password));
-        }
-    </script>
+					// Validación de la contraseña antes de enviar el formulario principal
+					form.onsubmit = function(e) {
+						e.preventDefault();
+						var password = document.getElementById("password").value;
+
+						var xhr = new XMLHttpRequest();
+						xhr.open("POST", "verificar_contraseña.php", true);
+						xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+						xhr.onreadystatechange = function() {
+							if (xhr.readyState === 4 && xhr.status === 200) {
+								if (xhr.responseText.trim() === "correcta") {
+									// Si la contraseña es correcta, proceder con el envío del formulario
+									document.querySelector('#formLiquidacion').submit();
+								} else {
+									// Mostrar mensaje de error si la contraseña es incorrecta
+									errorMessage.style.display = "block";
+								}
+							}
+						};
+						xhr.send("password=" + encodeURIComponent(password));
+					}
+				</script>
 
 				<div class="page-header">
                     <div class="row">

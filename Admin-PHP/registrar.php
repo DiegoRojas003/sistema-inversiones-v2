@@ -340,7 +340,7 @@ if (isset($_POST['registar_inversion'])) {
             empty($fecha_inversion) || empty($descripcion_inversion) || 
             empty($id_usuario) || empty($id_tipo)) {
             echo "<script>alert('Por favor, llena todos los campos.');</script>";
-            echo "<script>setTimeout(function(){ window.location.replace('inversionesM.php'); }, 500);</script>";
+            echo "<script>setTimeout(function(){ window.location.replace('inversiones.php'); }, 500);</script>";
         } else {
             if ($_FILES['archivo']['error'] === UPLOAD_ERR_OK) {
                 $nombre_archivo = basename($_FILES["archivo"]["name"]);
@@ -380,7 +380,7 @@ if (isset($_POST['registar_inversion'])) {
 
                             if ($resultado) {
                                 echo "<script>alert('¡Tu registro se ha completado!');</script>";
-                                echo "<script>setTimeout(function(){ window.location.replace('inversionesM.php'); }, 500);</script>";
+                                echo "<script>setTimeout(function(){ window.location.replace('inversiones.php'); }, 500);</script>";
                             } else {
                                 echo "<script>alert('Error al insertar en la base de datos: " . mysqli_error($conex) . "');</script>";
                             }       
