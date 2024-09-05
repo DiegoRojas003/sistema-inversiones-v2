@@ -195,9 +195,9 @@ function obtener_proyectos($conn, $id_usuario) {
 
 <body>
   <!-- Contenido del modal Login -->
-  <div class="modal fade" id="login-modal" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel"
+  <div class="modal fade"  id="login-modal" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel"
     aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-dialog modal-dialog-centered" style="max-width: 400px;" >
       <div class="modal-content">
         <div class="login-box bg-white box-shadow border-radius-10">
           <div class="login-title">
