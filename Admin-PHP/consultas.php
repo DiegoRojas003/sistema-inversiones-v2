@@ -313,7 +313,7 @@ $conn->close(); // Cerrar conexión principal
 								<tbody>
 									<tr>
 										<th scope="col">Valor de los aportes de capital</th>
-										<th id="valor-capital" scope="col" style='text-align: right;'><?php echo number_format($valor_aportes_capital, 0, ',', '.'); ?></th>
+										<th id="valor-capital" scope="col" style='text-align: right;'><?php echo number_format($valor_aportes_capital, 0, ','); ?></th>
 
 									</tr>
 								</tbody>
@@ -472,7 +472,8 @@ $conn->close(); // Cerrar conexión principal
 												echo "<td style='text-align: right;'>$ " . number_format($valor_futuro, 0, ',', '.') . "</td>";
 												echo "<td style='text-align: center;'>" . round($diferencia_dias3) . " días</td>";
 												// Sumar el valor futuro a los aportes de industria
-												$valor_aportes_industria += $valor_futuro;
+												$valor_aportes_industria += round($valor_futuro, 0);
+
 												// Destruir la instancia anterior antes de re-inicializar
 
 
@@ -496,10 +497,10 @@ $conn->close(); // Cerrar conexión principal
 		<script>
 			<?php
 			// Calcular valor de los aportes de capital sumando aportes en dinero y especie
-			$valor_aportes_capital = $valor_aportes_dinero + $valor_aportes_especie;
+			$valor_aportes_capital =round($valor_aportes_dinero + $valor_aportes_especie,0);
 
 			// Calcular el total de aportes sumando aportes de capital e industria
-			$total_aportes = $valor_aportes_capital + $valor_aportes_industria;
+			$total_aportes =round($valor_aportes_capital + $valor_aportes_industria,0) ;
 			?>
 			document.addEventListener("DOMContentLoaded", function() {
 				// Valores desde PHP
