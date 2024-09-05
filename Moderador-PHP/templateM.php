@@ -243,20 +243,14 @@ $apellido = isset($_SESSION['apellido']) ? $_SESSION['apellido'] : '';
                 <li class="dropdown">
                     <a href="javascript:;" class="dropdown-toggle">
                         <span class="micon bi bi-gear"></span></span
-                        ><span class="mtext">Creación</span>
+                        ><span class="mtext">Parámetros</span>
                     </a>
                     <ul class="submenu">
                         <li><a href="inversionesM.php">Inversiones</a></li>
-                        <li><a href="usuariosM.php">Inversionistas</a></li>
+                        <li><a href="usuariosM.php">Usuarios</a></li>
                     </ul>
                 </li>
-            
-                <li>
-                    <a href="../mantenimiento.html" class="dropdown-toggle no-arrow">
-                        <span class="micon fa fa-balance-scale"></span
-                        ><span class="mtext">Liquidación</span>
-                    </a>
-                </li>
+
                 <li>
                     <a href="consultasM.php" class="dropdown-toggle no-arrow">
                         <span class="micon fa fa-table"></span

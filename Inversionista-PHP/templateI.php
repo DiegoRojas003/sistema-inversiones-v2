@@ -240,12 +240,7 @@ $apellido = isset($_SESSION['apellido']) ? $_SESSION['apellido'] : '';
                         ><span class="mtext">Inicio</span>
                     </a>
                 </li>
-                <li>
-                    <a href="../mantenimiento.html" class="dropdown-toggle no-arrow">
-                        <span class="micon fa fa-balance-scale"></span
-                        ><span class="mtext">Liquidación</span>
-                    </a>
-                </li>
+                
                 <li>
                     <a href="consultaI.php" class="dropdown-toggle no-arrow">
                         <span class="micon fa fa-table"></span
