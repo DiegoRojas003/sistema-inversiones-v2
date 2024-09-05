@@ -166,7 +166,7 @@ if (!isset($_SESSION['authenticated']) || $_SESSION['authenticated'] !== true) {
 							while ($fila = mysqli_fetch_assoc($resultadoIN)) {
 								echo "<tr>";
 								echo "<td>" . $fila['Nombre'] . "</td>";
-								echo "<td>" . $fila['Monto'] . "</td>";
+								echo "<td style='text-align: right;'>$" . number_format($fila['Monto'], 0, ',', '.') . "</td>";
 								echo "<td>" . $fila['proyecto'] . "</td>";
 								echo "<td>" . $fila['Tipo'] . "</td>";
 								echo "<td>" . $fila['Fecha'] . "</td>";
