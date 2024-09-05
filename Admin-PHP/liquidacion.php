@@ -8,7 +8,6 @@ if (!isset($_SESSION['authenticated']) || $_SESSION['authenticated'] !== true) {
     exit();
 }
 
-$cedula = isset($_SESSION['cedula']) ? $_SESSION['cedula'] : '';
 
 include("conexionn.php");
 // Conexión a la base de datos
@@ -22,6 +21,26 @@ $conn = new mysqli($servername, $username, $password, $dbname);
 // Verificar conexión
 if ($conn->connect_error) {
     die("Conexión fallida: " . $conn->connect_error);
+}
+
+// Obtener la cédula de la sesión
+$cedula = isset($_SESSION['cedula']) ? $_SESSION['cedula'] : '';
+
+if (!empty($cedula)) {
+    // Preparar la consulta
+    $stmt = $conn->prepare("SELECT Contraseña FROM usuario2 WHERE ID_Usuario = ?");
+    $stmt->bind_param("s", $cedula);
+
+    // Ejecutar la consulta
+    $stmt->execute();
+    $stmt->bind_result($contraseña);
+    $stmt->fetch();
+
+    // Almacenar la contraseña en una variable
+    $contraseñaUsuario = $contraseña;
+
+    // Cerrar la declaración y la conexión
+    $stmt->close();
 }
 
 // Inicializar variables
@@ -242,8 +261,11 @@ if ($result_nombre_proyecto && $result_nombre_proyecto->num_rows > 0) {
 $_SESSION['nombreProyecto'] = $nombreProyecto;
 
 
-
 ?>
+<script>
+    // Paso 1: Pasar la contraseña PHP a JavaScript
+    var contraseñaUsuario = '<?php echo $contraseñaUsuario; ?>';
+</script>
 
 <script>
     // Paso 1: Guardar en el localStorage desde PHP
@@ -343,31 +365,26 @@ $_SESSION['nombreProyecto'] = $nombreProyecto;
                 <div class="page-header">
                     <div class="row">
                         <div class="col-md-6">
-                            <div class="form-group row">
-                                <label class="col-sm-12 col-md-6 col-form-label">Empresas que quieres liquidar</label>
-                                <div class="col-sm-12 col-md-10">
-                                    <form method="post" action="">
-                                        <select name="proyecto" class="custom-select col-12" onchange="this.form.submit()">
-                                            <option value="">Seleccione</option>
-                                            <?php foreach ($datos_proyecto1 as $proyecto1): ?>
-                                                <option value="<?php echo $proyecto1['ID_Proyecto']; ?>" <?php echo ($proyecto1['ID_Proyecto'] == $proyecto_id) ? 'selected' : ''; ?>>
-                                                    <?php echo $proyecto1['Nombre']; ?>
-                                                </option>
-                                            <?php endforeach; ?>
-                                        </select>
-                                    </form>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="form-group row">
-                            <label class="col-sm-12 col-md- col-form-label">Acta de liquidacion</label>
-                            <div class="col-sm-12 col-md-10">
-                                <input name="documento_L" id="documento_L" type="file" class="form-control-file form-control height-auto" accept=".doc, .docx, .pdf" />
-                            </div>
-                        </div>
-                        <div class="contenido-boton">
-                            <button class="btn btn-primary" id="btnLiquidar">Liquidar</button>
-                        </div>
+							<div class="form-group row">
+								<label class="col-sm-12 col-md-6 col-form-label">Empresas que quieres liquidar</label>
+								<div class="col-sm-12 col-md-10">
+								<form id="formLiquidar" method="post" action="liquidar_proyecto.php" enctype="multipart/form-data">
+									<select name="proyecto" class="custom-select col-12">
+										<option value="">Seleccione</option>
+										<?php foreach ($datos_proyecto1 as $proyecto1): ?>
+											<option value="<?php echo $proyecto1['ID_Proyecto']; ?>" <?php echo ($proyecto1['ID_Proyecto'] == $proyecto_id) ? 'selected' : ''; ?>>
+												<?php echo $proyecto1['Nombre']; ?>
+											</option>
+										<?php endforeach; ?>
+									</select>
+
+									<input name="documento_L" id="documento_L" type="file" class="form-control-file" accept=".doc, .docx, .pdf" />
+
+									<button class="btn btn-primary" id="btnLiquidar">Liquidar</button>
+								</form>
+								</div>
+							</div>
+						</div>
                     </div>
 				</div>
 				<!-- Modal -->
@@ -380,7 +397,6 @@ $_SESSION['nombreProyecto'] = $nombreProyecto;
 							<input type="password" id="password" name="password" required />
 							<button type="submit" class="btn btn-primary">Confirmar</button>
 						</form>
-						<p id="error-message" style="color: red; display: none;">Contraseña incorrecta.</p>
 					</div>
 				</div>
 				<script>
@@ -400,65 +416,37 @@ $_SESSION['nombreProyecto'] = $nombreProyecto;
 							e.preventDefault(); // Detener la acción de envío hasta que se verifique la contraseña
 						}
 					});
-				</script>
 
-				<script>
-					// Obtener referencias a los elementos
 					var modal = document.getElementById("passwordModal");
-					var btnLiquidar = document.getElementById("btnLiquidar");
 					var span = document.getElementsByClassName("close")[0];
 					var form = document.getElementById("passwordForm");
-					var errorMessage = document.getElementById("error-message");
 
-					// Validación de campos en blanco
-					btnLiquidar.onclick = function(event) {
-						var proyecto = document.querySelector('select[name="proyecto"]').value;
-						var actaLiquidacion = document.getElementById("documento_L").value;
-
-						// Validar que los campos no estén vacíos
-						if (proyecto === "" || actaLiquidacion === "") {
-							alert("Por favor, complete todos los campos.");
-							event.preventDefault();  // Evitar que el modal se abra si hay campos vacíos
-						} else {
-							// Si todos los campos están completos, mostrar el modal
-							modal.style.display = "block";
-						}
-					}
-
-					// Cerrar el modal cuando se hace clic en la 'x'
 					span.onclick = function() {
 						modal.style.display = "none";
 					}
 
-					// Cerrar el modal si se hace clic fuera de él
 					window.onclick = function(event) {
 						if (event.target == modal) {
 							modal.style.display = "none";
 						}
 					}
 
-					// Validación de la contraseña antes de enviar el formulario principal
-					form.onsubmit = function(e) {
-						e.preventDefault();
-						var password = document.getElementById("password").value;
+					form.onsubmit = function(event) {
+						event.preventDefault(); // Evitar el envío del formulario
 
-						var xhr = new XMLHttpRequest();
-						xhr.open("POST", "verificar_contraseña.php", true);
-						xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
-						xhr.onreadystatechange = function() {
-							if (xhr.readyState === 4 && xhr.status === 200) {
-								if (xhr.responseText.trim() === "correcta") {
-									// Si la contraseña es correcta, proceder con el envío del formulario
-									document.querySelector('#formLiquidacion').submit();
-								} else {
-									// Mostrar mensaje de error si la contraseña es incorrecta
-									errorMessage.style.display = "block";
-								}
-							}
-						};
-						xhr.send("password=" + encodeURIComponent(password));
+						var passwordInput = document.getElementById('password').value;
+
+						if (passwordInput === contraseñaUsuario) {
+							alert('Contraseña aceptada.');
+							// Si la contraseña es correcta, enviar el formulario principal (de liquidación)
+							document.getElementById('formLiquidar').submit();
+						} else {
+							alert('Contraseña incorrecta. Inténtelo de nuevo.');
+							document.getElementById('password').value = '';
+						}
 					}
 				</script>
+
 
 				<div class="page-header">
                     <div class="row">
