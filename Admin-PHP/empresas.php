@@ -171,7 +171,7 @@ if (!isset($_SESSION['authenticated']) || $_SESSION['authenticated'] !== true) {
 				<div class="clearfix"></div>
 				<form action="registrar.php" method="post" enctype="multipart/form-data">
 					<div class="form-group row">
-						<label class="col-sm-12 col-md-2 col-form-label">Identificador</label>
+						<label class="col-sm-12 col-md-2 col-form-label">Nit</label>
 						<div class="col-sm-12 col-md-10">
 							<input name="id_proyecto" class="form-control" type="number" placeholder="01">
 						</div>

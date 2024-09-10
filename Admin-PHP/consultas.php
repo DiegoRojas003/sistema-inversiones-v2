@@ -364,23 +364,36 @@ $conn->close(); // Cerrar conexión principal
 								</thead>
 								<tbody>
 									<?php
+									
 									$fecha_actual1 = date("Y-m-d");
+									echo '<script>console.log("Fecha Actual en PHP: ' . $fecha_actual1 . '");</script>';
+
+
+									
 									$valor_aportes_dinero = 0;
 									if (is_object($resultadoI) && mysqli_num_rows($resultadoI) > 0) {
 										while ($fila = mysqli_fetch_assoc($resultadoI)) {
 											echo "<tr>";
 											echo "<td>" . $fila['Fecha'] . "</td>";
+										
 											// Calcular la diferencia en días correctamente
-											$diferencia_dias1 = (strtotime($fecha_actual1) - strtotime($fila['Fecha'])) / (60 * 60 * 24);
+											$diferencia_dias1 = round((strtotime($fecha_actual1) - strtotime(date("Y-m-d", strtotime($fila['Fecha'])))) / (60 * 60 * 24), 0);
+										
+											// Convertir la tasa a formato decimal
+											$tasa_decimal = $tasa_ajustada / 100;
+										
 											// Calcular el valor futuro
-											$valor_futuro = $fila['Monto'] * pow((1 + ($tasa_ajustada/100)), $diferencia_dias1 / 365);
-											
+											$valor_futuro = round($fila['Monto'] * pow((1 + ($tasa_ajustada / 100)), $diferencia_dias1 / 365), 0);
+
+										
 											// Formatear y mostrar los valores
 											echo "<td style='text-align: right;'>$ " . number_format($fila['Monto'], 0, ',', '.') . "</td>";
 											echo "<td style='text-align: right;'>$ " . number_format($valor_futuro, 0, ',', '.') . "</td>";
-											echo "<td style='text-align: center;'>" . round($diferencia_dias1) . " días</td>";
+											echo "<td style='text-align: center;'>" . $diferencia_dias1 . " días</td>";
+										
 											// Sumar el valor futuro a los aportes de industria
 											$valor_aportes_dinero += $valor_futuro;
+										
 											echo "</tr>";
 										}
 									} else {
