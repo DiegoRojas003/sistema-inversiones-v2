@@ -155,14 +155,10 @@ $conn->close();
 								¡Bienvenido! Estamos encantados de tenerte aquí. 
 								Queremos que sepas que estamos completamente disponibles
 								 y comprometidos a atender tus necesidades financieras. 
-								 En nuestro rol, tenemos la capacidad y disposición para 
-								 gestionar y supervisar todos los aportes monetarios, 
-								 así como cualquier contribución especial que desees 
-								 hacer. Además, estamos aquí para facilitar cualquier 
-								 tipo de registro que necesites realizar, ya sea para 
-								 seguir de cerca tus inversiones, realizar seguimientos 
-								 detallados de los fondos o simplemente mantener un registro
-								organizado de tus transacciones financieras.
+
+
+
+
 							</p>
 						</div>
 						<div class="col-md-4" style="text-align:center;padding:1em 0;">
@@ -196,7 +192,7 @@ $conn->close();
                             <div class="d-flex flex-wrap">
                                 <div class="widget-data">
                                     <div class="weight-700 font-24 text-dark"><?php echo $fecha_mas_nueva; ?></div>
-                                    <div class="font-14 text-secondary weight-500">Fecha de inicio primera empresa</div>
+                                    <div class="font-14 text-secondary weight-500">Inicio primera empresa</div>
                                 </div>
                                 <div class="widget-icon">
                                     <div class="icon" data-color="#ff5b5b">
@@ -211,7 +207,7 @@ $conn->close();
                             <div class="d-flex flex-wrap">
                                 <div class="widget-data">
                                     <div class="weight-700 font-24 text-dark"><?php echo $fecha_mas_antigua; ?></div>
-                                    <div class="font-14 text-secondary weight-500">Fecha de inicio ultima empresa</div>
+                                    <div class="font-14 text-secondary weight-500">Inicio ultima empresa</div>
                                 </div>
                                 <div class="widget-icon">
                                     <div class="icon">

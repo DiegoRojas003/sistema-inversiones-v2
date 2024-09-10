@@ -260,26 +260,46 @@ if ($result_nombre_proyecto && $result_nombre_proyecto->num_rows > 0) {
 // Guardar el nombre del proyecto en la sesión
 $_SESSION['nombreProyecto'] = $nombreProyecto;
 
+// Consulta para obtener el enlace del documento (Certificado) asociado al proyecto seleccionado
+$sql_documento = "
+    SELECT Certificado_L 
+    FROM proyecto 
+    WHERE ID_Proyecto = ?
+";
+$stmt_documento = $conn->prepare($sql_documento);
+$stmt_documento->bind_param("s", $proyecto_id);
+$stmt_documento->execute();
+$result_documento = $stmt_documento->get_result();
+
+if ($result_documento && $result_documento->num_rows > 0) {
+    $row_documento = $result_documento->fetch_assoc();
+    $archivo_url = $row_documento['Certificado_L'];  // Almacenar en archivo_url
+} else {
+    // Manejar el caso donde no se encuentra el documento
+    $archivo_url = null;
+}
+
 
 ?>
+
 <script>
-    // Paso 1: Pasar la contraseña PHP a JavaScript
-    var contraseñaUsuario = '<?php echo $contraseñaUsuario; ?>';
+	// Paso 1: Pasar la contraseña PHP a JavaScript
+	var contraseñaUsuario = '<?php echo $contraseñaUsuario; ?>';
 </script>
 
 <script>
-    // Paso 1: Guardar en el localStorage desde PHP
-    localStorage.setItem('cantidadUsuarios', <?php echo $cantidadUsuarios; ?>);
+	// Paso 1: Guardar en el localStorage desde PHP
+	localStorage.setItem('cantidadUsuarios', <?php echo $cantidadUsuarios; ?>);
 
-    localStorage.setItem('inversionTipo1', <?php echo $montoTipo1; ?>);
-    localStorage.setItem('inversionTipo2', <?php echo $montoTipo2; ?>);
-    localStorage.setItem('inversionTipo3', <?php echo $montoTipo3; ?>);
+	localStorage.setItem('inversionTipo1', <?php echo $montoTipo1; ?>);
+	localStorage.setItem('inversionTipo2', <?php echo $montoTipo2; ?>);
+	localStorage.setItem('inversionTipo3', <?php echo $montoTipo3; ?>);
 </script>
 
 
 <script>
-    // Pasar los datos PHP a JavaScript
-    var datosMensuales = <?php echo $datos_mensuales_json; ?>;
+	// Pasar los datos PHP a JavaScript
+	var datosMensuales = <?php echo $datos_mensuales_json; ?>;
 </script>
 
 
@@ -291,116 +311,115 @@ $_SESSION['nombreProyecto'] = $nombreProyecto;
 
 <!DOCTYPE html>
 <html>
-	<head>
-		<!-- Basic Page Info -->
-		<meta charset="utf-8" />
-		<title>Simulación</title>
 
-		<!-- Site favicon -->
-		
+<head>
+	<!-- Basic Page Info -->
+	<meta charset="utf-8" />
+	<title>Simulación</title>
 
-		<!-- Mobile Specific Metas -->
-		<meta
-			name="viewport"
-			content="width=device-width, initial-scale=1, maximum-scale=1"
-		/>
+	<!-- Site favicon -->
 
-		<!-- Google Font -->
-		<link
-			href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap"
-			rel="stylesheet"
-		/>
-		<!-- CSS -->
-		<link rel="stylesheet" type="text/css" href="../vendors/styles/core.css" />
-		<link
-			rel="stylesheet"
-			type="text/css"
-			href="../vendors/styles/icon-font.min.css"
-		/>
-		<link rel="stylesheet" type="text/css" href="../vendors/styles/style.css" />
 
-		<!-- Modal CSS -->
-		<style>
-        .modal {
-            display: none;
-            position: fixed;
-            z-index: 1;
-            left: 0;
-            top: 0;
-            width: 100%;
-            height: 100%;
-            overflow: auto;
-            background-color: rgb(0,0,0);
-            background-color: rgba(0,0,0,0.4);
-            padding-top: 60px;
-        }
-        .modal-content {
-            background-color: #fefefe;
-            margin: 5% auto;
-            padding: 20px;
-            border: 1px solid #888;
-            width: 80%;
-        }
-        .close {
-            color: #aaa;
-            float: right;
-            font-size: 28px;
-            font-weight: bold;
-        }
-        .close:hover,
-        .close:focus {
-            color: black;
-            text-decoration: none;
-            cursor: pointer;
-        }
-    </style>
-	</head>
-	<body>
-		
+	<!-- Mobile Specific Metas -->
+	<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
+
+	<!-- Google Font -->
+	<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap"
+		rel="stylesheet" />
+	<!-- CSS -->
+	<link rel="stylesheet" type="text/css" href="../vendors/styles/core.css" />
+	<link rel="stylesheet" type="text/css" href="../vendors/styles/icon-font.min.css" />
+	<link rel="stylesheet" type="text/css" href="../vendors/styles/style.css" />
+
+	<!-- Modal CSS -->
 	
+
+</head>
+
+<body>
+
+
 	<?php include('template.php'); ?>
-    <div class="main-container">
-        <div class="pd-ltr-20 xs-pd-20-10">
-            <div class="min-height-200px">
-                <div class="page-header">
-                    <div class="row">
-                        <div class="col-md-6">
-							<div class="form-group row">
-								<label class="col-sm-12 col-md-6 col-form-label">Empresas que quieres liquidar</label>
-								<div class="col-sm-12 col-md-10">
-								<form id="formLiquidar" method="post" action="liquidar_proyecto.php" enctype="multipart/form-data">
-									<select name="proyecto" class="custom-select col-12">
-										<option value="">Seleccione</option>
-										<?php foreach ($datos_proyecto1 as $proyecto1): ?>
-											<option value="<?php echo $proyecto1['ID_Proyecto']; ?>" <?php echo ($proyecto1['ID_Proyecto'] == $proyecto_id) ? 'selected' : ''; ?>>
+
+
+
+
+
+	<div class="main-container">
+		<div class="pd-ltr-20 xs-pd-20-10">
+			<div class="min-height-200px">
+				<div class="page-header">
+					<form id="formLiquidar" method="post" action="liquidar_proyecto.php" enctype="multipart/form-data">
+						<div class="row">
+							<!-- Columna para el campo de selección de empresas -->
+							<div class="col-md-6">
+								<div class="form-group row">
+									<label class="col-sm-12 col-md-2 col-form-label">Empresas</label>
+									<div class="col-sm-12 col-md-10">
+										<select name="proyecto" id="proyecto" class="custom-select col-12">
+											<option value="" selected>Seleccione</option>
+											<?php foreach ($datos_proyecto1 as $proyecto1): ?>
+											<option value="<?php echo $proyecto1['ID_Proyecto']; ?>" <?php echo
+												($proyecto1['ID_Proyecto']==$proyecto_id) ? 'selected' : '' ; ?>>
 												<?php echo $proyecto1['Nombre']; ?>
 											</option>
-										<?php endforeach; ?>
-									</select>
+											<?php endforeach; ?>
+										</select>
+									</div>
+								</div>
+							</div>
 
-									<input name="documento_L" id="documento_L" type="file" class="form-control-file" accept=".doc, .docx, .pdf" />
+							<!-- Columna para el campo de carga de documentos -->
+							<div class="col-md-6">
+								<div class="form-group row">
+									<label class="col-sm-12 col-md-2 col-form-label">Documento</label>
+									<div class="col-sm-12 col-md-10">
+										<input name="documento_L" id="documento_L" type="file" class="form-control-file"
+											accept=".pdf" />
+									</div>
+								</div>
+							</div>
 
-									<button class="btn btn-primary" id="btnLiquidar">Liquidar</button>
-								</form>
+							<!-- Botón de liquidar -->
+							<div class="col-md-12">
+								<div class="form-group row">
+									<div class="col-sm-12 col-md-12 text-center">
+										<button style="padding: 1% 5% 1% 5%;" class="btn btn-primary" id="btnLiquidar">Liquidar</button>
+									</div>
 								</div>
 							</div>
 						</div>
-                    </div>
+					</form>
 				</div>
-				<!-- Modal -->
-				<div id="passwordModal" class="modal">
-					<div class="modal-content">
-						<span class="close">&times;</span>
-						<h2>Verificación de Contraseña</h2>
-						<form id="passwordForm">
-							<label for="password">Contraseña:</label>
-							<input type="password" id="password" name="password" required />
-							<button type="submit" class="btn btn-primary">Confirmar</button>
-						</form>
+				<div class="modal fade" id="Medium-modal" tabindex="-1" role="dialog"
+					aria-labelledby="myLargeModalLabel" aria-hidden="true">
+					<div class="modal-dialog modal-dialog-centered">
+						<div class="modal-content">
+							<div class="modal-header">
+								<h4 class="modal-title" id="myLargeModalLabel">
+									Confirmar liquidación
+								</h4>
+								<button type="button" class="close" data-dismiss="modal" aria-hidden="true">
+									×
+								</button>
+							</div>
+							<div class="modal-body">
+								<p>
+									¿Estás seguro de querer liquidar?, este cambio es irreversible y
+									ya no podrás agregar o modificar la información respecto al proyecto
+								</p>
+								<form id="passwordForm">
+									<label for="password">Contraseña:</label>
+									<input type="password" id="password" name="password" required />
+									<button type="submit" class="btn btn-primary">Confirmar</button>
+								</form>
+							</div>
+						</div>
 					</div>
 				</div>
+
 				<script>
-					document.getElementById('btnLiquidar').addEventListener('click', function(e) {
+					document.getElementById('btnLiquidar').addEventListener('click', function (e) {
 						var empresaSeleccionada = document.querySelector('select[name="proyecto"]').value;
 						var actaDeLiquidacion = document.getElementById('documento_L').files.length;
 
@@ -412,8 +431,8 @@ $_SESSION['nombreProyecto'] = $nombreProyecto;
 							e.preventDefault();
 						} else {
 							// Mostrar el modal para la verificación de contraseña
-							modal.style.display = "block";
-							e.preventDefault(); // Detener la acción de envío hasta que se verifique la contraseña
+							$('#Medium-modal').modal('show');
+							e.preventDefault();
 						}
 					});
 
@@ -421,17 +440,17 @@ $_SESSION['nombreProyecto'] = $nombreProyecto;
 					var span = document.getElementsByClassName("close")[0];
 					var form = document.getElementById("passwordForm");
 
-					span.onclick = function() {
+					span.onclick = function () {
 						modal.style.display = "none";
 					}
 
-					window.onclick = function(event) {
+					window.onclick = function (event) {
 						if (event.target == modal) {
 							modal.style.display = "none";
 						}
 					}
 
-					form.onsubmit = function(event) {
+					form.onsubmit = function (event) {
 						event.preventDefault(); // Evitar el envío del formulario
 
 						var passwordInput = document.getElementById('password').value;
@@ -449,86 +468,98 @@ $_SESSION['nombreProyecto'] = $nombreProyecto;
 
 
 				<div class="page-header">
-                    <div class="row">
-                        <div class="col-md-6">
-                            <div class="form-group row">
-                                <label class="col-sm-12 col-md-6 col-form-label">Consulta de empresas ya liquidadas</label>
-                                <div class="col-sm-12 col-md-10">
-                                    <form method="post" action="">
-                                        <select name="proyecto" class="custom-select col-12" onchange="this.form.submit()">
-                                            <option value="">Seleccione</option>
-                                            <?php foreach ($datos_proyecto as $proyecto): ?>
-                                                <option value="<?php echo $proyecto['ID_Proyecto']; ?>" <?php echo ($proyecto['ID_Proyecto'] == $proyecto_id) ? 'selected' : ''; ?>>
-                                                    <?php echo  $proyecto['Nombre']; ?>
-                                                </option>
-                                            <?php endforeach; ?>
-                                        </select>
-                                    </form>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
+					<div class="row">
+						<div class="col-md-6">
+							<div class="form-group row">
+								<label class="col-sm-12 col-md-6 col-form-label">Consulta de empresas ya
+									liquidadas</label>
+								<div class="col-sm-12 col-md-10">
+									<form method="post" action="">
+										<select name="proyecto" class="custom-select col-12"
+											onchange="this.form.submit()">
+											<option value="">Seleccione</option>
+											<?php foreach ($datos_proyecto as $proyecto): ?>
+											<option value="<?php echo $proyecto['ID_Proyecto']; ?>" <?php echo
+												($proyecto['ID_Proyecto']==$proyecto_id) ? 'selected' : '' ; ?>>
+												<?php echo  $proyecto['Nombre']; ?>
+											</option>
+											<?php endforeach; ?>
+										</select>
+									</form>
+								</div>
+								<?php if ($archivo_url): ?>
+									<a href="<?php echo $archivo_url; ?>" target="_blank" style="margin-left: 2rem;">
+										<i class="icon-copy fa fa-file-pdf-o fa-2x" aria-hidden="true"></i>
+									</a>
+								<?php else: ?>
+									<i class="icon-copy fa fa-file-pdf-o fa-2x" aria-hidden="true" style="display: none;"></i>
+								<?php endif; ?>
+
+							</div>
+							
+						</div>
+					</div>
+				</div>
 
 				<div class="bg-white pd-20 card-box mb-30" style="min-height: 200px;">
-				<h5 class="h4 text-blue mb-20">Gráfica circular %</h5>
+					<h5 class="h4 text-blue mb-20">Gráfica circular %</h5>
 					<div id="chart6"></div>
-					
+
 				</div>
 				<div class="bg-white pd-20 card-box mb-30" style="min-height: 200px;">
-				<h5 class="h4 text-blue mb-20">Gráfica de barras %</h5>
+					<h5 class="h4 text-blue mb-20">Gráfica de barras %</h5>
 					<div id="barras"></div>
 				</div>
-				
+
 				<div class="bg-white pd-20 card-box mb-30" style="min-height: 200px;">
-				<h5 class="h4 text-blue mb-20">Inversiones realizadas expresadas en millones</h5>
-						<div id="TimeLine"></div>
-					
-					</div>
+					<h5 class="h4 text-blue mb-20">Inversiones realizadas expresadas en millones</h5>
+					<div id="TimeLine"></div>
+
+				</div>
 				<div class="row clearfix">
 					<div class="col-lg-6 col-md-12 col-sm-12 mb-30">
 						<div class="pd-20 card-box" style="height: 360px;">
 							<h5 class="h4 text-blue mb-20">% Aportes</h5>
-							
-								<div class="pd-20 card-box height-100-p" style="height: 255px">
-									
-									<div id="chart8Valor" style="max-width: 500px;"></div>
-								</div>
-							
+
+							<div class="pd-20 card-box height-100-p" style="height: 255px">
+
+								<div id="chart8Valor" style="max-width: 500px;"></div>
+							</div>
+
 						</div>
 					</div>
 					<div class="col-lg-6 col-md-12 col-sm-12 mb-30">
 						<div class="pd-20 card-box" style="height: 360px; overflow: hidden;">
 							<h5 class="h4 text-blue mb-20">Usuarios</h5>
-							
-								<div class="pd-20 card-box height-100-p" style="height: 255px">
-									
-									<div id="velocimetro"></div>
-								</div>
-							
+
+							<div class="pd-20 card-box height-100-p" style="height: 255px">
+
+								<div id="velocimetro"></div>
+							</div>
+
 						</div>
 					</div>
-					
+
 					<div class="col-lg-6 col-md-12 col-sm-12 mb-30">
 						<div class="pd-20 card-box" style="height: 360px; overflow: hidden;">
 							<h5 class="h4 text-blue mb-20">Gráfica de radar % tipos de inversiones</h5>
-							
-								<div class="pd-20 card-box height-100-p" style="height: 255px, overflow: hidden">
-									
-									<div id="chart8Tipos"></div>
-								</div>
-							
+
+							<div class="pd-20 card-box height-100-p" style="height: 255px, overflow: hidden">
+
+								<div id="chart8Tipos"></div>
+							</div>
+
 						</div>
 					</div>
 					<div class="col-lg-6 col-md-12 col-sm-12 mb-30">
 						<div class="pd-20 card-box" style="height: 360px;">
 							<h5 class="h4 text-blue mb-20">Participación máxima vs mínima</h5>
-							
-								<div class="pd-20 card-box height-100-p" style="height: 255px">
-									
-									<div id="chart9" style="max-width: 500px;"></div>
-								</div>
-							
+
+							<div class="pd-20 card-box height-100-p" style="height: 255px">
+
+								<div id="chart9" style="max-width: 500px;"></div>
+							</div>
+
 						</div>
 					</div>
 					<div class="col-md-4 col-sm-12 mb-30">
@@ -566,7 +597,8 @@ $_SESSION['nombreProyecto'] = $nombreProyecto;
 							<div class="card-body">
 								<h5 class="card-title text-white">Valor de los aportes de capital</h5>
 								<p class="card-text">
-									$ <?php echo number_format($valor_aportes_capital, 0, ',', '.'); ?>
+									$
+									<?php echo number_format($valor_aportes_capital, 0, ',', '.'); ?>
 								</p>
 							</div>
 						</div>
@@ -576,27 +608,29 @@ $_SESSION['nombreProyecto'] = $nombreProyecto;
 							<div class="card-body">
 								<h5 class="card-title text-white">Valor de los aportes de industria</h5>
 								<p class="card-text">
-									$ <?php echo number_format($valor_aportes_industria, 0, ',', '.'); ?></th>
+									$
+									<?php echo number_format($valor_aportes_industria, 0, ',', '.'); ?>
+									</th>
 								</p>
 							</div>
 						</div>
 					</div>
 				</div>
 				<?php if ($proyecto_id): ?>
-                    <div class="card-box pb-10">
-                        <div class="h5 pd-20 mb-0">Resumen</div>
-                        <table class="table hover multiple-select-row data-table-export nowrap">
-							<thead>
-								<tr>
-									<th>Socios</th>
-									<th>Aportes de capital</th>
-									<th>Aportes de industria</th>
-									<th>Total aportes</th>
-									<th>Porcentaje participación</th>
-								</tr>
-							</thead>
-							<tbody id="data-table-body">
-								<?php
+				<div class="card-box pb-10">
+					<div class="h5 pd-20 mb-0">Resumen</div>
+					<table class="table hover multiple-select-row data-table-export nowrap">
+						<thead>
+							<tr>
+								<th>Socios</th>
+								<th>Aportes de capital</th>
+								<th>Aportes de industria</th>
+								<th>Total aportes</th>
+								<th>Porcentaje participación</th>
+							</tr>
+						</thead>
+						<tbody id="data-table-body">
+							<?php
 									$valor_aportes_capital = 0;
 									$valor_aportes_industria = 0;
 									$total_aportes = 0;
@@ -617,79 +651,87 @@ $_SESSION['nombreProyecto'] = $nombreProyecto;
 										$total_aportes += $datos['Capital'] + $datos['Industria'];
 									}
 								?>
-							</tbody>
-							<tfoot>
-								<tr>
-									<th>TOTALES</th>
-									<th style='text-align: right;' id="valor-capital"><?php echo "$ " . number_format($valor_aportes_capital, 0, ',', '.'); ?></th>
-									<th style='text-align: right;' id="valor-industria"><?php echo "$ " . number_format($valor_aportes_industria, 0, ',', '.'); ?></th>
-									<th style='text-align: right;' id="Valor-Total"><?php echo "$ " . number_format($total_aportes, 0, ',', '.'); ?></th>
-									<th style='text-align: center;'>100%</th>
-								</tr>
-							</tfoot>
-						</table>
-
-                    </div>
-                <?php endif; ?>
-            </div>
+						</tbody>
+						<tfoot>
+							<tr>
+								<th>TOTALES</th>
+								<th style='text-align: right;' id="valor-capital">
+									<?php echo "$ " . number_format($valor_aportes_capital, 0, ',', '.'); ?>
+								</th>
+								<th style='text-align: right;' id="valor-industria">
+									<?php echo "$ " . number_format($valor_aportes_industria, 0, ',', '.'); ?>
+								</th>
+								<th style='text-align: right;' id="Valor-Total">
+									<?php echo "$ " . number_format($total_aportes, 0, ',', '.'); ?>
+								</th>
+								<th style='text-align: center;'>100%</th>
+							</tr>
+						</tfoot>
+					</table>
 
 				</div>
-			</div>	
-			
+				<?php endif; ?>
+			</div>
 
-				
-			
-			
-			
-			
 		</div>
-		<!-- welcome modal start -->
-		
-		<!-- welcome modal end -->
-		<!-- js -->
-		
-		<script src="../vendors/scripts/core.js"></script>
-		<script src="../vendors/scripts/script.min.js"></script>
-		<script src="../vendors/scripts/process.js"></script>
-		<script src="../vendors/scripts/layout-settings.js"></script>
-		<script src="../src/plugins/apexcharts/apexcharts.min.js"></script>
-		<script src="../src/plugins/datatables/js/jquery.dataTables.min.js"></script>
-		<script src="../src/plugins/datatables/js/dataTables.bootstrap4.min.js"></script>
-		<script src="../src/plugins/datatables/js/dataTables.responsive.min.js"></script>
-		<script src="../src/plugins/datatables/js/responsive.bootstrap4.min.js"></script>
-		<script src="../vendors/scripts/dashboard3.js"></script>
-		<script src="../src/plugins/highcharts-6.0.7/code/highcharts.js"></script>
-		<script src="https://code.highcharts.com/highcharts-3d.js"></script>
-		<script src = "https://code.highcharts.com/10/highcharts.js" > </script>​​
-		
-		<script src="../vendors/scripts/highchart-setting-simulacion.js"></script>
+	</div>
 
-		<script src="../src/plugins/apexcharts/apexcharts.min.js"></script>
-		<script src="../vendors/scripts/apexcharts-setting-simulacion.js"></script>
-		
-		<script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
-		
-		<!-- DataTables -->
-		<!-- buttons for Export datatable -->
-		<script src="../src/plugins/datatables/js/dataTables.buttons.min.js"></script>
-		<script src="../src/plugins/datatables/js/buttons.bootstrap4.min.js"></script>
-		<script src="../src/plugins/datatables/js/buttons.print.min.js"></script>
-		<script src="../src/plugins/datatables/js/buttons.html5.min.js"></script>
-		<script src="../src/plugins/datatables/js/buttons.flash.min.js"></script>
-		<script src="../src/plugins/datatables/js/pdfmake.min.js"></script>
-		<script src="../src/plugins/datatables/js/vfs_fonts.js"></script>
-		<!-- Datatable Setting js -->
-		<script src="../vendors/scripts/datatable-setting.js"></script>
-		
-		<!-- Google Tag Manager (noscript) -->
-		<noscript
-			><iframe
-				src="https://www.googletagmanager.com/ns.html?id=GTM-NXZMQSS"
-				height="0"
-				width="0"
-				style="display: none; visibility: hidden"
-			></iframe
-		></noscript>
-		<!-- End Google Tag Manager (noscript) -->
-	</body>
+
+
+
+
+
+
+	</div>
+	<!-- welcome modal start -->
+
+	<!-- welcome modal end -->
+	<!-- js -->
+
+	<script src="../vendors/scripts/core.js"></script>
+	<script src="../vendors/scripts/script.min.js"></script>
+	<script src="../vendors/scripts/process.js"></script>
+	<script src="../vendors/scripts/layout-settings.js"></script>
+	<script src="../src/plugins/apexcharts/apexcharts.min.js"></script>
+	<script src="../src/plugins/datatables/js/jquery.dataTables.min.js"></script>
+	<script src="../src/plugins/datatables/js/dataTables.bootstrap4.min.js"></script>
+	<script src="../src/plugins/datatables/js/dataTables.responsive.min.js"></script>
+	<script src="../src/plugins/datatables/js/responsive.bootstrap4.min.js"></script>
+	<script src="../vendors/scripts/dashboard3.js"></script>
+	<script src="../src/plugins/highcharts-6.0.7/code/highcharts.js"></script>
+	<script src="https://code.highcharts.com/highcharts-3d.js"></script>
+	<script src="https://code.highcharts.com/10/highcharts.js"> </script>​​
+
+	<script src="../vendors/scripts/highchart-setting-simulacion.js"></script>
+
+	<script src="../src/plugins/apexcharts/apexcharts.min.js"></script>
+	<script src="../vendors/scripts/apexcharts-setting-simulacion.js"></script>
+
+	<script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
+
+	<!-- DataTables -->
+	<!-- buttons for Export datatable -->
+	<script src="../src/plugins/datatables/js/dataTables.buttons.min.js"></script>
+	<script src="../src/plugins/datatables/js/buttons.bootstrap4.min.js"></script>
+	<script src="../src/plugins/datatables/js/buttons.print.min.js"></script>
+	<script src="../src/plugins/datatables/js/buttons.html5.min.js"></script>
+	<script src="../src/plugins/datatables/js/buttons.flash.min.js"></script>
+	<script src="../src/plugins/datatables/js/pdfmake.min.js"></script>
+	<script src="../src/plugins/datatables/js/vfs_fonts.js"></script>
+	<!-- Datatable Setting js -->
+	<script src="../vendors/scripts/datatable-setting.js"></script>
+
+
+	<link href="assets/vendor/aos/aos.css" rel="stylesheet">
+	<link href="assets/vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+	<link href="assets/vendor/bootstrap-icons/bootstrap-icons.css" rel="stylesheet">
+	<link href="assets/vendor/boxicons/css/boxicons.min.css" rel="stylesheet">
+	<link href="assets/vendor/glightbox/css/glightbox.min.css" rel="stylesheet">
+	<link href="assets/vendor/swiper/swiper-bundle.min.css" rel="stylesheet">
+	<!-- Google Tag Manager (noscript) -->
+	<noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-NXZMQSS" height="0" width="0"
+			style="display: none; visibility: hidden"></iframe></noscript>
+	<!-- End Google Tag Manager (noscript) -->
+</body>
+
 </html>

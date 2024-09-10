@@ -249,7 +249,7 @@ if (!isset($_SESSION['authenticated']) || $_SESSION['authenticated'] !== true) {
 						<form action="registrar.php" method="post">
 							
 							<div class="form-group row">
-								<label class="col-sm-12 col-md-2 col-form-label">Identificador</label>
+								<label class="col-sm-12 col-md-2 col-form-label">Prefijos</label>
 								<div class="col-sm-12 col-md-10">
 									<input name="id_pais" class="form-control" type="number" placeholder="01,02,03,04,05">
 								</div>

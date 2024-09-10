@@ -209,74 +209,10 @@ if (!isset($_SESSION['authenticated']) || $_SESSION['authenticated'] !== true) {
 
 				</div>
 
-				<div class="title pb-20">
-					<h2 class="h3 mb-0">Resgistros de Proyectos, Municipios y Roles</h2>
-				</div>
+				
 
-				<div class="pd-20 card-box mb-30">
-					<div class="h5 pd-20 mb-0">Proyectos</div>
-					<table class="data-table table nowrap">
-						<thead>
-							<tr>
-								<th>Identificador</th>
-								<th class="table-plus">Nombre</th>
-								<th>Fecha</th>
-								<th>Descripción</th>
-							</tr>
-						</thead>	
-						<tbody>
-							<?php
-							while ($fila = mysqli_fetch_assoc($resultadop)) {
-								echo "<tr>";
-								echo "<td>" . $fila['ID_Proyecto'] . "</td>";
-								echo "<td>" . $fila['Nombre'] . "</td>";
-								echo "<td>" . $fila['Fecha'] . "</td>";
-								echo "<td>" . $fila['Descripcion'] . "</td>";
-							}
-							?>
-						</tbody>
-					</table>
-
-				</div>
-				<div class="pd-20 card-box mb-30">
-					<div class="h5 pd-20 mb-0">Municipios</div>
-					<table class="data-table table nowrap">
-						<thead>
-							<tr>
-								<th class="table-plus">Nombre</th>
-							</tr>
-						</thead>
-						<tbody>
-							<?php
-							while ($fila = mysqli_fetch_assoc($resultadoi)) {
-								echo "<tr>";
-								echo "<td>" . $fila['Nombre'] . "</td>";
-							}
-							?>
-						</tbody>
-					</table>
-				</div>
-
-				<div class="pd-20 card-box mb-30">
-					<div class="h5 pd-20 mb-0">Roles</div>
-					<table class="data-table table nowrap">
-						<thead>
-							<tr>
-								<th class="table-plus">Nombre</th>
-								<th class="table-plus">Descripcion</th>
-							</tr>
-						</thead>
-						<tbody>
-							<?php
-							while ($fila = mysqli_fetch_assoc($resultador)) {
-								echo "<tr>";
-								echo "<td>" . $fila['Nombre'] . "</td>";
-								echo "<td>" . $fila['Descripcion'] . "</td>";
-							}
-							?>
-						</tbody>
-					</table>
-				</div>
+				
+				
 
 				<div class="title pb-20 pt-20">
 					<h2 class="h3 mb-0">Creación de Usuarios</h2>

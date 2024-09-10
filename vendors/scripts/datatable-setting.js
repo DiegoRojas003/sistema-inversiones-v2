@@ -39,9 +39,11 @@ $('document').ready(function(){
 			}
 		},
 		dom: 'Bfrtp',
-		buttons: [
-		'copy', 'csv', 'pdf', 'print'
-		]
+		layout: {
+			topStart: {
+				buttons: ['copy', 'csv', 'excel', 'pdf', 'print']
+			}
+		}
 	});
 
 	var table = $('.select-row').DataTable();
