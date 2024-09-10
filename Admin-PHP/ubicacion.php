@@ -129,8 +129,8 @@ if (!isset($_SESSION['authenticated']) || $_SESSION['authenticated'] !== true) {
 							echo "<td>" . $fila['Nombre'] . "</td>";
 							echo '<td>';
 							echo '<div class="table-actions">';
-							echo '<a href="#" data-color="#265ed7"><i class="icon-copy dw dw-edit2"></i></a>';
-							echo '<a href="#" data-color="#e95959"><i class="icon-copy dw dw-delete-3"></i></a>';
+							echo '<a href="editar_pais.php" data-color="#265ed7" data-toggle="modal" data-target="#editPaisModal" onclick="cargarDatosPais(\'' . $fila['ID_Pais'] . '\', \'' . htmlspecialchars($fila['Nombre'], ENT_QUOTES) . '\')"><i class="icon-copy dw dw-edit2"></i></a>';
+							echo '<a href="eliminar_pais.php?id=' . $fila['ID_Pais'] . '" data-color="#e95959"><i class="icon-copy dw dw-delete-3"></i></a>';
 							echo '</div>';
 							echo '</td>';
 							echo '</tr>';
@@ -167,14 +167,15 @@ if (!isset($_SESSION['authenticated']) || $_SESSION['authenticated'] !== true) {
 								
 								echo '<td>';
 								echo '<div class="table-actions">';
-								echo '<a href="#" data-color="#265ed7"><i class="icon-copy dw dw-edit2"></i></a>';
-								echo '<a href="#" data-color="#e95959"><i class="icon-copy dw dw-delete-3"></i></a>';
+								echo '<a href="#" data-color="#265ed7" data-toggle="modal" data-target="#editDepartamentoModal" onclick="cargarDatosDepartamento(\'' . $fila['ID_Departamento'] . '\', \'' . htmlspecialchars($fila['Nombre'], ENT_QUOTES) . '\', \'' . htmlspecialchars($fila['FK_ID_Pais'], ENT_QUOTES) . '\')"><i class="icon-copy dw dw-edit2"></i></a>';
+								echo '<a href="eliminar_departamento.php?id=' . $fila['ID_Departamento'] . '" data-color="#e95959"><i class="icon-copy dw dw-delete-3"></i></a>';
 								echo '</div>';
 								echo '</td>';
 								echo '</tr>';
 							}
 							?>
 						</tbody>
+
 					</table>
 				</div>
 			</div>
@@ -205,19 +206,38 @@ if (!isset($_SESSION['authenticated']) || $_SESSION['authenticated'] !== true) {
 								
 								echo '<td>';
 								echo '<div class="table-actions">';
-								echo '<a href="#" data-color="#265ed7"><i class="icon-copy dw dw-edit2"></i></a>';
-								echo '<a href="#" data-color="#e95959"><i class="icon-copy dw dw-delete-3"></i></a>';
+								echo '<a href="#" data-color="#265ed7" data-toggle="modal" data-target="#editMunicipioModal" onclick="cargarDatosMunicipio(\'' . $fila['ID_Municipio'] . '\', \'' . htmlspecialchars($fila['Nombre'], ENT_QUOTES) . '\', \'' . htmlspecialchars($fila['FK_ID_Departamento'], ENT_QUOTES) . '\')"><i class="icon-copy dw dw-edit2"></i></a>';
+								echo '<a href="eliminar_municipio.php?id=' . $fila['ID_Municipio'] . '" data-color="#e95959"><i class="icon-copy dw dw-delete-3"></i></a>';
 								echo '</div>';
 								echo '</td>';
 								echo '</tr>';
 							}
 							?>
 						</tbody>
+
 					</table>
 
 
 				</div>
 			</div>
+			<script>
+				function cargarDatosPais(id, nombre) {
+					document.getElementById('id_pais').value = id;
+					document.getElementById('nombre_pais').value = nombre;
+				}
+
+				function cargarDatosDepartamento(id, nombre, paisId) {
+					document.getElementById('id_departamento').value = id;
+					document.getElementById('nombre_departamento').value = nombre;
+					document.getElementById('pais_departamento').value = paisId;
+				}
+
+				function cargarDatosMunicipio(id, nombre, departamentoId) {
+					document.getElementById('id_municipio').value = id;
+					document.getElementById('nombre_municipio').value = nombre;
+					document.getElementById('departamento_municipio').value = departamentoId;
+				}
+			</script>
 			<!-- REGISTRO DE TABLAS-->
 			<div class="xs-pd-20-10 pd-ltr-20">
 				

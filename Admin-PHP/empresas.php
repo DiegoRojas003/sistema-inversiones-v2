@@ -2,12 +2,14 @@
 // Iniciar la sesión
 session_start();
 
+include("conexionn.php");
 // Verificar si el usuario está autenticado
 if (!isset($_SESSION['authenticated']) || $_SESSION['authenticated'] !== true) {
     // Si el usuario no está autenticado, redirigirlo a la página de inicio de sesión
     header("Location: http://localhost/sistema-inversiones-v2/index.php"); // Cambia 'inicio-de-sesion.php' por la ruta de tu página de inicio de sesión
     exit();
 }
+
 ?>
 
 <!DOCTYPE html>
@@ -101,8 +103,8 @@ if (!isset($_SESSION['authenticated']) || $_SESSION['authenticated'] !== true) {
 								echo '<td><a href="../files/' . $fila['Certificado'] . '" target="_blank">' . $fila['Certificado'] . '</a></td>';
 								echo '<td>';
 								echo '<div class="table-actions">';
-								echo '<a href="#" data-color="#265ed7"><i class="icon-copy dw dw-edit2"></i></a>';
-								echo '<a href="#" data-color="#e95959"><i class="icon-copy dw dw-delete-3"></i></a>';
+								echo '<a href="#" data-color="#265ed7" data-toggle="modal" data-target="#editProyectoModal" onclick="cargarDatosProyecto(\'' . $fila['ID_Proyecto'] . '\', \'' . htmlspecialchars($fila['Nombre'], ENT_QUOTES) . '\', \'' . htmlspecialchars($fila['Fecha'], ENT_QUOTES) . '\', \'' . htmlspecialchars($fila['Descripcion'], ENT_QUOTES) . '\')"><i class="icon-copy dw dw-edit2"></i></a>';
+    							echo '<a href="eliminar_proyecto.php?id=' . $fila['ID_Proyecto'] . '" data-color="#e95959"><i class="icon-copy dw dw-delete-3"></i></a>';
 								echo '</div>';
 								echo '</td>';
 								echo '</tr>';
@@ -111,6 +113,67 @@ if (!isset($_SESSION['authenticated']) || $_SESSION['authenticated'] !== true) {
 					</tbody>
 				</table>
 			</div>
+			<!-- Modal Editar Proyecto -->
+			<div id="editProyectoModal" class="modal fade" tabindex="-1" role="dialog">
+				<div class="modal-dialog" role="document">
+					<div class="modal-content">
+						<div class="modal-header">
+							<h5 class="modal-title">Editar Proyecto</h5>
+							<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+								<span aria-hidden="true">&times;</span>
+							</button>
+						</div>
+						<div class="modal-body">
+							<form id="editProyectoForm" method="POST" action="editar_proyecto.php">
+								<input type="hidden" id="id_proyecto" name="id_proyecto">
+								<div class="form-group">
+									<label for="nombre_proyecto">Nombre:</label>
+									<input type="text" class="form-control" id="nombre_proyecto" name="nombre_proyecto" required>
+								</div>
+								<div class="form-group">
+									<label for="fecha_proyecto">Fecha:</label>
+									<input type="date" class="form-control" id="fecha_proyecto" name="fecha_proyecto" required>
+								</div>
+								<div class="form-group">
+									<label class="h-10" for="descripcion_proyecto">Descripción:</label>
+									<textarea class="form-control" style="height: 100px; resize: vertical;" id="descripcion_proyecto" name="descripcion_proyecto" required></textarea>
+								</div>
+								<div class="text-center">
+									<button type="submit" class="btn btn-primary center">Actualizar</button>
+								</div>
+								
+							</form>
+						</div>
+					</div>
+				</div>
+			</div>
+			<script>
+			function cargarDatosProyecto(id, nombre, fecha, descripcion) {
+				document.getElementById('id_proyecto').value = id;
+				document.getElementById('nombre_proyecto').value = nombre;
+				document.getElementById('fecha_proyecto').value = fecha;
+				document.getElementById('descripcion_proyecto').value = descripcion;
+			}
+
+			// Si estás usando jQuery para el modal, asegúrate de que esté correctamente configurado
+			$(document).ready(function() {
+				$('#editProyectoModal').on('show.bs.modal', function (event) {
+					var button = $(event.relatedTarget); // Button that triggered the modal
+					var id = button.data('id'); // Extract info from data-* attributes
+					var nombre = button.data('nombre');
+					var fecha = button.data('fecha');
+					var descripcion = button.data('descripcion');
+					
+					var modal = $(this);
+					modal.find('#id_proyecto').val(id);
+					modal.find('#nombre_proyecto').val(nombre);
+					modal.find('#fecha_proyecto').val(fecha);
+					modal.find('#descripcion_proyecto').val(descripcion);
+				});
+			});
+			</script>
+
+
 			<div class="title pb-20 pt-20">
 				<h2 class="h3 mb-0">Asignación de Usuarios</h2>
 			</div>
