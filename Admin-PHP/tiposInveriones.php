@@ -77,24 +77,80 @@ if (!isset($_SESSION['authenticated']) || $_SESSION['authenticated'] !== true) {
 							</tr>
 						</thead>
 						<tbody>
-							<?php
-							while ($fila = mysqli_fetch_assoc($resultadot)) {
-								echo "<tr>";
-								echo "<td>" . $fila['Nombre'] . "</td>";
-								echo "<td>" . $fila['Descripcion'] . "</td>";
-								echo '<td>';
-								echo '<div class="table-actions">';
-								echo '<a href="#" data-color="#265ed7"><i class="icon-copy dw dw-edit2"></i></a>';
-								echo '<a href="#" data-color="#e95959"><i class="icon-copy dw dw-delete-3"></i></a>';
-								echo '</div>';
-								echo '</td>';
-								echo '</tr>';
-							}
-							?>
+						<?php
+						while ($fila = mysqli_fetch_assoc($resultadot)) {
+							echo "<tr>";
+							echo "<td>" . $fila['Nombre'] . "</td>";
+							echo "<td>" . $fila['Descripcion'] . "</td>";
+							echo '<td>';
+							echo '<div class="table-actions">';
+							echo '<a href="#" data-toggle="modal" data-target="#editModal" onclick="cargarDatosTipo(\'' . $fila['ID_TIPO'] . '\', \'' . $fila['Nombre'] . '\', \'' . $fila['Descripcion'] . '\'); return false;" data-color="#265ed7"><i class="icon-copy dw dw-edit2"></i></a>';
+							echo '<a href="eliminar.php?id=' . $fila['ID_TIPO'] . '" onclick="return confirm(\'¿Estás seguro de que deseas eliminar este tipo?\')" data-color="#e95959"><i class="icon-copy dw dw-delete-3"></i></a>';
+							echo '</div>';
+							echo '</td>';
+							echo '</tr>';
+						}
+						?>
+
 						</tbody>
 					</table>
 				</div>
 			</div>
+			<!-- Script para cargar los datos del tipo de inversión en el modal -->
+			<script>
+				// Función para cargar los datos en el modal
+				function cargarDatosTipo(id, nombre, descripcion) {
+					document.getElementById('id_tipo').value = id;
+					document.getElementById('nombre_tipo').value = nombre;
+					document.getElementById('descripcion_tipo').value = descripcion;
+				}
+
+				// Asignar el evento 'click' a los botones de edición cuando la página se haya cargado
+				document.addEventListener('DOMContentLoaded', function () {
+					document.querySelectorAll('.edit-btn').forEach(button => {
+					button.addEventListener('click', function () {
+						const id = this.getAttribute('data-id');
+						const nombre = this.getAttribute('data-nombre');
+						const descripcion = this.getAttribute('data-descripcion');
+						
+						// Llamar a la función para cargar los datos en el modal
+						cargarDatosTipo(id, nombre, descripcion);
+					});
+					});
+				});
+				</script>
+
+			<!-- Modal para editar tipo de inversión -->
+				<div class="modal fade" id="editModal" tabindex="-1" aria-labelledby="editModalLabel" aria-hidden="true">
+				<div class="modal-dialog">
+					<div class="modal-content">
+					<div class="modal-header">
+						<h5 class="modal-title" id="editModalLabel">Editar Tipo de Inversión</h5>
+						<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+						<span aria-hidden="true">&times;</span>
+						</button>
+					</div>
+					<div class="modal-body">
+						<form action="editar_tipo.php" method="POST">
+						<input type="hidden" id="id_tipo" name="id_tipo">
+						
+						<div class="form-group">
+							<label for="nombre_tipo">Nombre</label>
+							<input type="text" class="form-control" id="nombre_tipo" name="nombre_tipo" placeholder="Nombre del tipo de inversión">
+						</div>
+						<div class="form-group">
+							<label for="descripcion_tipo">Descripción</label>
+							<textarea class="form-control" id="descripcion_tipo" name="descripcion_tipo" rows="3" placeholder="Descripción del tipo de inversión"></textarea>
+						</div>
+						
+						<button type="submit" class="btn btn-primary">Guardar cambios</button>
+						</form>
+					</div>
+					</div>
+				</div>
+				</div>
+
+
 			
             <!-- Campos de registro -->
 			<div class="xs-pd-20-10 pd-ltr-20">

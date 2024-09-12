@@ -48,7 +48,7 @@ if (!isset($_SESSION['authenticated']) || $_SESSION['authenticated'] !== true) {
 	<?php
 		include("conexionn.php");
 
-		$consultop = "SELECT ID_Proyecto, Nombre, Fecha, Descripcion, Certificado FROM proyecto";
+		$consultop = "SELECT ID_Proyecto, Nombre, Fecha, Descripcion, Certificado FROM proyecto WHERE liquidado <> 1";
 		$resultadop = mysqli_query($conex, $consultop);
 
 		// Crear un array para almacenar los datos

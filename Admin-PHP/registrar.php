@@ -201,7 +201,6 @@ if (isset($_POST['register_proyecto'])) {
 }
 
 
-
 if (isset($_POST['register_usuarios'])) {
     // Verificar si las contraseñas son iguales
     if ($_POST['contrasena'] !== $_POST['contrasena2']) {

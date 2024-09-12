@@ -220,6 +220,96 @@ if (!isset($_SESSION['authenticated']) || $_SESSION['authenticated'] !== true) {
 
 				</div>
 			</div>
+			<!-- Modal para editar País -->
+			<div class="modal fade" id="editPaisModal" tabindex="-1" role="dialog" aria-labelledby="editPaisModalLabel" aria-hidden="true">
+				<div class="modal-dialog" role="document">
+					<div class="modal-content">
+						<div class="modal-header">
+							<h5 class="modal-title" id="editPaisModalLabel">Editar País</h5>
+							<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+								<span aria-hidden="true">&times;</span>
+							</button>
+						</div>
+						<div class="modal-body">
+							<form id="formEditarPais" method="POST" action="editar_pais.php">
+								<input type="hidden" id="id_pais" name="id_pais">
+								<div class="form-group">
+									<label for="nombre_pais">Nombre</label>
+									<input type="text" class="form-control" id="nombre_pais" name="nombre_pais" required>
+								</div>
+								<button type="submit" class="btn btn-primary">Guardar cambios</button>
+							</form>
+						</div>
+					</div>
+				</div>
+			</div>
+			<!-- Modal para editar Departamento -->
+			<div class="modal fade" id="editDepartamentoModal" tabindex="-1" role="dialog" aria-labelledby="editDepartamentoModalLabel" aria-hidden="true">
+				<div class="modal-dialog" role="document">
+					<div class="modal-content">
+						<div class="modal-header">
+							<h5 class="modal-title" id="editDepartamentoModalLabel">Editar Departamento</h5>
+							<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+								<span aria-hidden="true">&times;</span>
+							</button>
+						</div>
+						<div class="modal-body">
+							<form id="formEditarDepartamento" method="POST" action="editar_departamento.php">
+								<input type="hidden" id="id_departamento" name="id_departamento">
+								<div class="form-group">
+									<label for="nombre_departamento">Nombre</label>
+									<input type="text" class="form-control" id="nombre_departamento" name="nombre_departamento" required>
+								</div>
+								<div class="form-group">
+									<label for="pais_departamento">País</label>
+									<select class="form-control" id="pais_departamento" name="pais_departamento" required>
+										<?php
+										foreach ($datos_pais as $pais) {
+											echo "<option value='{$pais['ID_Pais']}'>{$pais['Nombre']}</option>";
+										}
+										?>
+									</select>
+								</div>
+								<button type="submit" class="btn btn-primary">Guardar cambios</button>
+							</form>
+						</div>
+					</div>
+				</div>
+			</div>
+			<!-- Modal para editar Municipio -->
+			<div class="modal fade" id="editMunicipioModal" tabindex="-1" role="dialog" aria-labelledby="editMunicipioModalLabel" aria-hidden="true">
+				<div class="modal-dialog" role="document">
+					<div class="modal-content">
+						<div class="modal-header">
+							<h5 class="modal-title" id="editMunicipioModalLabel">Editar Municipio</h5>
+							<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+								<span aria-hidden="true">&times;</span>
+							</button>
+						</div>
+						<div class="modal-body">
+							<form id="formEditarMunicipio" method="POST" action="editar_municipio.php">
+								<input type="hidden" id="id_municipio" name="id_municipio">
+								<div class="form-group">
+									<label for="nombre_municipio">Nombre</label>
+									<input type="text" class="form-control" id="nombre_municipio" name="nombre_municipio" required>
+								</div>
+								<div class="form-group">
+									<label for="departamento_municipio">Departamento</label>
+									<select class="form-control" id="departamento_municipio" name="departamento_municipio" required>
+										<?php
+										foreach ($datos_departamento as $departamento) {
+											echo "<option value='{$departamento['ID_Departamento']}'>{$departamento['Nombre']}</option>";
+										}
+										?>
+									</select>
+								</div>
+								<button type="submit" class="btn btn-primary">Guardar cambios</button>
+							</form>
+						</div>
+					</div>
+				</div>
+			</div>
+
 			<script>
 				function cargarDatosPais(id, nombre) {
 					document.getElementById('id_pais').value = id;

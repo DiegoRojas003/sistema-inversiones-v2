@@ -86,7 +86,7 @@ if (!isset($_SESSION['authenticated']) || $_SESSION['authenticated'] !== true) {
 		}
 
 		// Consulta para obtener los datos de la tabla proyecto
-		$consulta_proyecto = "SELECT ID_Proyecto, Nombre, Fecha, Descripcion, Certificado FROM proyecto";
+		$consulta_proyecto = "SELECT ID_Proyecto, Nombre, Fecha, Descripcion, Certificado FROM proyecto WHERE liquidado <> 1";
 		$resultado_proyecto = mysqli_query($conex, $consulta_proyecto);
 
 		// Crear un array para almacenar los datos
@@ -174,8 +174,8 @@ if (!isset($_SESSION['authenticated']) || $_SESSION['authenticated'] !== true) {
 								echo '<td><a href="../files/' . $fila['CertificadoInversion'] . '" target="_blank">' . $fila['CertificadoInversion'] . '</a></td>';
 								echo '<td>';
 								echo '<div class="table-actions">';
-								echo '<a href="#" data-color="#265ed7"><i class="icon-copy dw dw-edit2"></i></a>';
-								echo '<a href="#" data-color="#e95959"><i class="icon-copy dw dw-delete-3"></i></a>';
+								echo '<a href="#" data-toggle="modal" data-target="#editModal" onclick="cargarDatosInversion(\'' . $fila['ID_Inversion'] . '\', \'' . $fila['Nombre'] . '\', \'' . $fila['Monto'] . '\', \'' . $fila['proyecto'] . '\', \'' . $fila['Tipo'] . '\'); return false;" data-color="#265ed7"><i class="icon-copy dw dw-edit2"></i></a>';
+								echo '<a href="eliminar_inversiones.php?id=' . $fila['ID_Inversion'] . '" data-color="#e95959"><i class="icon-copy dw dw-delete-3"></i></a>';
 								echo '</div>';
 								echo '</td>';
 								echo '</tr>';
@@ -185,6 +185,92 @@ if (!isset($_SESSION['authenticated']) || $_SESSION['authenticated'] !== true) {
 					</table>
 
 				</div>
+
+				<div class="modal fade" id="editModal" tabindex="-1" role="dialog" aria-labelledby="editModalLabel" aria-hidden="true">
+					<div class="modal-dialog" role="document">
+						<div class="modal-content">
+						<div class="modal-header">
+							<h5 class="modal-title" id="editModalLabel">Editar Inversión</h5>
+							<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+							<span aria-hidden="true">&times;</span>
+							</button>
+						</div>
+						<form id="editForm" method="post" action="editar_inversion.php">
+							<div class="modal-body">
+							<input type="hidden" name="id_inversion" id="id_inversion">
+
+							<!-- Campo editable de Nombre -->
+							<div class="form-group">
+								<label for="nombre">Nombre</label>
+								<input type="text" class="form-control" id="usuario" name="usuario" required>
+							</div>
+
+							<!-- Campo Monto (solo lectura) -->
+							<div class="form-group">
+								<label for="monto">Monto</label>
+								<input type="text" class="form-control" id="monto" name="monto" disabled>
+							</div>
+
+							<!-- Campo Proyecto (solo lectura) -->
+							<div class="form-group">
+								<label for="proyecto">Proyecto</label>
+								<input type="text" class="form-control" id="proyecto" name="proyecto" disabled>
+							</div>
+
+							<!-- Campo Tipo (solo lectura) -->
+							<div class="form-group">
+								<label for="tipo">Tipo</label>
+								<input type="text" class="form-control" id="tipo" name="tipo" disabled>
+							</div>
+							</div>
+							<div class="modal-footer">
+							<button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
+							<button type="submit" class="btn btn-primary">Guardar cambios</button>
+							</div>
+						</form>
+						</div>
+					</div>
+				</div>
+
+				<script>
+					function cargarDatosInversion(id, usuarioId, monto, proyecto, tipo) {
+						document.getElementById('id_inversion').value = id;
+						document.getElementById('usuario').value = usuarioId; // Selecciona el usuario en el menú desplegable
+						document.getElementById('monto').value = monto;
+						document.getElementById('proyecto').value = proyecto;
+						document.getElementById('tipo').value = tipo;
+
+						$('#editModal').modal('show');
+					}
+
+					document.addEventListener("DOMContentLoaded", function() {
+						var editButtons = document.querySelectorAll('.edit-btn');
+						var idInversionInput = document.getElementById('id_inversion');
+						var usuarioSelect = document.getElementById('usuario');
+						var montoInput = document.getElementById('monto');
+						var proyectoInput = document.getElementById('proyecto');
+						var tipoInput = document.getElementById('tipo');
+
+						editButtons.forEach(function(button) {
+							button.addEventListener('click', function() {
+								var id = this.getAttribute('data-id');
+								var usuarioId = this.getAttribute('data-usuario'); // Asegúrate de tener este atributo en los botones de editar
+								var monto = this.parentNode.parentNode.previousElementSibling.previousElementSibling.innerHTML;
+								var proyecto = this.parentNode.parentNode.previousElementSibling.innerHTML;
+								var tipo = this.parentNode.parentNode.previousElementSibling.previousElementSibling.previousElementSibling.innerHTML;
+
+								idInversionInput.value = id;
+								usuarioSelect.value = usuarioId;
+								montoInput.value = monto;
+								proyectoInput.value = proyecto;
+								tipoInput.value = tipo;
+
+								$('#editModal').modal('show');
+							});
+						});
+					});
+				</script>
+
 
 				<div class="title pb-20 pt-20">
 					<h2 class="h3 mb-0">Ingreso de inversiones</h2>

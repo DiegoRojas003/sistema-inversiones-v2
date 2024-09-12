@@ -6,6 +6,20 @@ $nombre = isset($_SESSION['nombre']) ? $_SESSION['nombre'] : '';
 $apellido = isset($_SESSION['apellido']) ? $_SESSION['apellido'] : '';
 ?>
 <div id="template">
+    <style>
+        .user-icon {
+            display: inline-block;
+            width: 40px; /* Tamaño del logo circular */
+            height: 40px; /* Tamaño del logo circular */
+            border-radius: 50%; /* Hacer el contenedor circular */
+            background-color: #28a745; /* Color de fondo del logo (puedes cambiarlo) */
+            color: white; /* Color del texto (letra) */
+            text-align: center;
+            line-height: 40px; /* Centrar verticalmente el texto */
+            font-size: 18px; /* Tamaño de la letra */
+            font-weight: bold;
+        }
+    </style>
 <div class="header">
     <div class="header-left">
         <div class="menu-icon bi bi-list"></div>
@@ -36,7 +50,12 @@ $apellido = isset($_SESSION['apellido']) ? $_SESSION['apellido'] : '';
                     data-toggle="dropdown"
                 >
                     <span class="user-icon">
-                        <img src="../vendors/images/photo1.jpg" alt="" />
+                        <!-- Reemplazar la imagen con el logo circular -->
+                        <?php
+                        // Obtener la primera letra del nombre
+                        $letra = strtoupper(substr($nombre, 0, 1));
+                        echo $letra;
+                        ?>
                     </span>
                     <span class="user-name"><?php echo $nombre . ' ' . $apellido; ?></span>
                 </a>

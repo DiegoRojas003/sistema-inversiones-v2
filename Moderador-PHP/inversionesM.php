@@ -264,7 +264,7 @@
 								<th>Fecha</th>
 								<th>Descripcion</th>
 								<th>CertificadoInversion</th>
-								<th class="datatable-nosort">Acciones</th>
+								<th class="datatable-nosort"></th>
 							</tr>
 						</thead>
 						<tbody>
@@ -278,10 +278,7 @@
 									<td><?php echo $fila['Descripcion']; ?></td>
 									<td><a href="../files/<?php echo $fila['CertificadoInversion']; ?>" target="_blank"><?php echo $fila['CertificadoInversion']; ?></a></td>
 									<td>
-										<div class="table-actions">
-											<a href="#" data-color="#265ed7"><i class="icon-copy dw dw-edit2"></i></a>
-											<a href="#" data-color="#e95959"><i class="icon-copy dw dw-delete-3"></i></a>
-										</div>
+										
 									</td>
 								</tr>
 							<?php endwhile; ?>
@@ -289,6 +286,7 @@
 					</table>
 
 				</div>
+
 
 				<div class="title pb-20 pt-20">
 					<h2 class="h3 mb-0">Ingreso de inversiones</h2>

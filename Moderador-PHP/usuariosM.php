@@ -237,7 +237,7 @@ $resultadou = mysqli_query($conex, $consultou);
 								<th>Fecha</th>
 								<th>Municipio</th>
 								<th>Rol</th>
-								<th class="datatable-nosort">Acciones</th>
+								<th class="datatable-nosort"></th>
 							</tr>
 						</thead>
 						<tbody>
@@ -275,8 +275,6 @@ $resultadou = mysqli_query($conex, $consultou);
 
 								echo '<td>';
 								echo '<div class="table-actions">';
-								echo '<a href="#" data-color="#265ed7"><i class="icon-copy dw dw-edit2"></i></a>';
-								echo '<a href="#" data-color="#e95959"><i class="icon-copy dw dw-delete-3"></i></a>';
 								echo '</div>';
 								echo '</td>';
 								echo '</tr>';

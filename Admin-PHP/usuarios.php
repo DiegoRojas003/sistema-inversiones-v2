@@ -196,8 +196,8 @@ if (!isset($_SESSION['authenticated']) || $_SESSION['authenticated'] !== true) {
 
 								echo '<td>';
 								echo '<div class="table-actions">';
-								echo '<a href="#" data-color="#265ed7"><i class="icon-copy dw dw-edit2"></i></a>';
-								echo '<a href="#" data-color="#e95959"><i class="icon-copy dw dw-delete-3"></i></a>';
+								echo '<a href="#" data-toggle="modal" data-target="#editUsuarioModal" onclick="cargarDatosUsuario(\'' . $fila['ID_Usuario'] . '\', \'' . $fila['Nombre'] . '\', \'' . $fila['Apellido'] . '\', \'' . $fila['Telefono'] . '\', \'' . $fila['Correo'] . '\', \'' . $fila['Contraseña'] . '\', \'' . $fila['Fecha'] . '\', \'' . $fila['FK_ID_Municipio'] . '\', \'' . $fila['FK_ID_Rol'] . '\'); return false;" data-color="#265ed7"><i class="icon-copy dw dw-edit2"></i></a>';
+								echo '<a href="eliminar_usuario.php?id_usuario=' . $fila['ID_Usuario'] . '" data-color="#e95959"><i class="icon-copy dw dw-delete-3"></i></a>';
 								echo '</div>';
 								echo '</td>';
 								echo '</tr>';
@@ -208,10 +208,74 @@ if (!isset($_SESSION['authenticated']) || $_SESSION['authenticated'] !== true) {
 
 
 				</div>
+				<script>
+					function cargarDatosUsuario(id, nombre, apellido, telefono, correo, contrasena, fecha, municipioId, rolId) {
+						document.getElementById('id_usuario').value = id;
+						document.getElementById('nombre_usuario').value = nombre;
+						document.getElementById('apellido_usuario').value = apellido;
+						document.getElementById('telefono_usuario').value = telefono;
+						document.getElementById('correo_usuario').value = correo;
+						document.getElementById('contrasena_usuario').value = contrasena;
+						document.getElementById('fecha_usuario').value = fecha;
+						document.getElementById('municipio_usuario').value = municipioId;
+						document.getElementById('rol_usuario').value = rolId;
+					}
+				</script>
+
 
 				
 
-				
+				<!-- Modal para editar Usuario -->
+				<div class="modal fade" id="editUsuarioModal" tabindex="-1" role="dialog" aria-labelledby="editUsuarioModalLabel" aria-hidden="true">
+					<div class="modal-dialog" role="document">
+						<div class="modal-content">
+							<div class="modal-header">
+								<h5 class="modal-title" id="editUsuarioModalLabel">Editar Usuario</h5>
+								<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+									<span aria-hidden="true">&times;</span>
+								</button>
+							</div>
+							<div class="modal-body">
+								<form id="formEditarUsuario" method="POST" action="editar_usuario.php">
+									<input type="hidden" id="id_usuario" name="id_usuario">
+									<div class="form-group">
+										<label for="nombre_usuario">Nombre</label>
+										<input type="text" class="form-control" id="nombre_usuario" name="nombre_usuario" required>
+									</div>
+									<div class="form-group">
+										<label for="apellido_usuario">Apellido</label>
+										<input type="text" class="form-control" id="apellido_usuario" name="apellido_usuario" required>
+									</div>
+									<div class="form-group">
+										<label for="telefono_usuario">Teléfono</label>
+										<input type="text" class="form-control" id="telefono_usuario" name="telefono_usuario" required>
+									</div>
+									<div class="form-group">
+										<label for="correo_usuario">Correo</label>
+										<input type="email" class="form-control" id="correo_usuario" name="correo_usuario" required>
+									</div>
+									<div class="form-group">
+										<label for="contraseña_usuario">Contraseña</label>
+										<input type="password" class="form-control" id="contraseña_usuario" name="contraseña_usuario" required>
+									</div>
+									<div class="form-group">
+										<label for="municipio_usuario">Municipio</label>
+										<select class="form-control" id="municipio_usuario" name="municipio_usuario" required>
+											<?php
+											foreach ($datos_Municipio as $municipio) {
+												echo "<option value='{$municipio['ID_Municipio']}'>{$municipio['Nombre']}</option>";
+											}
+											?>
+										</select>
+									</div>
+									
+									<button type="submit" class="btn btn-primary">Guardar cambios</button>
+								</form>
+							</div>
+						</div>
+					</div>
+				</div>
+
 				
 
 				<div class="title pb-20 pt-20">
