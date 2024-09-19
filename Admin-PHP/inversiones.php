@@ -299,13 +299,13 @@ if (!isset($_SESSION['authenticated']) || $_SESSION['authenticated'] !== true) {
 
 
 						<div class="form-group row">
-							<label class="col-sm-12 col-md-2 col-form-label">Monto en Dinero</label>
+							<label class="col-sm-12 col-md-2 col-form-label">Monto en dinero</label>
 							<div class="col-sm-12 col-md-10">
 								<input name="monto" class="form-control" type="number" placeholder="2500000">
 							</div>
 						</div>
 						<div class="form-group row">
-							<label class="col-sm-12 col-md-2 col-form-label">Proyecto</label>
+							<label class="col-sm-12 col-md-2 col-form-label">Empresa</label>
 							<div class="col-sm-12 col-md-10">
 								<select name="proyecto" class="custom-select col-12">
 									<option selected="">Seleccione</option>
@@ -335,15 +335,15 @@ if (!isset($_SESSION['authenticated']) || $_SESSION['authenticated'] !== true) {
 							</div>
 						</div>
 						<div class="form-group row">
-							<label class="col-sm-12 col-md-2 col-form-label">Fecha de Inversion</label>
+							<label class="col-sm-12 col-md-2 col-form-label">Fecha de Inversión</label>
 							<div class="col-sm-12 col-md-10">
 								<input name="fecha_inversion" class="form-control date-picker" placeholder="Seleccione la fecha" type="text">
 							</div>
 						</div>
 						<div class="form-group row">
-							<label class="col-sm-12 col-md-2 col-form-label">Descripcion de Inversion</label>
+							<label class="col-sm-12 col-md-2 col-form-label">Descripción de Inversión</label>
 							<div class="col-sm-12 col-md-10">
-							<textarea name='descripcion_inversion' placeholder="Ingresa una breve Descripcion del proyecto a crear..." class="form-control" id="exampleFormControlTextarea1" rows="3"></textarea>
+							<textarea name='descripcion_inversion' placeholder="Ingresa una breve descripción de la empresa a crear..." class="form-control" id="exampleFormControlTextarea1" rows="3"></textarea>
 						</div>
 						</div>
 						

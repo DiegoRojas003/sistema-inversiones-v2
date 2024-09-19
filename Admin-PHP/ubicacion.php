@@ -345,7 +345,7 @@ if (!isset($_SESSION['authenticated']) || $_SESSION['authenticated'] !== true) {
 								</div>
 							</div>
 							<div class="form-group row">
-								<label class="col-sm-12 col-md-2 col-form-label">País</label>
+								<label class="col-sm-12 col-md-2 col-form-label">Países</label>
 								<div class="col-sm-12 col-md-10">
 									<input name="pais" class="form-control" type="text" placeholder="Colombia">
 								</div>
@@ -366,7 +366,7 @@ if (!isset($_SESSION['authenticated']) || $_SESSION['authenticated'] !== true) {
 								</div>
 							</div>
 							<div class="form-group row">
-								<label class="col-sm-12 col-md-2 col-form-label">Pais</label>
+								<label class="col-sm-12 col-md-2 col-form-label">Países</label>
 								<div class="col-sm-12 col-md-10">
 									<select name="FK_Pais" class="custom-select col-12">
 										<option selected="">Seleccione</option>
@@ -386,7 +386,7 @@ if (!isset($_SESSION['authenticated']) || $_SESSION['authenticated'] !== true) {
 					<div class="pd-20 card-box mb-30">
 						<form action="registrar.php" method="post">
 								<div class="form-group row">
-									<label class="col-sm-12 col-md-2 col-form-label">municipio</label>
+									<label class="col-sm-12 col-md-2 col-form-label">Municipio</label>
 									<div class="col-sm-12 col-md-10">
 										<input name="municipioo" class="form-control" type="text" placeholder="Fusagasuga">
 									</div>

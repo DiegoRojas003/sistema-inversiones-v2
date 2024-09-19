@@ -358,7 +358,7 @@ $conn->close(); // Cerrar conexión principal
 									<tr>
 										<th>Fecha</th>
 										<th>Monto</th>
-										<th>Valor del Aporte ajustado</th>
+										<th>Valor del aporte ajustado</th>
 										<th>Tiempo transcurrido desde el día del aporte</th>
 									</tr>
 								</thead>

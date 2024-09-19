@@ -181,7 +181,7 @@ if (!isset($_SESSION['authenticated']) || $_SESSION['authenticated'] !== true) {
 			<div class="pd-20 card-box mb-30">
 				<div class="clearfix">
 					<div class="pull-left">
-						<p class="mb-30">Seleccione la empresa y los usuarios que desea vincular a dicho empresa:</p>
+						<p class="mb-30">Seleccione la empresa y los usuarios que desea vincular a dicha empresa:</p>
 					</div>
 				</div>
 				<form action="registrar.php" method="POST" >
@@ -234,7 +234,7 @@ if (!isset($_SESSION['authenticated']) || $_SESSION['authenticated'] !== true) {
 				<div class="clearfix"></div>
 				<form action="registrar.php" method="post" enctype="multipart/form-data">
 					<div class="form-group row">
-						<label class="col-sm-12 col-md-2 col-form-label">Nit</label>
+						<label class="col-sm-12 col-md-2 col-form-label">NIT</label>
 						<div class="col-sm-12 col-md-10">
 							<input name="id_proyecto" class="form-control" type="number" placeholder="01">
 						</div>

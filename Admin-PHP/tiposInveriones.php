@@ -91,7 +91,6 @@ if (!isset($_SESSION['authenticated']) || $_SESSION['authenticated'] !== true) {
 							echo '</tr>';
 						}
 						?>
-
 						</tbody>
 					</table>
 				</div>

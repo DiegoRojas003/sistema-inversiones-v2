@@ -323,7 +323,7 @@ $_SESSION['nombreProyecto'] = $nombreProyecto;
 				</div>
 				
 				<div class="bg-white pd-20 card-box mb-30" style="min-height: 200px;">
-				<h5 class="h4 text-blue mb-20">Inversiones realizadas expresadas en millones</h5>
+				<h5 class="h4 text-blue mb-20">Inversiones realizadas expresadas en millones de pesos</h5>
 						<div id="TimeLine"></div>
 					
 					</div>
