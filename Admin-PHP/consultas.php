@@ -308,7 +308,7 @@ $conn->close(); // Cerrar conexión principal
                     <div class="col-lg-6 col-md-12 col-sm-12 mb-30">
                         <div class="pd-20 card-box">
                             <h5 class="h4 text-blue mb-20">Resumen Inversiones</h5>
-                            <div class="card-box pd-20 mb-20" style="width: 500px; height: 250px;">
+                            <div class="card-box pd-20 mb-20 w-100">
 							<table class="table">
 								<tbody>
 									<tr>

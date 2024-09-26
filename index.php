@@ -739,7 +739,7 @@ function obtener_proyectos($conn, $id_usuario) {
               <div class="address">
                 <i class="bi bi-geo-alt"></i>
                 <h4>Ubicación:</h4>
-                <p>Diagonal 18 No. 20-29 Fusagasugá barrio Manila</p>
+                <p>Dg. 9 #595, Bogotá, Soacha, Cundinamarca</p>
               </div>
 
               <div class="email">
@@ -754,8 +754,8 @@ function obtener_proyectos($conn, $id_usuario) {
                 <p>+57 3228237214</p>
               </div>
 
-              <iframe
-                src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d1311.9270222192467!2d-74.36964982384944!3d4.333868218831487!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x8e3f04f314d97f1b%3A0x669cea7143a50cb0!2sUNIVERSIDAD%20DE%20CUNDINAMARCA%20-%20SEDE%20FUSAGASUG%C3%81!5e0!3m2!1ses-419!2sco!4v1716957351722!5m2!1ses-419!2sco"
+              
+                <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d4213.577461568245!2d-74.22306294488621!3d4.57829062401165!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x8e3f756362c8f147%3A0x30535dfcb1466835!2sUniversidad%20de%20Cundinamarca%20Extensi%C3%B3n%20Soacha!5e0!3m2!1ses-419!2sco!4v1727364683721!5m2!1ses-419!2sco"
                 frameborder="0" style="border:0; width: 100%; height: 290px;" allowfullscreen></iframe>
             </div>
 
@@ -807,8 +807,8 @@ function obtener_proyectos($conn, $id_usuario) {
             <div class="footer-info">
               <h3>Colombia</h3>
               <p>
-                Fusagasugá Cundinamarca<br>
-                Diagonal 18 No. 20-29 Fusagasugá barrio Manila<br><br>
+                <br>
+                Dg. 9 #595, Bogotá, Soacha, Cundinamarca<br><br>
                 <strong>Celular:</strong> +57 3228237214<br>
                 <strong>Correo:</strong> unicundi@ucundinamarca.edu.co<br>
               </p>
